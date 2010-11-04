@@ -1,0 +1,231 @@
+setters should make the object take ownership of the object parameter
+
+----
+
+Native:
+
+Command : IObject {
+	static instance(Map<String, Object>);
+}
+
+Procedure : IObject {
+	static instance(Map<String, Object>);
+}
+
+State : IObject {
+	static instance(Map<String, Object>);
+}
+
+
+NativeObjectFactoryImpl implements INativeObjectFactory {
+
+}
+
+
+-----------------------------------------------
+Validations:
+
+* all methods in the implemented interface must exist in the class.
+* constructor signature must be equal to the interfaces'
+
+* Param names on objectInit must match with class declaration.
+* Types must exist.
+* Names cannot repeat on the same context.
+* Interfaces cannot be instantiated.
+
+
+-----------------------------------------------
+
+COBFramework {
+	
+	List<File> files;
+	Map<String, IClassDef> classes;
+	Map<String, InterfaceDef> interfaces;
+	List<IObjectDef> objects;
+	
+	loadClassPath(String dirs);
+	
+	parse();
+	
+	instanceClasses();
+	
+	IClass getClass(String className);
+	
+	finalize();
+}
+
+IType {
+	enum { float, integer, string, reference } simpleType;
+	String name; // reference
+	boolean array;
+	
+	isAssignableFrom(IType type);
+}
+
+Context {
+
+	private Context parentContext;
+
+	private Map<String, Object> entries;
+	
+	getVariable(String name);
+}
+
+INativeObjectFactory {
+
+	IObject instanceNativeType(Type type, Map<String, Object>);
+
+}
+
+IInteger : IValue {
+	int intValue;
+}
+
+IFloat : IValue {
+	float floatValue;
+}
+
+IArray : IValue {
+	List<IValue> elements;
+}
+
+IObject : IValue {
+
+	IClass class;
+	boolean isNative;
+	
+	Map<String, IVariable> instanceVariables;
+}
+
+IClass {
+	IClassDef definition;
+	
+	Map<String, IVar> classVariables;
+	
+	IObject getStaticObject(String name);
+	IObject newInstantiate(Context ctx);
+}
+
+IVariable {
+	IVarDef definition;
+	
+	String name;
+	int numericName;
+	IValue value;
+}
+
+IValue {
+	IType type;
+}
+
+// defs
+
+InterfaceDef {
+	String name;
+	List<IFormalParamDef> params;
+	List<IVariableDef> variableDefs;
+}
+
+IClassDef {
+	String name;
+	boolean isNative;
+	
+	List<IFormalParamDef> params;
+	List<String> implementedInterfaces;
+	List<IVariableDef> variableDefs;
+	
+	IClass instantiateClass(Context ctx);
+}
+
+IFormalParamDef {
+	IType type;
+	String name;
+}
+
+IActualParamDef {
+	String name;
+	IValueDef valueDef;
+}
+
+
+
+IVariableDecl {
+	boolean static;
+	IType declaredType;
+	String name;
+	IValueDef value;
+}
+
+IValueDef {
+	IType inferredType;
+	enum ValueDefType { objectInit, arrayInit, literal, reference } valueDefType;
+	
+	IValue eval(Context ctx);
+}
+
+IRerenceDef : IValueDef {
+	List<String> referencePath;
+	IValue eval(Context ctx);
+}
+
+IArrayInitDef : IValueDef {
+	List<IValueDef> values;
+	IArray eval(Context ctx);
+}
+
+IObjectInitDef : IValueDef {
+	IClassDef classDef;
+	IActualParamDef paramsDef;
+	
+	IObject eval(Context ctx);
+}
+
+ILiteralDef : IValueDef {
+	enum LiteralDefType { integer, float, string } literalDefType;
+}
+
+IIntegerLiteralDef : ILiteralDef {
+	int intValue;
+}
+
+IFloatLiteralDef : ILiteralDef {
+	float floatValue;
+}
+
+IStringLiteralDef : ILiteralDef {
+	String stringValue;
+}
+
+--------------------------------------
+
+@members
+{
+
+ #include "FeedVizParser.h"
+
+ int main(int argc, char * argv[])
+ {
+
+    pANTLR3_INPUT_STREAM           input;
+    pSimpleCalcLexer               lex;
+    pANTLR3_COMMON_TOKEN_STREAM    tokens;
+    pSimpleCalcParser              parser;
+
+    input  = antlr3AsciiFileStreamNew          ((pANTLR3_UINT8)argv[1]);
+    lex    = SimpleCalcLexerNew                (input);
+    tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
+    parser = SimpleCalcParserNew               (tokens);
+
+    parser  ->expr(parser);
+
+    // Must manually clean up
+    //
+    parser ->free(parser);
+    tokens ->free(tokens);
+    lex    ->free(lex);
+    input  ->close(input);
+
+    return 0;
+ }
+
+}

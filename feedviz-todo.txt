@@ -1,0 +1,13 @@
+
+[ ] gramatica antlr
+* verificacion del ast de antlr
+* clases de modelo transform, animation, etc
+* instancia de clases modelo a partir del AST
+
+* abrir una ventana
+* correr d2d en la ventana
+
+* embeber lua
+* bindings lua-modelo; instanciar clases del modelo
+
+* hacer que d2d renderee clases del modelo
