@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Type.h"
+#include <antlr3defs.h>
 
 namespace COBJ
 {
@@ -10,10 +11,11 @@ namespace COBJ
 		STRING_P_TYPE = STRING_TYPE
 	};
 
-	class PrimitiveType : Type
+	class PrimitiveType : public Type
 	{
 	public:
 		PrimitiveType(primitive_type primitiveType);
+		PrimitiveType(const pANTLR3_BASE_TREE node);
 		~PrimitiveType(void);
 
 		bool operator==(const Type& type) const;

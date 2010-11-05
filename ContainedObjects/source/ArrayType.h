@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Type.h"
+#include <antlr3defs.h>
 
 namespace COBJ
 {
@@ -8,6 +9,7 @@ namespace COBJ
 	{
 	public:
 		ArrayType(const boost::shared_ptr<Type>& pChildType);
+		ArrayType(const pANTLR3_BASE_TREE node);
 
 		~ArrayType(void);
 

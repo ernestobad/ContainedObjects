@@ -1,5 +1,29 @@
 setters should make the object take ownership of the object parameter
 
+ClassDef*
+	FormalParamDef*
+		(Type)*
+	VariableDeclAssignDef
+		(Type)*
+		ValueDef
+			(Type)*
+			LiteralValueDef
+				(IntegerLiteralValueDef)*
+				(StringLiteralValueDef)*
+				(FloatLiteralValueDef)*
+			(ReferencePathValueDef)
+			(ObjectInitValueDef)
+				ActualParamDef
+					[ValueDef]
+			ArrayInitValueDef
+				(Type)*
+				[ValueDef]
+
+InterfaceDef
+	[FormalParamDef]*
+	VariableDeclDef
+		(Type)*
+
 ----
 
 Native:

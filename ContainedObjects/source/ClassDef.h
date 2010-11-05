@@ -7,21 +7,21 @@
 
 #pragma once
 
-class VariableDeclAssignDef;
 #include <antlr3defs.h>
 
-class FormalParamDef;
-
-namespace COBJ {
+namespace COBJ
+{
+	class FormalParamDef;
+	class VariableDeclAssignDef;
 
 	class ClassDef {
 
 	public:
 		ClassDef();
 
-		virtual ~ClassDef();
+		ClassDef(const pANTLR3_BASE_TREE node);
 
-		static void create(const pANTLR3_BASE_TREE node, boost::shared_ptr<ClassDef>& pClassDef);
+		virtual ~ClassDef();
 
 		const std::wstring& getClassName() const
 		{
@@ -67,7 +67,7 @@ namespace COBJ {
 			std::wstring m_ClassName;
 			std::list<boost::shared_ptr<FormalParamDef>> m_FormalPrameters;
 			std::list<std::wstring> m_ImplementedInterfaces;
-			std::list<boost::shared_ptr<VariableDeclAssignDef>> m_VariableDecls;
+			std::list<boost::shared_ptr<COBJ::VariableDeclAssignDef>> m_VariableDecls;
 			bool m_IsNative;
 	};
 

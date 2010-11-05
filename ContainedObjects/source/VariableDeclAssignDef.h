@@ -7,14 +7,18 @@
 
 #pragma once
 
-class Type;
-class ValueDef;
+#include <antlr3defs.h>
 
 namespace COBJ
 {
+	class Type;
+	class ValueDef;
+
 	class VariableDeclAssignDef {
+
 	public:
 		VariableDeclAssignDef();
+		VariableDeclAssignDef(const pANTLR3_BASE_TREE node);
 		virtual ~VariableDeclAssignDef();
 
 		bool isStatic() const

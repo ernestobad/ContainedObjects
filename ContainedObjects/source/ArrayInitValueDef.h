@@ -1,16 +1,19 @@
 #pragma once
 
 #include "ValueDef.h"
+#include <antlr3defs.h>
 
-class Type;
 
 namespace COBJ
 {
+	class Type;
 
 	class ArrayInitValueDef : public ValueDef
 	{
 	public:
 		ArrayInitValueDef(void);
+		ArrayInitValueDef(const pANTLR3_BASE_TREE node);
+
 		virtual ~ArrayInitValueDef(void);
 
 		const std::list<boost::shared_ptr<ValueDef>>& getValues() const

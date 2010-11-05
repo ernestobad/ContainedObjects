@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LiteralValueDef.h"
+#include <antlr3defs.h>
 
 namespace COBJ
 {
@@ -8,6 +9,8 @@ namespace COBJ
 	{
 	public:
 		StringLiteralValueDef(void);
+		StringLiteralValueDef(const pANTLR3_BASE_TREE node);
+
 		virtual ~StringLiteralValueDef(void);
 
 		const std::wstring& getStringValue() const

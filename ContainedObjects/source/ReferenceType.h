@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Type.h"
+#include <antlr3defs.h>
 
 namespace COBJ
 {
@@ -14,6 +15,8 @@ namespace COBJ
 	{
 	public:
 		ReferenceType(reference_type referenceType, const std::wstring& referenceTypeName);
+
+		ReferenceType(const pANTLR3_BASE_TREE node);
 
 		~ReferenceType(void);
 

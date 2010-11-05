@@ -7,7 +7,7 @@ using namespace COBJ;
 
 int main( int argc, const char* argv[] )
 {
-	std::wstring strFile = L"testprog1.cbj";
+	std::wstring strFile = L"testprog3.cbj";
 	std::list<std::wstring> fileList;
 	fileList.push_back(strFile);
 

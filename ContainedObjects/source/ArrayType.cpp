@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "ArrayType.h"
+#include "antlr/ContainedObjectsLexer.h"
 
 namespace COBJ
 {
@@ -7,6 +8,21 @@ namespace COBJ
 	ArrayType::ArrayType(const boost::shared_ptr<Type>& pChildType)
 		: Type(ARRAY_TYPE), m_pChildType(pChildType)
 	{
+	}
+
+	ArrayType::ArrayType(const pANTLR3_BASE_TREE node)
+		: Type(ARRAY_TYPE)
+	{
+		assert(node->getType(node) == N_ARRAY_TYPE);
+		assert(node->getChildCount(node) == 1);
+
+		pANTLR3_BASE_TREE n;
+
+		n = (pANTLR3_BASE_TREE) node->getChild(node, 0);
+
+		assert(n->getType(n) == N_SIMPLE_TYPE);
+
+		createSimpleType(n, m_pChildType);
 	}
 
 	ArrayType::~ArrayType(void)

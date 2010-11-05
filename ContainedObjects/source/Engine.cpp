@@ -3,6 +3,8 @@
 #include "exceptions.h"
 #include "conversions.h"
 #include "auto_resource.h"
+#include "ClassDef.h"
+#include "InterfaceDef.h"
 #include <antlr3defs.h>
 #include "antlr/ContainedObjectsLexer.h"
 #include "antlr/ContainedObjectsParser.h"
@@ -30,7 +32,7 @@ namespace COBJ
 	{
 			for (int i = 0; i < level; ++i)
 				wprintf(L"   ");
-			wprintf(L"%s\n", (const wchar_t*) node->getText(node)->chars);
+			wprintf(L"%s %i\n", (const wchar_t*) node->getText(node)->chars, node->getType(node));
 			for (int i = 0; i < (int)node->getChildCount(node); ++i)
 			{
 				pANTLR3_BASE_TREE child = (pANTLR3_BASE_TREE)node->getChild(node, i);
@@ -123,8 +125,22 @@ namespace COBJ
 		{
 			// nodes = antlr3CommonTreeNodeStreamNewTree(langAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
 	 
-			pANTLR3_BASE_TREE tree = langAST.tree;
-            print(tree, 0);
+			pANTLR3_BASE_TREE root = langAST.tree;
+
+			if (root->getType(root) == N_CLASS_DECL)
+			{
+				boost::shared_ptr<ClassDef> pClassDef(new ClassDef(root));
+			}
+			else if (root->getType(root) == N_IFACE_DECL)
+			{
+				boost::shared_ptr<InterfaceDef> pClassDef(new InterfaceDef(root));
+			}
+			else
+			{
+				assert(false);
+			}
+
+			print(root, 0);
 		}
 	}
 

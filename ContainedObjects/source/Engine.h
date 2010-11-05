@@ -2,10 +2,12 @@
 
 #include "IEngine.h"
 
-class Type;
-
 namespace COBJ
 {
+	class Type;
+	class IClass;
+	class IInterface;
+
 	class Engine : public IEngine
 	{
 	public:

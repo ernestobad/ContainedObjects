@@ -1,15 +1,17 @@
 #pragma once
 
 #include "ValueDef.h"
-
-class ActualParamDef;
+#include <antlr3defs.h>
 
 namespace COBJ
 {
+	class ActualParamDef;
+
 	class ObjectInitValueDef : public ValueDef
 	{
 	public:
 		ObjectInitValueDef(void);
+		ObjectInitValueDef(const pANTLR3_BASE_TREE node);
 		virtual ~ObjectInitValueDef(void);
 
 		const std::wstring& getClassName() const

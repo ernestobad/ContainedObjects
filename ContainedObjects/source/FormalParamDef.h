@@ -7,14 +7,17 @@
 
 #pragma once
 
-class Type;
+#include <antlr3defs.h>
 
 namespace COBJ {
+
+	class Type;
 
 	class FormalParamDef
 	{
 	public:
 		FormalParamDef();
+		FormalParamDef(const pANTLR3_BASE_TREE node);
 		virtual ~FormalParamDef();
 
 		const Type* getType() const

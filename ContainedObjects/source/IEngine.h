@@ -1,13 +1,13 @@
 
 #pragma once
 
-class IClass;
-class IInterface;
-class IVariable;
-class Type;
-
 namespace COBJ
 {
+	class IClass;
+	class IInterface;
+	class IVariable;
+	class Type;
+
 	class IEngine
     {
     public:

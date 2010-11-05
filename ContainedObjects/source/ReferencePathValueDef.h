@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ValueDef.h"
+#include <antlr3defs.h>
 
 namespace COBJ
 {
@@ -8,6 +9,8 @@ namespace COBJ
 	{
 	public:
 		ReferencePathValueDef(void);
+		ReferencePathValueDef(const pANTLR3_BASE_TREE node);
+
 		~ReferencePathValueDef(void);
 
 		const std::list<std::wstring>& getReferencePath() const

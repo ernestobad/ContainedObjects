@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <antlr3defs.h>
+
 namespace COBJ
 {
 	enum basic_type {
@@ -15,6 +17,7 @@ namespace COBJ
 	class Type
 	{
 	public:
+		Type(void);
 		Type(basic_type basicType);
 
         virtual ~Type();
@@ -25,7 +28,15 @@ namespace COBJ
 
 		virtual bool operator!=(const Type& type) const;
 
-	private:
+	protected:
 		basic_type m_BasicType;
 	};
+
+	void createType(
+			const pANTLR3_BASE_TREE node,
+			boost::shared_ptr<Type>& pType);
+
+	void createSimpleType(
+				const pANTLR3_BASE_TREE node,
+				boost::shared_ptr<Type>& pType);
 }

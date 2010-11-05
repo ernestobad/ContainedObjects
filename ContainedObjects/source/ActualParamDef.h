@@ -7,13 +7,16 @@
 
 #pragma once
 
-class ValueDef;
+#include <antlr3defs.h>
 
-namespace COBJ {
+namespace COBJ
+{
+	class ValueDef;
 
 	class ActualParamDef {
 	public:
 		ActualParamDef();
+		ActualParamDef(const pANTLR3_BASE_TREE node);
 		virtual ~ActualParamDef();
 
 		const std::wstring& getParamName() const

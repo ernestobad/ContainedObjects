@@ -34,7 +34,8 @@ tokens
 	N_VARDEF_ASSIGN;
 	
 	N_TYPE;
-	N_REFERENCE_TYPE;
+	N_OBJECT_TYPE;
+	N_CLASS_TYPE;
 	N_ARRAY_TYPE;
 	
 	N_VALUE;
@@ -166,14 +167,15 @@ type	:	arrayType	-> ^(N_ARRAY_TYPE arrayType)
 
 arrayType
 	:	simpleType '[' ']'
-		-> ^(N_SIMPLE_TYPE simpleType)
+		-> ^(N_TYPE simpleType)
 	;
 
 simpleType
- 	:	INTEGER_KW	-> N_INTEGER_TYPE
-	|	FLOAT_KW	-> N_FLOAT_TYPE
-	|	STRING_KW	-> N_STRING_TYPE
-	|	ID		-> ^(N_REFERENCE_TYPE ID)
+ 	:	INTEGER_KW		-> N_INTEGER_TYPE
+	|	FLOAT_KW		-> N_FLOAT_TYPE
+	|	STRING_KW		-> N_STRING_TYPE
+	|	ID			-> ^(N_OBJECT_TYPE ID)
+	|	CLASS_KW '<' ID '>'	-> ^(N_CLASS_TYPE ID)
 	;
 
  /*------------------------------------------------------------------
@@ -183,7 +185,7 @@ simpleType
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
 
-INTL :	'0'..'9'+
+INTL :	('+'|'-')? '0'..'9'+
     ;
 
 FLOATL
@@ -214,21 +216,21 @@ HEX_DIGIT : ('0'..'9'|'a'..'f'|'A'..'F') ;
 fragment
 ESC_SEQ
     :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
-    |   UNICODE_ESC
-    |   OCTAL_ESC
+//  |   UNICODE_ESC
+//  |   OCTAL_ESC
     ;
 
-fragment
-OCTAL_ESC
-    :   '\\' ('0'..'3') ('0'..'7') ('0'..'7')
-    |   '\\' ('0'..'7') ('0'..'7')
-    |   '\\' ('0'..'7')
-    ;
+//fragment
+//OCTAL_ESC
+//    :   '\\' ('0'..'3') ('0'..'7') ('0'..'7')
+//    |   '\\' ('0'..'7') ('0'..'7')
+//    |   '\\' ('0'..'7')
+//    ;
 
-fragment
-UNICODE_ESC
-   :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
-   ;
+//fragment
+//UNICODE_ESC
+//   :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+//   ;
 
 
 SPACE  : ( '\t' | ' ' | '\r' | '\n'| '\u000C' )+

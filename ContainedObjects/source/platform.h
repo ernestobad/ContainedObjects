@@ -11,12 +11,14 @@
 #include <windows.h>
 #endif
 
+#include <assert.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
 #include <stdio.h>
 
+#include <sstream>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -24,9 +26,10 @@
 #include <map>
 #include <vector>
 
-
+#include <boost/lexical_cast.hpp>
 #include <boost/smart_ptr/shared_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/scoped_array.hpp>
+#include <boost/format.hpp>
 
 #include "Error.h"

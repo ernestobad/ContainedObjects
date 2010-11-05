@@ -1,15 +1,17 @@
 #pragma once
 
-
-class FormalParamDef;
-class VariableDeclDef;
+#include <antlr3defs.h>
 
 namespace COBJ
 {
+	class FormalParamDef;
+	class VariableDeclDef;
+
 	class InterfaceDef
 	{
 	public:
 		InterfaceDef();
+		InterfaceDef(const pANTLR3_BASE_TREE node);
 
 		virtual ~InterfaceDef();
 

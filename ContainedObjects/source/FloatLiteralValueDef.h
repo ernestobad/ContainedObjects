@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LiteralValueDef.h"
+#include <antlr3defs.h>
 
 namespace COBJ
 {
@@ -8,6 +9,8 @@ namespace COBJ
 	{
 	public:
 		FloatLiteralValueDef(void);
+		FloatLiteralValueDef(const pANTLR3_BASE_TREE node);
+
 		virtual ~FloatLiteralValueDef(void);
 
 		float getFloatValue() const

@@ -1,13 +1,16 @@
 #pragma once
 
-class Type;
+#include <antlr3defs.h>
 
 namespace COBJ
 {
+	class Type;
+
 	class VariableDeclDef
 	{
 	public:
 		VariableDeclDef(void);
+		VariableDeclDef(const pANTLR3_BASE_TREE node);
 		virtual ~VariableDeclDef(void);
 
 		bool isStatic() const

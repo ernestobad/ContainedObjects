@@ -7,12 +7,16 @@
 
 #include "platform.h"
 #include "VariableDeclAssignDef.h"
+#include "antlr/ContainedObjectsLexer.h"
 
 namespace COBJ
 {
 
-	VariableDeclAssignDef::VariableDeclAssignDef() :
-		m_IsStatic(false), m_pDeclaredType(), m_Name(), m_pValue()
+	VariableDeclAssignDef::VariableDeclAssignDef()
+	{
+	}
+
+	VariableDeclAssignDef::VariableDeclAssignDef(const pANTLR3_BASE_TREE node)
 	{
 	}
 
