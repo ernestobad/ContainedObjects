@@ -25,8 +25,7 @@ tokens
 	N_IFACE_DECL;
 	
 	N_FORMAL_CLASS_PARAMS;
-	N_CLASS_BODY;
-	N_IFACE_BODY;
+	N_BODY;
 	N_IMPLEMENTS_DECL;
 	N_IMPLEMENTED_IFACE;
 	N_FORMAL_CLASS_PARAM;
@@ -80,25 +79,15 @@ init 	:	classDecl	-> ^(N_CLASS_DECL classDecl)
 // Interface
 	
 interfaceDecl
-	:	INTERFACE_KW ID '(' formalClassParamList ')' '{' interfaceBody '}' EOF
-		-> ^(N_IFACE_NAME ID) ^(N_FORMAL_CLASS_PARAMS formalClassParamList) ^(N_IFACE_BODY interfaceBody)
-	;
-	
-interfaceBody
-	:	varDef*
-		-> ^(N_VARDEF varDef)*
-	;
-	
-varDef
-	:	STATIC_KW? type ID ';'
-		-> ^(N_SCOPE STATIC_KW?) ^(N_TYPE type) ^(N_VAR_NAME ID)
+	:	INTERFACE_KW ID '(' formalClassParamList ')' '{' body '}' EOF
+		-> ^(N_IFACE_NAME ID) ^(N_FORMAL_CLASS_PARAMS formalClassParamList) ^(N_BODY body)
 	;
 
 // Class
 
 classDecl 
-	:	CLASS_KW ID '(' formalClassParamList ')' implementsDecl '{' classBody '}' EOF
-		-> ^(N_CLASS_NAME ID) ^(N_FORMAL_CLASS_PARAMS formalClassParamList) ^(N_IMPLEMENTS_DECL implementsDecl) ^(N_CLASS_BODY classBody)
+	:	CLASS_KW ID '(' formalClassParamList ')' implementsDecl '{' body '}' EOF
+		-> ^(N_CLASS_NAME ID) ^(N_FORMAL_CLASS_PARAMS formalClassParamList) ^(N_IMPLEMENTS_DECL implementsDecl) ^(N_BODY body)
 	;
 
 formalClassParamList 
@@ -115,14 +104,14 @@ implementsDecl
 		-> ^(N_IMPLEMENTED_IFACE ID)*
 	;
 
-classBody
-	:	varDefAssign*
-		-> ^(N_VARDEF_ASSIGN varDefAssign)*
+body
+	:	varDef*
+		-> ^(N_VARDEF varDef)*
 	;
 
-varDefAssign
-	:	STATIC_KW? type ID '=' value ';'
-		-> ^(N_SCOPE STATIC_KW?) ^(N_TYPE type) ^(N_VAR_NAME ID) ^(N_VALUE value)
+varDef
+	:	STATIC_KW? type ID ('=' value)? ';'
+		-> ^(N_SCOPE STATIC_KW?) ^(N_TYPE type) ^(N_VAR_NAME ID) ^(N_VALUE value)?
 	;
 
 actualParamList
@@ -153,7 +142,7 @@ literal	:	INTL	-> ^(N_INT_LITERAL INTL)
 
 arrayInit
 	:	simpleType '[' ']' '{' (value (',' value)*)? '}'
-		-> ^(N_ARRAY_TYPE simpleType) ^(N_ARRAY_VALUES value*)
+		-> ^(N_ARRAY_TYPE simpleType) ^(N_ARRAY_VALUES (N_VALUE value)*)
 	;
 
 objectInit

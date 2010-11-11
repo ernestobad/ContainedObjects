@@ -6,12 +6,12 @@
 namespace COBJ
 {
 	enum basic_type {
-		FLOAT_TYPE,
-		INTEGER_TYPE,
-		STRING_TYPE,
-		ARRAY_TYPE,
-		OBJECT_TYPE,
-		CLASS_TYPE
+		FLOAT_B_TYPE,
+		INTEGER_B_TYPE,
+		STRING_B_TYPE,
+		ARRAY_B_TYPE,
+		OBJECT_B_TYPE,
+		CLASS_B_TYPE
 	};
 
 	class Type

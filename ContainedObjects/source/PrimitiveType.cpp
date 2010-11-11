@@ -14,15 +14,15 @@ namespace COBJ
 	{
 		if (node->getType(node) == N_INTEGER_TYPE)
 		{
-			m_BasicType = INTEGER_TYPE;
+			m_BasicType = INTEGER_B_TYPE;
 		}
 		else if (node->getType(node) == N_FLOAT_TYPE)
 		{
-			m_BasicType = FLOAT_TYPE;
+			m_BasicType = FLOAT_B_TYPE;
 		}
 		else if (node->getType(node) == N_STRING_TYPE)
 		{
-			m_BasicType = STRING_TYPE;
+			m_BasicType = STRING_B_TYPE;
 		}
 		else
 		{

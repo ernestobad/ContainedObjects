@@ -15,5 +15,4 @@ namespace COBJ {
 
 	Value::~Value() {
 	}
-
 }

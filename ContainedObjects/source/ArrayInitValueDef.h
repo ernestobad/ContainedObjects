@@ -4,6 +4,7 @@
 #include <antlr3defs.h>
 
 
+
 namespace COBJ
 {
 	class Type;

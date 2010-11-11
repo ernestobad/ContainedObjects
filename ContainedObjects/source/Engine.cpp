@@ -133,7 +133,7 @@ namespace COBJ
 			}
 			else if (root->getType(root) == N_IFACE_DECL)
 			{
-				boost::shared_ptr<InterfaceDef> pClassDef(new InterfaceDef(root));
+				boost::shared_ptr<InterfaceDef> pInterfaceDef(new InterfaceDef(root));
 			}
 			else
 			{

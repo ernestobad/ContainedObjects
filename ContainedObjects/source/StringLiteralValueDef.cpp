@@ -97,13 +97,17 @@ namespace COBJ
 					}
 					break;
 				case END_STATE:
-					assert(curr == L'\0');
+					assert(false);
 					break;
 				default:
 					assert(false);
 					break;
 			}
+
+			assert(state == END_STATE);
 		}
+
+		
 
 		strBuff.str(m_StringValue);
 	}

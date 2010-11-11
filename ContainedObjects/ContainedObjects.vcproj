@@ -268,14 +268,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\VariableDeclAssignDef.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\VariableDeclAssignDef.h"
-				>
-			</File>
-			<File
 				RelativePath=".\source\VariableDeclDef.cpp"
 				>
 			</File>
@@ -382,11 +374,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\Context.cpp"
+				RelativePath=".\source\Context.h"
 				>
 			</File>
 			<File
-				RelativePath=".\source\Context.h"
+				RelativePath=".\source\ContextEntry.h"
 				>
 			</File>
 			<File
@@ -445,6 +437,18 @@
 		<Filter
 			Name="static"
 			>
+			<File
+				RelativePath=".\source\SemanticAnalysis.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\SemanticAnalysis.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\SemanticCheck.h"
+				>
+			</File>
 			<File
 				RelativePath=".\source\StaticContextEntry.cpp"
 				>

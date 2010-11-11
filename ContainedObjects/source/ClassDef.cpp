@@ -9,7 +9,7 @@
 #include "platform.h"
 #include "ClassDef.h"
 #include "FormalParamDef.h"
-#include "VariableDeclAssignDef.h"
+#include "VariableDeclDef.h"
 #include "antlr/ContainedObjectsLexer.h"
 
 
@@ -84,7 +84,7 @@ namespace COBJ
 			// body
 
 			n = (pANTLR3_BASE_TREE) node->getChild(node, 3);
-			assert(n->getType(n) == N_CLASS_BODY);
+			assert(n->getType(n) == N_BODY);
 
 			m_VariableDecls.clear();
 
@@ -94,7 +94,7 @@ namespace COBJ
 				c = (pANTLR3_BASE_TREE) n->getChild(n, i);
 				assert(c->getType(c) == N_VARDEF_ASSIGN);
 
-				boost::shared_ptr<VariableDeclAssignDef> pVarDeclAssign(new VariableDeclAssignDef(c));
+				boost::shared_ptr<VariableDeclDef> pVarDeclAssign(new VariableDeclDef(c));
 				m_VariableDecls.push_back(pVarDeclAssign);
 			}
 		}

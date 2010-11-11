@@ -28,36 +28,41 @@ namespace COBJ
 		return m_EntryType;
 	}
 
-	Result RuntimeContextEntry::getClass(boost::shared_ptr<IClass>& pClass) const
+	bool RuntimeContextEntry::getClass(boost::shared_ptr<IClass>& pClass) const
 	{
 		if (m_EntryType != CLASS_RT_CTX_ENTRY)
 		{
-			return ErrorCode::InvalidType;
+			return false;
 		}
 
 		pClass = boost::static_pointer_cast<IClass>(m_pEntry);
-		return ErrorCode::Ok;
+		return true;
 	}
 
-	Result RuntimeContextEntry::getInterface(boost::shared_ptr<IInterface>& pInterface) const
+	bool RuntimeContextEntry::getInterface(boost::shared_ptr<IInterface>& pInterface) const
 	{
 		if (m_EntryType != INTERFACE_RT_CTX_ENTRY)
 		{
-			return ErrorCode::InvalidType;
+			return false;
 		}
 
 		pInterface = boost::static_pointer_cast<IInterface>(m_pEntry);
-		return ErrorCode::Ok;
+		return true;
 	}
 
-	Result RuntimeContextEntry::getVariable(boost::shared_ptr<IVariable>& pVariable) const
+	bool RuntimeContextEntry::getVariable(boost::shared_ptr<IVariable>& pVariable) const
 	{
 		if (m_EntryType != VARIABLE_RT_CTX_ENTRY)
 		{
-			return ErrorCode::InvalidType;
+			return false;
 		}
 
 		pVariable = boost::static_pointer_cast<IVariable>(m_pEntry);
-		return ErrorCode::Ok;
+		return true;
+	}
+
+	const std::wstring& RuntimeContextEntry::getName() const
+	{
+		return m_Name;
 	}
 }

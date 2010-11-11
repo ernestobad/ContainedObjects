@@ -7,9 +7,11 @@
 
 #pragma once
 
-class Type;
+#include <antlr3defs.h>
 
 namespace COBJ {
+
+	class Type;
 
 	enum value_type
 	{
@@ -26,7 +28,7 @@ namespace COBJ {
 			return m_pInferredType;
 		}
 
-		void setInferredType(boost::shared_ptr<Type>& pInferredType)
+		void setInferredType(const boost::shared_ptr<Type>& pInferredType)
 		{
 			m_pInferredType = pInferredType;
 		}
@@ -46,5 +48,9 @@ namespace COBJ {
 		value_type m_ValueType;
 
 	};
+
+	void createValueDef(
+				const pANTLR3_BASE_TREE node,
+				boost::shared_ptr<ValueDef>& pType);
 
 }

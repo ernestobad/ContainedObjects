@@ -6,12 +6,12 @@ namespace COBJ
 {
 
 	ArrayType::ArrayType(const boost::shared_ptr<Type>& pChildType)
-		: Type(ARRAY_TYPE), m_pChildType(pChildType)
+		: Type(ARRAY_B_TYPE), m_pChildType(pChildType)
 	{
 	}
 
 	ArrayType::ArrayType(const pANTLR3_BASE_TREE node)
-		: Type(ARRAY_TYPE)
+		: Type(ARRAY_B_TYPE)
 	{
 		assert(node->getType(node) == N_ARRAY_TYPE);
 		assert(node->getChildCount(node) == 1);

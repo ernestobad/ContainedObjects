@@ -1,11 +1,14 @@
 #pragma once
 
-class IClass;
-class IInterface;
-class IVariable;
+#include "ContextEntry.h"
+
 
 namespace COBJ
 {
+	class IClass;
+	class IInterface;
+	class IVariable;
+
 	enum runtime_ctx_entry_type
 	{
 		CLASS_RT_CTX_ENTRY,
@@ -13,7 +16,7 @@ namespace COBJ
 		VARIABLE_RT_CTX_ENTRY
 	};
 
-	class RuntimeContextEntry
+	class RuntimeContextEntry : public ContextEntry
 	{
 	public:
 		RuntimeContextEntry(const boost::shared_ptr<IClass>& pClasss);
@@ -24,14 +27,17 @@ namespace COBJ
 
 		runtime_ctx_entry_type getType() const;
 
-		Result getClass(boost::shared_ptr<IClass>& pClass) const;
+		const std::wstring& getName() const;
 
-		Result getInterface(boost::shared_ptr<IInterface>& pInterface) const;
+		bool getClass(boost::shared_ptr<IClass>& pClass) const;
 
-		Result getVariable(boost::shared_ptr<IVariable>& pVariable) const;
+		bool getInterface(boost::shared_ptr<IInterface>& pInterface) const;
+
+		bool getVariable(boost::shared_ptr<IVariable>& pVariable) const;
 
 	private:
 		runtime_ctx_entry_type m_EntryType;
 		boost::shared_ptr<void> m_pEntry;
+		std::wstring m_Name;
 	};
 }

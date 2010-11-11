@@ -9,7 +9,7 @@ namespace COBJ
 		INTEGER_LITERAL, FLOAT_LITERAL, STRING_LITERAL
 	};
 
-	class LiteralValueDef : ValueDef
+	class LiteralValueDef : public ValueDef
 	{
 	public:
 		LiteralValueDef(literal_type literalType);

@@ -12,7 +12,7 @@
 namespace COBJ
 {
 	class FormalParamDef;
-	class VariableDeclAssignDef;
+	class VariableDeclDef;
 
 	class ClassDef {
 
@@ -53,12 +53,12 @@ namespace COBJ
 			m_ImplementedInterfaces = implementedInterfaces;
 		}
 
-		const std::list<boost::shared_ptr<VariableDeclAssignDef>>& getVariableDecls() const
+		const std::list<boost::shared_ptr<VariableDeclDef>>& getVariableDecls() const
 		{
 			return m_VariableDecls;
 		}
 
-		void setVariableDecls(const std::list<boost::shared_ptr<VariableDeclAssignDef>> &variableDecls)
+		void setVariableDecls(const std::list<boost::shared_ptr<VariableDeclDef>> &variableDecls)
 		{
 			m_VariableDecls = variableDecls;
 		}
@@ -67,7 +67,7 @@ namespace COBJ
 			std::wstring m_ClassName;
 			std::list<boost::shared_ptr<FormalParamDef>> m_FormalPrameters;
 			std::list<std::wstring> m_ImplementedInterfaces;
-			std::list<boost::shared_ptr<COBJ::VariableDeclAssignDef>> m_VariableDecls;
+			std::list<boost::shared_ptr<COBJ::VariableDeclDef>> m_VariableDecls;
 			bool m_IsNative;
 	};
 

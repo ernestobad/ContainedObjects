@@ -7,8 +7,8 @@ namespace COBJ
 {
 	enum reference_type
 	{
-		OBJECT_REF_TYPE = OBJECT_TYPE,
-		CLASS_REF_TYPE = CLASS_TYPE
+		OBJECT_REF_TYPE = OBJECT_B_TYPE,
+		CLASS_REF_TYPE = CLASS_B_TYPE
 	};
 
 	class ReferenceType : public Type

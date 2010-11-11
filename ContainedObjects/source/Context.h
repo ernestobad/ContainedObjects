@@ -12,22 +12,85 @@ namespace COBJ {
 	template <class E>
 	class Context {
 	public:
-		Context();
-		Context(const boost::shared_ptr<Context<E>>& pParentContext);
+		Context()
+			: m_pParentContext()
+		{
+		}
 
-		virtual ~Context();
+		Context(const boost::shared_ptr<Context<E>>& pParentContext) 
+			: m_pParentContext(pParentContext)
+		{
+		}
 
-		virtual Result lookup(
+		virtual ~Context()
+		{
+		}
+
+		virtual bool hasParent()
+		{
+			return m_pParentContext.get() != NULL;
+		}
+
+		virtual const boost::shared_ptr<Context<E>>& getParentContext()
+		{
+			return m_pParentContext;
+		}
+
+		virtual const Context<E>& getRootContext()
+		{
+			if (!hasParent())
+			{
+				return *this;
+			}
+			else
+			{
+				return m_pParentContext->getRootContext();
+			}
+		}
+
+		virtual bool lookup(
 			const std::wstring& name,
-			boost::shared_ptr<const E>& pEntry);
+			boost::shared_ptr<const E>& pEntry,
+			bool searchParents = true)
+		{
+			std::map<const std::wstring, boost::shared_ptr<const E>>::iterator it;
 
-		virtual Result addEntry(
-			const std::wstring& name,
-			const boost::shared_ptr<const E>& pEntry);
+			it = m_Map.find(name);
+
+			if (it == m_Map.end())
+			{
+				if (searchParents && this->hasParent())
+				{
+					return m_pParentContext->lookup(name, pEntry, searchParents);
+				}
+
+				return false;
+			}
+
+			pEntry = it->second;
+			return true;
+		}
+
+		virtual bool addEntry(
+			const boost::shared_ptr<const E>& pEntry)
+		{
+			std::map<const std::wstring, boost::shared_ptr<const E>>::iterator it;
+
+			it = m_Map.find(pEntry->getName());
+
+			if (it != m_Map.end())
+			{
+				return false;
+			}
+
+			m_Map[pEntry->getName()] = pEntry;
+
+			return true;
+		}
 
 	private:
-		boost::shared_ptr<Context<E>> m_ParentContext;
-		std::map<std::wstring, boost::shared_ptr<const E>> m_Map;
+		boost::shared_ptr<Context<E>> m_pParentContext;
+		std::map<const std::wstring, boost::shared_ptr<const E>> m_Map;
 	};
 
 }

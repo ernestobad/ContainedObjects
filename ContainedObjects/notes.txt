@@ -3,25 +3,25 @@ setters should make the object take ownership of the object parameter
 ClassDef*
 	FormalParamDef*
 		(Type)*
-	VariableDeclAssignDef
+	VariableDeclAssignDef*
 		(Type)*
-		ValueDef
+		ValueDef*
 			(Type)*
 			LiteralValueDef
 				(IntegerLiteralValueDef)*
 				(StringLiteralValueDef)*
 				(FloatLiteralValueDef)*
-			(ReferencePathValueDef)
-			(ObjectInitValueDef)
-				ActualParamDef
-					[ValueDef]
-			ArrayInitValueDef
+			(ReferencePathValueDef)*
+			(ObjectInitValueDef)*
+				ActualParamDef*
+					[ValueDef]*
+			ArrayInitValueDef*
 				(Type)*
-				[ValueDef]
+				[ValueDef]*
 
-InterfaceDef
+InterfaceDef*
 	[FormalParamDef]*
-	VariableDeclDef
+	VariableDeclDef*
 		(Type)*
 
 ----
@@ -49,14 +49,26 @@ NativeObjectFactoryImpl implements INativeObjectFactory {
 -----------------------------------------------
 Validations:
 
-* all methods in the implemented interface must exist in the class.
+* all vars in the implemented interface must exist in the class.
 * constructor signature must be equal to the interfaces'
-
-* Param names on objectInit must match with class declaration.
-* Types must exist.
-* Names cannot repeat on the same context.
+* class variables should be assigned.
 * Interfaces cannot be instantiated.
 
+* Param names on objectInit must match with class declaration. : infer param types first.
+* names & references check.
+* Names cannot repeat on the same context.
+* type check: variables, actual parameters.
+* recursive references are not allowed.
+
+* static vars cannot refer non static vars or parameters.
+
+
+context:
+	class names, interface names.
+	variable names,
+	paramter names.
+	
+values: classes, objects, arrays, literals.
 
 -----------------------------------------------
 

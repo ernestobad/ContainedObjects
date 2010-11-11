@@ -5,7 +5,7 @@
 
 namespace COBJ
 {
-	class ReferencePathValueDef : ValueDef
+	class ReferencePathValueDef : public ValueDef
 	{
 	public:
 		ReferencePathValueDef(void);
