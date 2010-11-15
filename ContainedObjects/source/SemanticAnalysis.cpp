@@ -2,11 +2,12 @@
 #include "SemanticAnalysis.h"
 #include "Context.h"
 #include "StaticContextEntry.h"
-#include "SemanticCheck.h"
+#include "ICheck.h"
 #include "ClassDef.h"
 #include "InterfaceDef.h"
 #include "ValueDef.h"
 #include "VariableDeclDef.h"
+#include "FormalParamDef.h"
 #include "ObjectInitValueDef.h"
 #include "ArrayInitValueDef.h"
 #include "LiteralValueDef.h"
@@ -15,10 +16,15 @@
 #include "Type.h"
 #include "PrimitiveType.h"
 #include "ReferenceType.h"
+#include "Log.h"
+#include "LogEntry.h"
 
 namespace COBJ
 {
-	SemanticAnalysis::SemanticAnalysis(void)
+	using namespace std;
+
+	SemanticAnalysis::SemanticAnalysis(const boost::shared_ptr<Log>& pLog)
+		: m_pLog(pLog)
 	{
 	}
 
@@ -26,127 +32,124 @@ namespace COBJ
 	{
 	}
 
-	void SemanticAnalysis::addCheck(const boost::shared_ptr<SemanticCheck>& pSemanticCheck)
+	void SemanticAnalysis::addCheck(const ICheckPtr& pCheck)
 	{
 
 	}
 
 	void SemanticAnalysis::analyze(
-			std::list<boost::shared_ptr<ClassDef>> classes,
-			std::list<boost::shared_ptr<InterfaceDef>> interfaces)
+			list<ClassDefPtr> classes,
+			list<InterfaceDefPtr> interfaces)
 	{
-		Context<StaticContextEntry> rootCtx;
+		StaticContextPtr pRootCtx;
 
-		std::list<boost::shared_ptr<ClassDef>>::iterator cit;
+		list<ClassDefPtr>::iterator cit;
 
 		for (cit = classes.begin(); cit != classes.end(); cit++)
 		{
-			boost::shared_ptr<StaticContextEntry> entry(new StaticContextEntry(*cit));
-			rootCtx.addEntry(entry);
+			ConstStaticContextEntryPtr entry(new StaticContextEntry(*cit));
+			pRootCtx->addEntry(entry);
 		}
 
-		std::list<boost::shared_ptr<InterfaceDef>>::iterator iit;
+		list<InterfaceDefPtr>::iterator iit;
 
 		for (iit = interfaces.begin(); iit != interfaces.end(); iit++)
 		{
-			boost::shared_ptr<StaticContextEntry> entry(new StaticContextEntry(*iit));
-			rootCtx.addEntry(entry);
+			ConstStaticContextEntryPtr entry(new StaticContextEntry(*iit));
+			pRootCtx->addEntry(entry);
 		}
 
 
 	}
 
 	void SemanticAnalysis::inferTypes(
-			std::list<boost::shared_ptr<ClassDef>>& classes,
-			const Context<StaticContextEntry>& rootCtx)
+			list<ClassDefPtr>& classes,
+			ConstStaticContextPtr& rootCtx)
 	{
-		std::list<boost::shared_ptr<ClassDef>>::iterator cit;
+		list<ClassDefPtr>::iterator cit;
 
 		for (cit = classes.begin(); cit != classes.end(); cit++)
 		{
-			boost::shared_ptr<ClassDef>& pClassDef = *cit;
+			ClassDefPtr& pClassDef = *cit;
 
-			Context<StaticContextEntry> classCtx(rootCtx);
+			StaticContextPtr pClassCtx(new StaticContext(rootCtx));
 
-			initClassContext(classCtx, pClassDef);
+			initClassContext(*pClassCtx, *pClassDef);
 
-			const std::list<boost::shared_ptr<VariableDeclDef>>& variables = pClassDef->getVariableDecls();
+			const list<VariableDeclDefPtr>& variables = pClassDef->getVariableDecls();
 
-			std::list<boost::shared_ptr<VariableDeclDef>>::const_iterator vit;
+			list<VariableDeclDefPtr>::const_iterator vit;
 
 			for (vit = variables.begin(); vit != variables.end(); vit++)
 			{
-				const boost::shared_ptr<VariableDeclDef>& pVariable = *vit;
-				const boost::shared_ptr<ValueDef>& pValueDef = pVariable->getValue();
+				const VariableDeclDefPtr& pVariable = *vit;
+				const ValueDefPtr& pValueDef = pVariable->getValue();
 
-				inferTypes(pValueDef, classCtx);
+				inferTypes(*pValueDef, rootCtx);
 			}
 		}
 	}
 
 	void SemanticAnalysis::inferTypes(
-		const boost::shared_ptr<ValueDef>& pValueDef,
-		const Context<StaticContextEntry>& classCtx)
+		ValueDef& valueDef,
+		ConstStaticContextPtr& pClassCtx)
 	{
-		switch (pValueDef->getValueType())
+		switch (valueDef.getValueType())
 		{
 		case OBJECT_INIT:
 			{
-				boost::shared_ptr<ObjectInitValueDef>& pObjectInitDef = 
-					boost::static_pointer_cast<ObjectInitValueDef, ValueDef>(pValueDef);
+				const ObjectInitValueDef& objectInitDef = static_cast<const ObjectInitValueDef&>(valueDef);
 
-				boost::shared_ptr<Type> pType = boost::shared_ptr<Type>(
-					new ReferenceType(OBJECT_REF_TYPE, pObjectInitDef->getClassName()));
+				TypePtr pType = TypePtr(
+					new ReferenceType(OBJECT_REF_TYPE, objectInitDef.getClassName()));
 
-				pValueDef->setInferredType(pType);
+				valueDef.setInferredType(pType);
 
-				const std::list<boost::shared_ptr<ActualParamDef>>& actualParams = pObjectInitDef->getActualParams();
+				const map<const wstring, ActualParamDefPtr>& actualParamsMap = objectInitDef.getActualParamsMap();
 
-				std::list<boost::shared_ptr<ActualParamDef>>::const_iterator it;
+				map<const wstring, ActualParamDefPtr>::const_iterator it;
 
-				for (it = actualParams.begin(); it != actualParams.end(); it++)
+				for (it = actualParamsMap.begin(); it != actualParamsMap.end(); it++)
 				{
-					const boost::shared_ptr<ActualParamDef>& pActualParamDef = *it;
-					const boost::shared_ptr<ValueDef>& pParamValueDef = pActualParamDef->getValue();
+					const ActualParamDefPtr& pActualParamDef = (*it).second;
+					const ValueDefPtr& pParamValueDef = pActualParamDef->getValue();
 
-					inferTypes(pParamValueDef, classCtx);
+					inferTypes(*pParamValueDef, pClassCtx);
 				}
 			}
 			break;
 		case ARRAY_INIT:
 			{
-				boost::shared_ptr<ArrayInitValueDef>& pArrayInitDef = 
-					boost::static_pointer_cast<ArrayInitValueDef, ValueDef>(pValueDef);
+				const ArrayInitValueDef& arrayInitDef = static_cast<const ArrayInitValueDef&>(valueDef);
 
-				pValueDef->setInferredType(pArrayInitDef->getDeclaredType());
+				valueDef.setInferredType(arrayInitDef.getDeclaredType());
 
-				const std::list<boost::shared_ptr<ValueDef>>& arrayValues = pArrayInitDef->getValues();
+				const list<ValueDefPtr>& arrayValues = arrayInitDef.getValues();
 
-				std::list<boost::shared_ptr<ValueDef>>::const_iterator it;
+				list<ValueDefPtr>::const_iterator it;
 
 				for (it = arrayValues.begin(); it != arrayValues.end(); it++)
 				{
-					const boost::shared_ptr<ValueDef>& pArrayValue = *it;
+					const ValueDefPtr& pArrayValue = *it;
 
-					inferTypes(pArrayValue, classCtx);
+					inferTypes(*pArrayValue, pClassCtx);
 				}
 			}
 			break;
 		case LITERAL:
 			{
-				boost::shared_ptr<LiteralValueDef>& pLiteralInitDef = 
-					boost::static_pointer_cast<LiteralValueDef, ValueDef>(pValueDef);
+				const LiteralValueDef& literalDef = static_cast<const LiteralValueDef&>(valueDef);
 
-				switch (pLiteralInitDef->getLiteralType())
+				switch (literalDef.getLiteralType())
 				{
 				case INTEGER_LITERAL:
-					pValueDef->setInferredType(P_INTEGER_TYPE);
+					valueDef.setInferredType(P_INTEGER_TYPE);
 					break;
 				case FLOAT_LITERAL:
-					pValueDef->setInferredType(P_FLOAT_TYPE);
+					valueDef.setInferredType(P_FLOAT_TYPE);
 					break;
 				case STRING_LITERAL:
-					pValueDef->setInferredType(P_STRING_TYPE);
+					valueDef.setInferredType(P_STRING_TYPE);
 					break;
 				default:
 					assert(false);
@@ -156,21 +159,91 @@ namespace COBJ
 			break;
 		case REFERENCE_PATH:
 			{
-				boost::shared_ptr<ReferencePathValueDef>& pReferencePathDef = 
-					boost::static_pointer_cast<ReferencePathValueDef, ValueDef>(pValueDef);
+				const ReferencePathValueDef& referencePathDef = static_cast<const ReferencePathValueDef&>(valueDef);
 
-				const std::list<std::wstring>& path = pReferencePathDef->getReferencePath();
+				const list<wstring>& path = referencePathDef.getReferencePath();
 
-				boost::shared_ptr<StaticContextEntry> pEntry;
+				StaticContextEntryPtr pEntry;
 
-				std::list<std::wstring>::const_iterator it;
+				ConstTypePtr pCurrentType;
+
+				list<wstring>::const_iterator it;
 
 				for (it = path.begin(); it != path.end(); it++)
 				{
-					const std::wstring& pathElement = *it;
+					const wstring& pathElement = *it;
 
+					if (it == path.begin())
+					{
+						ConstStaticContextEntryPtr pEntry;
 
+						if (!pClassCtx->lookup(pathElement, pEntry))
+						{
+							boost::wformat f(L"Unable to resolve name %1%");
+							f % pathElement;
+							m_pLog->addError(referencePathDef, f.str());
+							return;
+						}
+						else
+						{
+							switch (pEntry->getStaticEntryType())
+							{
+							case CLASS_DEF_CTX_ENTRY:
+								{
+									TypePtr pType(new ReferenceType(CLASS_REF_TYPE, pEntry->getName()));
+									pCurrentType = pType;
+								}
+								break;
+							case INTERFACE_DEF_CTX_ENTRY:
+								{
+									TypePtr pType(new ReferenceType(CLASS_REF_TYPE, pEntry->getName()));
+									pCurrentType = pType;
+								}
+								break;
+							case VARIABLE_DEF_CTX_ENTRY:
+								{
+									VariableDeclDefPtr pVariableDef;
+									pEntry->getVariable(pVariableDef);
+									pCurrentType = pVariableDef->getDeclaredType();
+								}
+								break;
+							case FORMAL_PARAM_DEF_CTX_ENTRY:
+								{
+									FormalParamDefPtr pFormalParamDef;
+									pEntry->getFormalParam(pFormalParamDef);
+									pCurrentType = pFormalParamDef->getType();
+								}
+								break;
+							default:
+								assert(false);
+								return;
+							}
+						}
+					}
+					else
+					{
+						assert(pCurrentType.get() != NULL);
+
+						ConstStaticContextPtr pRootCtx = pClassCtx;
+						pClassCtx->getRootContext(pRootCtx);
+
+						if (!followPathElement(
+								*pCurrentType,
+								*pRootCtx,
+								pathElement,
+								pCurrentType))
+						{
+							boost::wformat f(L"Unable to resolve name %1%");
+							f % pathElement;
+							m_pLog->addError(referencePathDef, f.str());
+							return;
+						}
+					}
 				}
+
+				assert(pCurrentType.get() != NULL);
+
+				valueDef.setInferredType(pCurrentType);
 			}
 			break;
 		default:
@@ -179,36 +252,109 @@ namespace COBJ
 		}
 	}
 
-	bool SemanticAnalysis::followPath(
-			const boost::shared_ptr<Type>& pCurrentType,
-			const 
-			const std::wstring& pathElement,
-			boost::shared_ptr<Type>& pNextType)
+	bool SemanticAnalysis::followPathElement(
+			const Type& currentType,
+			const StaticContext& rootCtx,
+			const wstring& pathElement,
+			ConstTypePtr& pNextType)
 	{
+		boolean isObject = false;
+		switch (currentType.getBasicType())
+		{
+		case FLOAT_B_TYPE:
+		case INTEGER_B_TYPE:
+		case STRING_B_TYPE:
+		case ARRAY_B_TYPE:
+			{
+				return false;
+			}
+		case OBJECT_B_TYPE:
+		case CLASS_B_TYPE:
+			{
+				const ReferenceType& refType = static_cast<const ReferenceType&>(currentType);
+				const wstring& className = refType.getReferenceTypeName();
+
+				ConstStaticContextEntryPtr pEntry;
+
+				if (!rootCtx.lookup(className, pEntry))
+				{
+					return false;
+				}
+
+				list<VariableDeclDefPtr> varsDecls;
+
+				if (pEntry->getStaticEntryType() == CLASS_DEF_CTX_ENTRY)
+				{
+					ClassDefPtr pClassDefEntry;
+					pEntry->getClass(pClassDefEntry);
+
+					varsDecls = pClassDefEntry->getVariableDecls();
+				}
+				else if (pEntry->getStaticEntryType() == INTERFACE_DEF_CTX_ENTRY)
+				{
+					InterfaceDefPtr pInterfaceDefEntry;
+					pEntry->getInterface(pInterfaceDefEntry);
+
+					varsDecls = pInterfaceDefEntry->getVariableDecls();
+				}
+				else
+				{
+					return false;
+				}
+
+				bool isObject = (refType.getBasicType() == OBJECT_REF_TYPE);
+
+				list<VariableDeclDefPtr>::const_iterator it;
+
+				for (it = varsDecls.begin(); it != varsDecls.end(); it++)
+				{
+					VariableDeclDefPtr varDecl = *it;
+					if (varDecl->getName() == pathElement)
+					{
+						if (isObject && varDecl->isStatic())
+						{
+							return false;
+						}
+						else if (!isObject && !varDecl->isStatic())
+						{
+							return false;
+						}
+
+						pNextType = varDecl->getDeclaredType();
+						return true;
+					}
+				}
+			}
+			break;
+		default:
+			assert(false);
+		}
+
 		return false;
 	}
 
 	void SemanticAnalysis::initClassContext(
-		Context<StaticContextEntry>& ctx,
-		const boost::shared_ptr<ClassDef> pClassDef)
+		StaticContext& ctx,
+		const ClassDef& classDef)
 	{
-		const std::list<boost::shared_ptr<FormalParamDef>>& formalParams = pClassDef->getFormalParameters();
+		const map<const wstring, FormalParamDefPtr>& formalParamsMap = classDef.getFormalParametersMap();
 
-		std::list<boost::shared_ptr<FormalParamDef>>::const_iterator fpit;
+		map<const wstring, FormalParamDefPtr>::const_iterator fpit;
 
-		for (fpit = formalParams.begin(); fpit != formalParams.end(); fpit++)
+		for (fpit = formalParamsMap.begin(); fpit != formalParamsMap.end(); fpit++)
 		{
-			boost::shared_ptr<StaticContextEntry> entry(new StaticContextEntry(*fpit));
+			FormalParamDefPtr pFormalParamDef = (*fpit).second;
+			StaticContextEntryPtr entry(new StaticContextEntry(pFormalParamDef));
 			ctx.addEntry(entry);
 		}
 
-		const std::list<boost::shared_ptr<VariableDeclDef>>& variables = pClassDef->getVariableDecls();
+		const list<VariableDeclDefPtr>& variables = classDef.getVariableDecls();
 
-		std::list<boost::shared_ptr<VariableDeclDef>>::const_iterator vit;
+		list<VariableDeclDefPtr>::const_iterator vit;
 
 		for (vit = variables.begin(); vit != variables.end(); vit++)
 		{
-			boost::shared_ptr<StaticContextEntry> entry(new StaticContextEntry(*vit));
+			StaticContextEntryPtr entry(new StaticContextEntry(*vit));
 			ctx.addEntry(entry);
 		}
 	}

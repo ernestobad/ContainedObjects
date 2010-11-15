@@ -20,6 +20,9 @@ namespace COBJ
 
 		~ReferenceType(void);
 
+		
+		reference_type getReferenceType() const;
+
 		const std::wstring& getReferenceTypeName() const;
 
 		bool operator==(const Type& type) const;

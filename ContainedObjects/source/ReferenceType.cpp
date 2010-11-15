@@ -37,6 +37,11 @@ namespace COBJ
 	{
 	}
 
+	reference_type ReferenceType::getReferenceType() const
+	{
+		return (reference_type) getBasicType();
+	}
+
 	const std::wstring& ReferenceType::getReferenceTypeName() const
 	{
 		return m_ReferenceTypeName;

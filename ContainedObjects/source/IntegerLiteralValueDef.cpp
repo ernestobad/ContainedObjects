@@ -11,7 +11,7 @@ namespace COBJ
 	}
 
 	IntegerLiteralValueDef::IntegerLiteralValueDef(const pANTLR3_BASE_TREE node)
-		: LiteralValueDef(INTEGER_LITERAL)
+		: LiteralValueDef(INTEGER_LITERAL, node)
 	{
 		assert(node->getType(node) == N_INT_LITERAL);
 		assert(node->getChildCount(node) == 1);

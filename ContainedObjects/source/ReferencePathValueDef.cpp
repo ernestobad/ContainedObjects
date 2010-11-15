@@ -5,10 +5,12 @@
 namespace COBJ
 {
 	ReferencePathValueDef::ReferencePathValueDef(void)
+		: ValueDef(REFERENCE_PATH)
 	{
 	}
 
 	ReferencePathValueDef::ReferencePathValueDef(const pANTLR3_BASE_TREE node)
+		: ValueDef(REFERENCE_PATH, node)
 	{
 		assert(node->getType(node) == N_REFERENCE_VAL);
 		assert(node->getChildCount(node) >= 1);

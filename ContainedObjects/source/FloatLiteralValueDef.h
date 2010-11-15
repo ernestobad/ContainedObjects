@@ -2,6 +2,7 @@
 
 #include "LiteralValueDef.h"
 #include <antlr3defs.h>
+#include "ast_types.h"
 
 namespace COBJ
 {
@@ -12,6 +13,11 @@ namespace COBJ
 		FloatLiteralValueDef(const pANTLR3_BASE_TREE node);
 
 		virtual ~FloatLiteralValueDef(void);
+
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_FLOAT_LITERAL_VALUE;
+		}
 
 		float getFloatValue() const
 		{

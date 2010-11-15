@@ -188,6 +188,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\source\ast_types.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\ASTNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\ASTNode.h"
+				>
+			</File>
+			<File
 				RelativePath=".\source\ClassDef.cpp"
 				>
 			</File>
@@ -374,6 +386,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\source\common_types.h"
+				>
+			</File>
+			<File
 				RelativePath=".\source\Context.h"
 				>
 			</File>
@@ -399,6 +415,22 @@
 			</File>
 			<File
 				RelativePath=".\source\exceptions.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\Log.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\Log.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\LogEntry.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\LogEntry.h"
 				>
 			</File>
 			<File
@@ -438,6 +470,18 @@
 			Name="static"
 			>
 			<File
+				RelativePath=".\source\ICheck.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\ObjectInitCheck.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\ObjectInitCheck.h"
+				>
+			</File>
+			<File
 				RelativePath=".\source\SemanticAnalysis.cpp"
 				>
 			</File>
@@ -446,7 +490,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\SemanticCheck.h"
+				RelativePath=".\source\static_types.h"
 				>
 			</File>
 			<File

@@ -1,19 +1,23 @@
 #pragma once
 
 #include <antlr3defs.h>
+#include "ASTNode.h"
+#include "ast_types.h"
 
 namespace COBJ
 {
-	class FormalParamDef;
-	class VariableDeclDef;
-
-	class InterfaceDef
+	class InterfaceDef : public ASTNode
 	{
 	public:
 		InterfaceDef();
 		InterfaceDef(const pANTLR3_BASE_TREE node);
 
 		virtual ~InterfaceDef();
+
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_INTERFACE;
+		}
 
 		const std::wstring& getIntefaceName() const
 		{
@@ -25,29 +29,29 @@ namespace COBJ
 			m_InterfaceName = interfaceName;
 		}
 
-		const std::list<boost::shared_ptr<FormalParamDef>>& getFormalParameters() const
+		const std::list<FormalParamDefPtr>& getFormalParameters() const
 		{
 			return m_FormalPrameters;
 		}
 
-		void setFormalParameters(const std::list<boost::shared_ptr<FormalParamDef>>& formalParameters)
+		void setFormalParameters(const std::list<FormalParamDefPtr>& formalParameters)
 		{
 			m_FormalPrameters = formalParameters;
 		}
 
-		const std::list<boost::shared_ptr<VariableDeclDef>>& getVariableDecls() const
+		const std::list<VariableDeclDefPtr>& getVariableDecls() const
 		{
 			return m_VariableDecls;
 		}
 
-		void setVariableDecls(const std::list<boost::shared_ptr<VariableDeclDef>> &variableDecls)
+		void setVariableDecls(const std::list<VariableDeclDefPtr> &variableDecls)
 		{
 			m_VariableDecls = variableDecls;
 		}
 
 	private:
 		std::wstring m_InterfaceName;
-		std::list<boost::shared_ptr<FormalParamDef>> m_FormalPrameters;
-		std::list<boost::shared_ptr<VariableDeclDef>> m_VariableDecls;
+		std::list<FormalParamDefPtr> m_FormalPrameters;
+		std::list<VariableDeclDefPtr> m_VariableDecls;
 	};
 }

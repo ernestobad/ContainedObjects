@@ -2,13 +2,11 @@
 
 #include "ValueDef.h"
 #include <antlr3defs.h>
-
-
+#include "ast_types.h"
+#include "common_types.h"
 
 namespace COBJ
 {
-	class Type;
-
 	class ArrayInitValueDef : public ValueDef
 	{
 	public:
@@ -17,29 +15,33 @@ namespace COBJ
 
 		virtual ~ArrayInitValueDef(void);
 
-		const std::list<boost::shared_ptr<ValueDef>>& getValues() const
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_ARRAY_INIT_VALUE;
+		}
+
+		const std::list<ValueDefPtr>& getValues() const
 		{
 			return m_Values;
 		}
 
-		void setValues(const std::list<boost::shared_ptr<ValueDef>>& values)
+		void setValues(const std::list<ValueDefPtr>& values)
 		{
 			m_Values = values;
 		}
 
-		const boost::shared_ptr<Type>& getDeclaredType() const
+		const TypePtr& getDeclaredType() const
 		{
 			return m_pDeclaredType;
 		}
 
-		void setDeclaredType(const boost::shared_ptr<Type>& pDeclaredType)
+		void setDeclaredType(const TypePtr& pDeclaredType)
 		{
 			m_pDeclaredType = pDeclaredType;
 		}
 
 	private:
-		std::list<boost::shared_ptr<ValueDef>> m_Values;
-		boost::shared_ptr<Type> m_pDeclaredType;
+		std::list<ValueDefPtr> m_Values;
+		TypePtr m_pDeclaredType;
 	};
-
 }

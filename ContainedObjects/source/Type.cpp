@@ -32,7 +32,7 @@ namespace COBJ
 
 	void createType(
 				const pANTLR3_BASE_TREE node,
-				boost::shared_ptr<Type>& pType)
+				ConstTypePtr& pType)
 	{
 		assert(node->getType(node) == N_TYPE);
 		assert(node->getChildCount(node) == 1);
@@ -53,7 +53,7 @@ namespace COBJ
 
 	void createSimpleType(
 			const pANTLR3_BASE_TREE node,
-			boost::shared_ptr<Type>& pType)
+			ConstTypePtr& pType)
 	{
 		assert(node->getType(node) == N_SIMPLE_TYPE);
 		assert(node->getChildCount(node) == 1);

@@ -7,22 +7,22 @@
 
 namespace COBJ
 {
-	StaticContextEntry::StaticContextEntry(const boost::shared_ptr<ClassDef>& pClassDef)
+	StaticContextEntry::StaticContextEntry(const ClassDefPtr& pClassDef)
 		: m_EntryType(CLASS_DEF_CTX_ENTRY), m_pEntry(pClassDef), m_Name(pClassDef->getClassName())
 	{
 	}
 
-	StaticContextEntry::StaticContextEntry(const boost::shared_ptr<InterfaceDef>& pInterfaceDef)
+	StaticContextEntry::StaticContextEntry(const InterfaceDefPtr& pInterfaceDef)
 		: m_EntryType(INTERFACE_DEF_CTX_ENTRY), m_pEntry(pInterfaceDef), m_Name(pInterfaceDef->getIntefaceName())
 	{
 	}
 
-	StaticContextEntry::StaticContextEntry(const boost::shared_ptr<VariableDeclDef>& pVariableDef)
+	StaticContextEntry::StaticContextEntry(const VariableDeclDefPtr& pVariableDef)
 		: m_EntryType(VARIABLE_DEF_CTX_ENTRY), m_pEntry(pVariableDef), m_Name(pVariableDef->getName())
 	{
 	}
 
-	StaticContextEntry::StaticContextEntry(const boost::shared_ptr<FormalParamDef>& pFormalParamDef)
+	StaticContextEntry::StaticContextEntry(const FormalParamDefPtr& pFormalParamDef)
 		: m_EntryType(FORMAL_PARAM_DEF_CTX_ENTRY), m_pEntry(pFormalParamDef), m_Name(pFormalParamDef->getParamName())
 	{
 	}
@@ -31,12 +31,12 @@ namespace COBJ
 	{
 	}
 
-	static_ctx_entry_type StaticContextEntry::getType() const
+	static_ctx_entry_type StaticContextEntry::getStaticEntryType() const
 	{
 		return m_EntryType;
 	}
 
-	bool StaticContextEntry::getClass(boost::shared_ptr<ClassDef>& pClassDef) const
+	bool StaticContextEntry::getClass(ClassDefPtr& pClassDef) const
 	{
 		if (m_EntryType != CLASS_DEF_CTX_ENTRY)
 			return false;
@@ -45,7 +45,7 @@ namespace COBJ
 		return true;
 	}
 
-	bool StaticContextEntry::getInterface(boost::shared_ptr<InterfaceDef>& pInterfaceDef) const
+	bool StaticContextEntry::getInterface(InterfaceDefPtr& pInterfaceDef) const
 	{
 		if (m_EntryType != INTERFACE_DEF_CTX_ENTRY)
 			return false;
@@ -54,7 +54,7 @@ namespace COBJ
 		return true;
 	}
 
-	bool StaticContextEntry::getVariable(boost::shared_ptr<VariableDeclDef>& pVariableDef) const
+	bool StaticContextEntry::getVariable(VariableDeclDefPtr& pVariableDef) const
 	{
 		if (m_EntryType != VARIABLE_DEF_CTX_ENTRY)
 			return false;
@@ -63,7 +63,7 @@ namespace COBJ
 		return true;
 	}
 
-	bool StaticContextEntry::getFormalParam(boost::shared_ptr<FormalParamDef>& pFormalParamDef) const
+	bool StaticContextEntry::getFormalParam(FormalParamDefPtr& pFormalParamDef) const
 	{
 		if (m_EntryType != FORMAL_PARAM_DEF_CTX_ENTRY)
 			return false;

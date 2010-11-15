@@ -54,6 +54,7 @@ Validations:
 * class variables should be assigned.
 * Interfaces cannot be instantiated.
 
+* names at objectInit must belong to a class
 * Param names on objectInit must match with class declaration. : infer param types first.
 * names & references check.
 * Names cannot repeat on the same context.

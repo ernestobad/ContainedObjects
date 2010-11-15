@@ -2,10 +2,11 @@
 
 #include "ValueDef.h"
 #include <antlr3defs.h>
+#include "ast_types.h"
 
 namespace COBJ
 {
-	class ActualParamDef;
+	using namespace std;
 
 	class ObjectInitValueDef : public ValueDef
 	{
@@ -14,28 +15,33 @@ namespace COBJ
 		ObjectInitValueDef(const pANTLR3_BASE_TREE node);
 		virtual ~ObjectInitValueDef(void);
 
-		const std::wstring& getClassName() const
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_OBJECT_INIT_VALUE;
+		}
+
+		const wstring& getClassName() const
 		{
 			return m_ClassName;
 		}
 
-		void setClassName(const std::wstring& className)
+		void setClassName(const wstring& className)
 		{
 			m_ClassName = className;
 		}
 
-		const std::list<boost::shared_ptr<ActualParamDef>>& getActualParams()
+		const map<const wstring, ActualParamDefPtr>& getActualParamsMap() const
 		{
-			return m_ActualParams;
+			return m_ActualParamsMap;
 		}
 
-		void setActualParams(const std::list<boost::shared_ptr<ActualParamDef>>& actualParams)
+		void setActualParamsMap(const map<const wstring, ActualParamDefPtr>& actualParamsMap)
 		{
-			m_ActualParams = actualParams;
+			m_ActualParamsMap = actualParamsMap;
 		}
 
 	private:
-		std::wstring m_ClassName;
-		std::list<boost::shared_ptr<ActualParamDef>> m_ActualParams;
+		wstring m_ClassName;
+		map<const wstring, ActualParamDefPtr> m_ActualParamsMap;
 	};
 }

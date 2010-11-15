@@ -11,6 +11,7 @@ namespace COBJ
 	}
 
 	InterfaceDef::InterfaceDef(const pANTLR3_BASE_TREE node)
+		: ASTNode(node)
 	{
 		assert(node->getType(node) == N_IFACE_DECL);
 		assert(node->getChildCount(node) == 3);

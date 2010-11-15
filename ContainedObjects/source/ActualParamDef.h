@@ -8,16 +8,25 @@
 #pragma once
 
 #include <antlr3defs.h>
+#include "ASTNode.h"
+#include "ast_types.h"
 
 namespace COBJ
 {
 	class ValueDef;
 
-	class ActualParamDef {
+	class ActualParamDef : public ASTNode
+	{
 	public:
 		ActualParamDef();
 		ActualParamDef(const pANTLR3_BASE_TREE node);
+
 		virtual ~ActualParamDef();
+
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_ACTUAL_PARAM;
+		}
 
 		const std::wstring& getParamName() const
 		{
@@ -29,19 +38,18 @@ namespace COBJ
 			m_ParamName = paramName;
 		}
 
-		const boost::shared_ptr<ValueDef>& getValue() const
+		const ValueDefPtr& getValue() const
 		{
 			return m_pValue;
 		}
 
-		void setValue(boost::shared_ptr<ValueDef>& pValue)
+		void setValue(ValueDefPtr& pValue)
 		{
 			m_pValue = pValue;
 		}
 
 	private:
 		std::wstring m_ParamName;
-		boost::shared_ptr<ValueDef> m_pValue;
+		ValueDefPtr m_pValue;
 	};
-
 }

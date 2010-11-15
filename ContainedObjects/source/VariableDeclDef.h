@@ -8,18 +8,27 @@
 #pragma once
 
 #include <antlr3defs.h>
+#include "ASTNode.h"
+#include "ast_types.h"
+#include "common_types.h"
 
 namespace COBJ
 {
 	class Type;
 	class ValueDef;
 
-	class VariableDeclDef {
+	class VariableDeclDef : public ASTNode
+	{
 
 	public:
 		VariableDeclDef();
 		VariableDeclDef(const pANTLR3_BASE_TREE node);
 		virtual ~VariableDeclDef();
+
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_VARIABLE;
+		}
 
 		bool isStatic() const
 		{
@@ -31,12 +40,12 @@ namespace COBJ
 			m_IsStatic = isStatic;
 		}
 
-		const Type* getDeclaredType() const
+		const ConstTypePtr& getDeclaredType() const
 		{
-			return m_pDeclaredType.get();
+			return m_pDeclaredType;
 		}
 
-		void setDeclaredType(boost::shared_ptr<Type>& pDeclaredType)
+		void setDeclaredType(const TypePtr& pDeclaredType)
 		{
 			m_pDeclaredType = pDeclaredType;
 		}
@@ -51,12 +60,12 @@ namespace COBJ
 			m_Name = name;
 		}
 
-		const boost::shared_ptr<ValueDef>& getValue() const
+		const ValueDefPtr& getValue() const
 		{
 			return m_pValue;
 		}
 
-		void setValue(const boost::shared_ptr<ValueDef>& pValue)
+		void setValue(const ValueDefPtr& pValue)
 		{
 			m_pValue = pValue;
 		}
@@ -64,7 +73,7 @@ namespace COBJ
 	private:
 		bool m_IsStatic;
 		std::wstring m_Name;
-		boost::shared_ptr<Type> m_pDeclaredType;
-		boost::shared_ptr<ValueDef> m_pValue;
+		ConstTypePtr m_pDeclaredType;
+		ValueDefPtr m_pValue;
 	};
 }

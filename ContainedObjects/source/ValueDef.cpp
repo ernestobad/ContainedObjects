@@ -17,7 +17,13 @@
 
 namespace COBJ {
 
-	ValueDef::ValueDef() : m_ValueType((value_type) -1)
+	ValueDef::ValueDef(value_type valueType, const pANTLR3_BASE_TREE node)
+		: ASTNode(node), m_ValueType(valueType)
+	{
+	}
+
+	ValueDef::ValueDef(value_type valueType)
+		: m_ValueType(valueType)
 	{
 	}
 

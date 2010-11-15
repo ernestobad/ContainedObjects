@@ -11,7 +11,7 @@ namespace COBJ
 	}
 
 	FloatLiteralValueDef::FloatLiteralValueDef(const pANTLR3_BASE_TREE node)
-		: LiteralValueDef(FLOAT_LITERAL)
+		: LiteralValueDef(FLOAT_LITERAL, node)
 	{
 		assert(node->getType(node) == N_FLOAT_LITERAL);
 		assert(node->getChildCount(node) == 1);

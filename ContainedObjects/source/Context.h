@@ -17,7 +17,7 @@ namespace COBJ {
 		{
 		}
 
-		Context(const boost::shared_ptr<Context<E>>& pParentContext) 
+		Context(const boost::shared_ptr<const Context<E>>& pParentContext) 
 			: m_pParentContext(pParentContext)
 		{
 		}
@@ -26,40 +26,42 @@ namespace COBJ {
 		{
 		}
 
-		virtual bool hasParent()
+		virtual bool hasParent() const
 		{
 			return m_pParentContext.get() != NULL;
 		}
 
-		virtual const boost::shared_ptr<Context<E>>& getParentContext()
+		virtual const boost::shared_ptr<const Context<E>>& getParentContext()
 		{
 			return m_pParentContext;
 		}
 
-		virtual const Context<E>& getRootContext()
+		virtual bool getRootContext(boost::shared_ptr<const Context<E>>& pRootCtx) const
 		{
 			if (!hasParent())
 			{
-				return *this;
+				return false;
 			}
 			else
 			{
-				return m_pParentContext->getRootContext();
+				pRootCtx = m_pParentContext;
+				m_pParentContext->getRootContext(pRootCtx);
+				return true;
 			}
 		}
 
 		virtual bool lookup(
 			const std::wstring& name,
 			boost::shared_ptr<const E>& pEntry,
-			bool searchParents = true)
+			bool searchParents = true) const
 		{
-			std::map<const std::wstring, boost::shared_ptr<const E>>::iterator it;
+			std::map<const std::wstring, boost::shared_ptr<const E>>::const_iterator it;
 
 			it = m_Map.find(name);
 
 			if (it == m_Map.end())
 			{
-				if (searchParents && this->hasParent())
+				if (searchParents && hasParent())
 				{
 					return m_pParentContext->lookup(name, pEntry, searchParents);
 				}
@@ -89,7 +91,7 @@ namespace COBJ {
 		}
 
 	private:
-		boost::shared_ptr<Context<E>> m_pParentContext;
+		boost::shared_ptr<const Context<E>> m_pParentContext;
 		std::map<const std::wstring, boost::shared_ptr<const E>> m_Map;
 	};
 

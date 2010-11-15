@@ -7,25 +7,45 @@ namespace COBJ
 	class Type;
 	class IClass;
 	class IInterface;
+	class Log;
 
 	class Engine : public IEngine
 	{
 	public:
-		Engine(void);
-		virtual ~Engine(void);
 
-		virtual void parseFiles(const std::list<std::wstring>& filePaths);
+		static Engine* getInstance()
+		{
+			if (s_pInstance == NULL)
+			{
+				s_pInstance = new Engine();
+			}
 
-		virtual void parseFile(const std::wstring& filePath);
+			return s_pInstance;
+		}
+		
+		~Engine(void);
 
-		virtual Result getClass(const std::wstring& className, boost::shared_ptr<IClass>& pClass);
+		void parseFiles(const std::list<std::wstring>& filePaths);
 
-		virtual Result getInterface(const std::wstring& interfaceName, boost::shared_ptr<IInterface>& pInterface);
+		void parseFile(const std::wstring& filePath);
+
+		const std::wstring& getCurrentFile();
+
+		bool getClass(
+			const std::wstring& className,
+			boost::shared_ptr<IClass>& pClass);
+
+		bool getInterface(
+			const std::wstring& interfaceName,
+			boost::shared_ptr<IInterface>& pInterface);
 
 	private:
+		Engine(void);
+		static Engine* s_pInstance;
+
 		std::list<boost::shared_ptr<IClass>> m_Classes;
 		std::list<boost::shared_ptr<IInterface>> m_Interfaces;
-	};
-
-	
+		boost::shared_ptr<Log> m_pLog;
+		std::wstring m_CurrentFile;
+	};	
 }

@@ -5,7 +5,7 @@
 namespace COBJ
 {
 
-	ArrayType::ArrayType(const boost::shared_ptr<Type>& pChildType)
+	ArrayType::ArrayType(const ConstTypePtr& pChildType)
 		: Type(ARRAY_B_TYPE), m_pChildType(pChildType)
 	{
 	}
@@ -29,9 +29,9 @@ namespace COBJ
 	{
 	}
 
-	const Type& ArrayType::getChildType() const
+	const ConstTypePtr& ArrayType::getChildType() const
 	{
-		return *m_pChildType;
+		return m_pChildType;
 	}
 
 	bool ArrayType::operator==(const Type& type) const
@@ -43,9 +43,9 @@ namespace COBJ
 
 		const ArrayType& arrayType = static_cast<const ArrayType &>(type);
 
-		const Type& childType1 = arrayType.getChildType();
-		const Type& childType2 = getChildType();
+		const ConstTypePtr& childType1 = arrayType.getChildType();
+		const ConstTypePtr& childType2 = getChildType();
 
-		return (childType1 == childType2);
+		return (*childType1 == *childType2);
 	}
 }

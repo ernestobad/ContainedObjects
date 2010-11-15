@@ -1,14 +1,11 @@
 #pragma once
 
 #include "ContextEntry.h"
+#include "Context.h"
+#include "ast_types.h"
 
 namespace COBJ
 {
-	class ClassDef;
-	class InterfaceDef;
-	class VariableDeclDef;
-	class FormalParamDef;
-
 	enum static_ctx_entry_type
 	{
 		CLASS_DEF_CTX_ENTRY,
@@ -21,22 +18,22 @@ namespace COBJ
 	{
 	public:
 
-		StaticContextEntry(const boost::shared_ptr<ClassDef>& pClassDef);
-		StaticContextEntry(const boost::shared_ptr<InterfaceDef>& pInterfaceDef);
-		StaticContextEntry(const boost::shared_ptr<VariableDeclDef>& pVariableDef);
-		StaticContextEntry(const boost::shared_ptr<FormalParamDef>& pFormalParamDef);
+		StaticContextEntry(const ClassDefPtr& pClassDef);
+		StaticContextEntry(const InterfaceDefPtr& pInterfaceDef);
+		StaticContextEntry(const VariableDeclDefPtr& pVariableDef);
+		StaticContextEntry(const FormalParamDefPtr& pFormalParamDef);
 
 		virtual ~StaticContextEntry(void);
 
-		static_ctx_entry_type getType() const;
+		static_ctx_entry_type getStaticEntryType() const;
 
-		bool getClass(boost::shared_ptr<ClassDef>& pClassDef) const;
+		bool getClass(ClassDefPtr& pClassDef) const;
 
-		bool getInterface(boost::shared_ptr<InterfaceDef>& pInterfaceDef) const;
+		bool getInterface(InterfaceDefPtr& pInterfaceDef) const;
 
-		bool getVariable(boost::shared_ptr<VariableDeclDef>& pVariableDef) const;
+		bool getVariable(VariableDeclDefPtr& pVariableDef) const;
 
-		bool getFormalParam(boost::shared_ptr<FormalParamDef>& pFormalParamDef) const;
+		bool getFormalParam(FormalParamDefPtr& pFormalParamDef) const;
 
 		const std::wstring& getName() const;
 

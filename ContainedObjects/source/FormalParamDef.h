@@ -8,24 +8,33 @@
 #pragma once
 
 #include <antlr3defs.h>
+#include "ASTNode.h"
+#include "ast_types.h"
+#include "common_types.h"
 
-namespace COBJ {
-
+namespace COBJ
+{
 	class Type;
 
-	class FormalParamDef
+	class FormalParamDef : public ASTNode
 	{
 	public:
 		FormalParamDef();
 		FormalParamDef(const pANTLR3_BASE_TREE node);
+
 		virtual ~FormalParamDef();
 
-		const Type* getType() const
+		ast_node_type getASTNodeType() const
 		{
-			return m_pType.get();
+			return ASTN_FORMAL_PARAM;
 		}
 
-		void setType(const boost::shared_ptr<Type>& pType)
+		const ConstTypePtr& getType() const
+		{
+			return m_pType;
+		}
+
+		void setType(const TypePtr& pType)
 		{
 			m_pType = pType;
 		}
@@ -41,8 +50,7 @@ namespace COBJ {
 		}
 
 	private:
-		boost::shared_ptr<Type> m_pType;
+		ConstTypePtr m_pType;
 		std::wstring m_ParamName;
 	};
-
 }

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "common_types.h"
 #include <antlr3defs.h>
 
 namespace COBJ
@@ -34,9 +35,9 @@ namespace COBJ
 
 	void createType(
 			const pANTLR3_BASE_TREE node,
-			boost::shared_ptr<Type>& pType);
+			ConstTypePtr& pType);
 
 	void createSimpleType(
 				const pANTLR3_BASE_TREE node,
-				boost::shared_ptr<Type>& pType);
+				ConstTypePtr& pType);
 }

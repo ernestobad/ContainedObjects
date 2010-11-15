@@ -6,10 +6,12 @@
 namespace COBJ
 {
 	ObjectInitValueDef::ObjectInitValueDef(void)
+		: ValueDef(OBJECT_INIT)
 	{
 	}
 
 	ObjectInitValueDef::ObjectInitValueDef(const pANTLR3_BASE_TREE node)
+		: ValueDef(OBJECT_INIT, node)
 	{
 		assert(node->getType(node) == N_OBJECT_INIT_VAL);
 		assert(node->getChildCount(node) == 2);
@@ -30,7 +32,7 @@ namespace COBJ
 		}
 
 		{
-			m_ActualParams.clear();
+			m_ActualParamsMap.clear();
 
 			// actual params
 			n = (pANTLR3_BASE_TREE) node->getChild(node, 1);
@@ -42,8 +44,8 @@ namespace COBJ
 				c = (pANTLR3_BASE_TREE) n->getChild(n, i);
 				assert(c->getType(c) == N_ACTUAL_PARAM);
 
-				boost::shared_ptr<ActualParamDef> pActualParamDef(new ActualParamDef(c));
-				m_ActualParams.push_back(pActualParamDef);
+				ActualParamDefPtr pActualParamDef(new ActualParamDef(c));
+				m_ActualParamsMap[pActualParamDef->getParamName()] = pActualParamDef;
 			}
 		}
 	}

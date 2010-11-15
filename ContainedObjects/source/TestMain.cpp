@@ -11,7 +11,7 @@ int main( int argc, const char* argv[] )
 	std::list<std::wstring> fileList;
 	fileList.push_back(strFile);
 
-	IEngine* pEngine = new Engine();
+	IEngine* pEngine = Engine::getInstance();
 	pEngine->parseFiles(fileList);
 
 	printf( "\nHello World\n\n" );

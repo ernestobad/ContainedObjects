@@ -19,6 +19,7 @@ namespace COBJ
 	}
 
 	VariableDeclDef::VariableDeclDef(const pANTLR3_BASE_TREE node)
+		: ASTNode(node)
 	{
 		assert(node->getType(node) == N_VARDEF);
 		assert(node->getChildCount(node) == 3 || node->getChildCount(node) == 4);

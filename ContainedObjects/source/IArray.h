@@ -1,10 +1,10 @@
 
 #pragma once
 
-class IObject;
-
 namespace COBJ
 {
+	class IObject;
+
 	class IArray
 	{
 	public:

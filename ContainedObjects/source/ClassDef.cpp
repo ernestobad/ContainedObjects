@@ -21,7 +21,7 @@ namespace COBJ
 	}
 
 	ClassDef::ClassDef(const pANTLR3_BASE_TREE node)
-		: m_IsNative(false)
+		: ASTNode(node), m_IsNative(false)
 	{
 		assert(node->getType(node) == N_CLASS_DECL);
 		assert(node->getChildCount(node) == 4);
@@ -43,7 +43,7 @@ namespace COBJ
 		{
 			// formal class params
 
-			m_FormalPrameters.clear();
+			m_FormalPrametersMap.clear();
 
 			n = (pANTLR3_BASE_TREE) node->getChild(node, 1);
 			assert(n->getType(n) == N_FORMAL_CLASS_PARAMS);
@@ -54,8 +54,8 @@ namespace COBJ
 				c = (pANTLR3_BASE_TREE) n->getChild(n, i);
 				assert(c->getType(c) == N_FORMAL_CLASS_PARAM);
 
-				boost::shared_ptr<FormalParamDef> pFormalParamDef(new FormalParamDef(c));
-				m_FormalPrameters.push_back(pFormalParamDef);
+				FormalParamDefPtr pFormalParamDef(new FormalParamDef(c));
+				m_FormalPrametersMap[pFormalParamDef->getParamName()] = pFormalParamDef;
 			}
 		}
 

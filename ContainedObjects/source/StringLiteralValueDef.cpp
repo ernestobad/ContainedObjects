@@ -16,7 +16,7 @@ namespace COBJ
 	}
 
 	StringLiteralValueDef::StringLiteralValueDef(const pANTLR3_BASE_TREE node)
-		: LiteralValueDef(STRING_LITERAL)
+		: LiteralValueDef(STRING_LITERAL, node)
 	{
 		assert(node->getType(node) == N_STRING_LITERAL);
 		assert(node->getChildCount(node) == 1);

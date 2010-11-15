@@ -8,68 +8,74 @@
 #pragma once
 
 #include <antlr3defs.h>
+#include "ASTNode.h"
+#include "ast_types.h"
 
 namespace COBJ
 {
-	class FormalParamDef;
-	class VariableDeclDef;
+	using namespace std;
 
-	class ClassDef {
+	class ClassDef : public ASTNode
+	{
 
 	public:
 		ClassDef();
 
 		ClassDef(const pANTLR3_BASE_TREE node);
 
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_CLASS;
+		}
+
 		virtual ~ClassDef();
 
-		const std::wstring& getClassName() const
+		const wstring& getClassName() const
 		{
 			return m_ClassName;
 		}
 
-		void setClassName(const std::wstring& className)
+		void setClassName(const wstring& className)
 		{
 			m_ClassName = className;
 		}
 
-		const std::list<boost::shared_ptr<FormalParamDef>>& getFormalParameters() const
+		const map<const wstring, FormalParamDefPtr>& getFormalParametersMap() const
 		{
-			return m_FormalPrameters;
+			return m_FormalPrametersMap;
 		}
 
-		void setFormalParameters(const std::list<boost::shared_ptr<FormalParamDef>>& formalParameters)
+		void setFormalParametersMap(const map<const wstring, FormalParamDefPtr>& formalParametersMap)
 		{
-			m_FormalPrameters = formalParameters;
+			m_FormalPrametersMap = formalParametersMap;
 		}
 
-		const std::list<std::wstring>& getImplementedInterfaces()
+		const list<const wstring>& getImplementedInterfaces()
 		{
 			return m_ImplementedInterfaces;
 		}
 
-		void setImplementedInterfaces(const std::list<std::wstring> implementedInterfaces)
+		void setImplementedInterfaces(const list<const wstring> implementedInterfaces)
 		{
 			m_ImplementedInterfaces = implementedInterfaces;
 		}
 
-		const std::list<boost::shared_ptr<VariableDeclDef>>& getVariableDecls() const
+		const list<VariableDeclDefPtr>& getVariableDecls() const
 		{
 			return m_VariableDecls;
 		}
 
-		void setVariableDecls(const std::list<boost::shared_ptr<VariableDeclDef>> &variableDecls)
+		void setVariableDecls(const list<VariableDeclDefPtr> &variableDecls)
 		{
 			m_VariableDecls = variableDecls;
 		}
 
 		private:
-			std::wstring m_ClassName;
-			std::list<boost::shared_ptr<FormalParamDef>> m_FormalPrameters;
-			std::list<std::wstring> m_ImplementedInterfaces;
-			std::list<boost::shared_ptr<COBJ::VariableDeclDef>> m_VariableDecls;
+			wstring m_ClassName;
+			map<const wstring, FormalParamDefPtr> m_FormalPrametersMap;
+			list<const wstring> m_ImplementedInterfaces;
+			list<VariableDeclDefPtr> m_VariableDecls;
 			bool m_IsNative;
 	};
-
 }
 

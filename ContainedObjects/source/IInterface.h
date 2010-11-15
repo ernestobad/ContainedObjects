@@ -1,10 +1,10 @@
 
 #pragma once
 
-class InterfaceDef;
-
 namespace COBJ
 {
+	class InterfaceDef;
+
 	class IInterface
 	{
 	public:

@@ -12,10 +12,13 @@
 
 namespace COBJ {
 
-	ActualParamDef::ActualParamDef() {
+	ActualParamDef::ActualParamDef()
+	{
 	}
 
-	ActualParamDef::ActualParamDef(const pANTLR3_BASE_TREE node) {
+	ActualParamDef::ActualParamDef(const pANTLR3_BASE_TREE node)
+		: ASTNode(node)
+	{
 		assert(node->getType(node) == N_ACTUAL_PARAM);
 		assert(node->getChildCount(node) == 2);
 

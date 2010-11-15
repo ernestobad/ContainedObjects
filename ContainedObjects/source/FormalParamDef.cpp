@@ -17,6 +17,7 @@ namespace COBJ {
 	}
 
 	FormalParamDef::FormalParamDef(const pANTLR3_BASE_TREE node)
+		: ASTNode(node)
 	{
 		assert(node->getType(node) == N_FORMAL_CLASS_PARAM);
 

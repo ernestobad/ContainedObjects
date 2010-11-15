@@ -8,6 +8,9 @@
 #pragma once
 
 #include <antlr3defs.h>
+#include "ASTNode.h"
+#include "ast_types.h"
+#include "common_types.h"
 
 namespace COBJ {
 
@@ -18,17 +21,22 @@ namespace COBJ {
 		OBJECT_INIT, ARRAY_INIT, LITERAL, REFERENCE_PATH
 	};
 
-	class ValueDef {
+	class ValueDef : public ASTNode
+	{
 	public:
-		ValueDef();
+		ValueDef(value_type valueType);
+		ValueDef(value_type valueType, const pANTLR3_BASE_TREE node);
+
 		virtual ~ValueDef();
 
-		const boost::shared_ptr<Type>& getInferredType() const
+		virtual ast_node_type getASTNodeType() const = 0;
+
+		const ConstTypePtr& getInferredType() const
 		{
 			return m_pInferredType;
 		}
 
-		void setInferredType(const boost::shared_ptr<Type>& pInferredType)
+		void setInferredType(const ConstTypePtr& pInferredType)
 		{
 			m_pInferredType = pInferredType;
 		}
@@ -44,13 +52,12 @@ namespace COBJ {
 		}
 
 	private:
-		boost::shared_ptr<Type> m_pInferredType;
+		ConstTypePtr m_pInferredType;
 		value_type m_ValueType;
 
 	};
 
 	void createValueDef(
 				const pANTLR3_BASE_TREE node,
-				boost::shared_ptr<ValueDef>& pType);
-
+				ValueDefPtr& pType);
 }

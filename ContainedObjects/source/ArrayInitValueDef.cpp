@@ -8,10 +8,12 @@
 namespace COBJ
 {
 	ArrayInitValueDef::ArrayInitValueDef(void)
+		: ValueDef(ARRAY_INIT)
 	{
 	}
 
 	ArrayInitValueDef::ArrayInitValueDef(const pANTLR3_BASE_TREE node)
+		: ValueDef(ARRAY_INIT, node)
 	{
 		assert(node->getType(node) == N_ARRAY_INIT_VAL);
 		assert(node->getChildCount(node) == 2);

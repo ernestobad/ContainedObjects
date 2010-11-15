@@ -3,8 +3,13 @@
 
 namespace COBJ
 {
+	LiteralValueDef::LiteralValueDef(literal_type literalType, const pANTLR3_BASE_TREE node)
+		: ValueDef(LITERAL, node), m_LiteralType(literalType)
+	{
+	}
+
 	LiteralValueDef::LiteralValueDef(literal_type literalType)
-		: m_LiteralType(literalType)
+		: ValueDef(LITERAL), m_LiteralType(literalType)
 	{
 	}
 
