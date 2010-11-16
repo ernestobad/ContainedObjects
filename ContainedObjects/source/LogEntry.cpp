@@ -1,20 +1,20 @@
 #include "platform.h"
 #include "LogEntry.h"
+#include "message_code.h"
 
 namespace COBJ
 {
-
 	LogEntry::LogEntry(
-		log_level level,
 		const std::wstring& file,
 		int line,
 		int charPosition,
+		message_code messageCode,
 		const std::wstring& message)
 	{
-		m_Level = level;
 		m_File = file;
 		m_Line = line;
 		m_CharPosition = charPosition;
+		m_MessageCode = messageCode;
 		m_Message = message;
 	}
 
@@ -33,15 +33,15 @@ namespace COBJ
 	{
 		std::wstring strLevel;
 
-		switch (m_Level)
+		switch (msg::getLevel(m_MessageCode))
 		{
-		case ERROR_LEVEL:
+		case msg::ERR:
 			strLevel = L"ERROR";
 			break;
-		case WARNING_LEVEL:
+		case msg::WARN:
 			strLevel = L"WARN";
 			break;
-		case INFO_LEVEL:
+		case msg::INFO:
 			strLevel = L"INFO";
 			break;
 		default:

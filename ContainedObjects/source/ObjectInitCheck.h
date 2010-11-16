@@ -14,7 +14,7 @@ namespace COBJ
 
 		void doCheck(
 			const ConstStaticContextPtr& pCtx,
-			const ConstASTNodePtr& pNode,
+			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const;
 
 	private:

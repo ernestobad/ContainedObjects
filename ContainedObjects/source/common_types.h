@@ -31,4 +31,7 @@ namespace COBJ
 	typedef boost::shared_ptr<LogEntry> LogEntryPtr;
 	typedef boost::shared_ptr<const LogEntry> ConstLogEntryPtr;
 
+	class LogMessage;
+	typedef boost::shared_ptr<LogMessage> LogMessagePtr;
+	typedef boost::shared_ptr<const LogMessage> ConstLogMessagePtr;
 }

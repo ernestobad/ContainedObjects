@@ -29,6 +29,13 @@ namespace COBJ
 	{
 	}
 
+	std::wstring ArrayType::toString() const
+	{
+		boost::wformat f(L"%1%[]");
+		f % m_pChildType->toString();
+		return f.str();
+	}
+
 	const ConstTypePtr& ArrayType::getChildType() const
 	{
 		return m_pChildType;

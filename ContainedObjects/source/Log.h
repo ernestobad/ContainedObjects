@@ -1,11 +1,11 @@
 #pragma once
 
 #include "common_types.h"
+#include "ast_types.h"
+#include "message_code.h"
 
 namespace COBJ
 {
-	class ASTNode;
-	enum log_level;
 
 	class Log
 	{
@@ -17,38 +17,26 @@ namespace COBJ
 
 		bool hasErrors() const;
 
-		void addError(
-			const std::wstring& file, int line, int charPosition, const std::wstring& message);
+		bool hasMessages(int mask) const;
 
-		void addError(
-			const ASTNode& node, const std::wstring& message);
+		bool hasMessage(message_code messageCode) const;
 
-		void addWarning(
-			const std::wstring& file, int line, int charPosition, const std::wstring& message);
+		void log(
+			const std::wstring& file, int line, int charPosition,
+			message_code messageCode, const std::wstring& message);
 
-		void addWarning(
-			const ASTNode& node, const std::wstring& message);
+		void log(
+			const ASTNode& node,
+			message_code messageCode, const std::wstring& message);
 
-		void addInfo(
-			const std::wstring& file, int line, int charPosition, const std::wstring& message);
+		const std::list<ConstLogEntryPtr>& getEntries() const;
 
-		void addInfo(
-			const ASTNode& node, const std::wstring& message);
-
-		const std::list<ConstLogEntryPtr>& getEntries();
-
-		void printAll();
+		void printAll() const;
 
 	private:
 
-		void addEntry(
-			log_level level,
-			const std::wstring& file,
-			int line,
-			int charPosition,
-			const std::wstring& message);
-
 		std::list<ConstLogEntryPtr> m_Entries;
+		std::set<message_code> m_MessageCodes;
 		bool m_HasErrors;
 	};
 }

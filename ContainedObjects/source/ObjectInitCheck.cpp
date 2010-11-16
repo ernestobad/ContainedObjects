@@ -10,6 +10,7 @@
 #include "ActualParamDef.h"
 #include "FormalParamDef.h"
 #include "SemanticAnalysis.h"
+#include "message_code.h"
 
 namespace COBJ
 {
@@ -25,14 +26,14 @@ namespace COBJ
 
 	void ObjectInitCheck::doCheck(
 		const ConstStaticContextPtr& pCtx,
-		const ConstASTNodePtr& pNode,
+		const ASTNodePtr& pNode,
 		const LogPtr& pLog) const
 	{
 		if (pNode->getASTNodeType() != ASTN_OBJECT_INIT_VALUE)
 			return;
 
-		const ConstObjectInitValueDefPtr pObjectInit = 
-			boost::static_pointer_cast<const ObjectInitValueDef>(pNode);
+		const ObjectInitValueDefPtr pObjectInit = 
+			boost::static_pointer_cast<ObjectInitValueDef>(pNode);
 
 		const wstring& className = pObjectInit->getClassName();
 
@@ -41,7 +42,7 @@ namespace COBJ
 		{
 			boost::wformat f(L"Can't find name %1% in context.");
 			f % className;
-			pLog->addError(*pNode, f.str());
+			pLog->log(*pNode, msg::ErrAnaObjInit_ClassNotFound, f.str());
 			return;
 		}
 
@@ -50,7 +51,7 @@ namespace COBJ
 		{
 			boost::wformat f(L"%1% is not a class.");
 			f % className;
-			pLog->addError(*pNode, f.str());
+			pLog->log(*pNode, msg::ErrAnaObjInit_NotAClass, f.str());
 			return;
 		}
 
@@ -66,7 +67,7 @@ namespace COBJ
 			{
 				boost::wformat f(L"Missing parameter %1%.");
 				f % formalParamName;
-				pLog->addError(*pObjectInit, f.str());
+				pLog->log(*pObjectInit, msg::ErrAnaObjInit_MissingParam, f.str());
 			}
 		}
 
@@ -74,19 +75,41 @@ namespace COBJ
 		for (apIt = actualParamsMap.begin(); apIt != actualParamsMap.end(); apIt++)
 		{
 			const wstring& actualParamName = (*apIt).first;
-			ActualParamDefPtr& pActualParamDef = (*apIt).second;
+			const ActualParamDefPtr& pActualParamDef = (*apIt).second;
+
+			const ConstTypePtr& pActualParamInferredType = 
+				pActualParamDef->getValue()->getInferredType();
 
 			if ((fpIt = formalParamsMap.find(actualParamName)) == formalParamsMap.end())
 			{
 				boost::wformat f(L"Unkown parameter %1%.");
 				f % actualParamName;
-				pLog->addError(*pActualParamDef, f.str());
+				pLog->log(*pActualParamDef, msg::ErrAnaObjInit_UnknownParam, f.str());
+				continue;
 			}
 
-			FormalParamDefPtr& pFormalParamDef = (*fpIt).second;
+			if (pActualParamDef->getValue()->getInferredType().get() == NULL)
+			{
+				// type inference should've failed
+				assert(pLog->hasMessages(msg::ERR|msg::ANALYSIS|msg::TYPE_INFER));
+				continue;
+			}
 
-			// TODO:
-			SemanticAnalysis::isTypeAssignableFrom
+			const FormalParamDefPtr& pFormalParamDef = (*fpIt).second;
+
+			const ConstTypePtr& pFormalParamType = pFormalParamDef->getType();
+
+
+			if (!SemanticAnalysis::isTypeAssignableFrom(
+					 pFormalParamType,
+					pActualParamInferredType,
+					pCtx->getParentContext()))
+			{
+				boost::wformat f(L"Cannot convert value from %1% to %2%.");
+				f % pActualParamInferredType->toString() %  pFormalParamType->toString();
+				pLog->log(*pActualParamDef, msg::ErrAnaObjInit_IncompTypes, f.str());
+				continue;
+			}
 		}
 		
 	}

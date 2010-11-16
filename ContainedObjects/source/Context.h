@@ -31,7 +31,7 @@ namespace COBJ {
 			return m_pParentContext.get() != NULL;
 		}
 
-		virtual const boost::shared_ptr<const Context<E>>& getParentContext()
+		virtual const boost::shared_ptr<const Context<E>>& getParentContext() const
 		{
 			return m_pParentContext;
 		}
@@ -50,6 +50,12 @@ namespace COBJ {
 			}
 		}
 
+		virtual bool contains(const std::wstring& name, bool searchParents = true)
+		{
+			boost::shared_ptr<const E> pEntry;
+			return lookup(name, pEntry, searchParents);
+		}
+
 		virtual bool lookup(
 			const std::wstring& name,
 			boost::shared_ptr<const E>& pEntry,
@@ -65,8 +71,10 @@ namespace COBJ {
 				{
 					return m_pParentContext->lookup(name, pEntry, searchParents);
 				}
-
-				return false;
+				else
+				{
+					return false;
+				}
 			}
 
 			pEntry = it->second;

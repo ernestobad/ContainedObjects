@@ -25,6 +25,8 @@
 #include <list>
 #include <map>
 #include <vector>
+#include <set>
+#include <utility>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/smart_ptr/shared_ptr.hpp>
@@ -32,4 +34,3 @@
 #include <boost/scoped_array.hpp>
 #include <boost/format.hpp>
 
-#include "Error.h"

@@ -18,6 +18,7 @@
 #include "ReferenceType.h"
 #include "Log.h"
 #include "LogEntry.h"
+#include "message_code.h"
 
 namespace COBJ
 {
@@ -38,28 +39,87 @@ namespace COBJ
 	}
 
 	void SemanticAnalysis::analyze(
-			list<ClassDefPtr> classes,
-			list<InterfaceDefPtr> interfaces)
+			const list<ClassDefPtr>& classes,
+			const list<InterfaceDefPtr>& interfaces)
 	{
-		StaticContextPtr pRootCtx;
+		StaticContextPtr pRootCtx(new StaticContext());
 
-		list<ClassDefPtr>::iterator cit;
+		initRootContext(*pRootCtx, classes, interfaces);
+	}
+
+	void SemanticAnalysis::initRootContext(
+			StaticContext& ctx,
+			const std::list<ClassDefPtr>& classes,
+			const std::list<InterfaceDefPtr>& interfaces)
+	{
+		list<ClassDefPtr>::const_iterator cit;
 
 		for (cit = classes.begin(); cit != classes.end(); cit++)
 		{
-			ConstStaticContextEntryPtr entry(new StaticContextEntry(*cit));
-			pRootCtx->addEntry(entry);
+			const ClassDefPtr pClassDef = *cit;
+			ConstStaticContextEntryPtr pEntry(new StaticContextEntry(pClassDef));
+			if (!ctx.addEntry(pEntry))
+			{
+				boost::wformat f(L"%1% already exists in context.");
+				f % pEntry->getName();
+				m_pLog->log(*pClassDef, msg::ErrAnaCtxInit_ClassNameAlreadyExists, f.str());
+				continue;
+			}
 		}
 
-		list<InterfaceDefPtr>::iterator iit;
+		list<InterfaceDefPtr>::const_iterator iit;
 
 		for (iit = interfaces.begin(); iit != interfaces.end(); iit++)
 		{
-			ConstStaticContextEntryPtr entry(new StaticContextEntry(*iit));
-			pRootCtx->addEntry(entry);
+			const InterfaceDefPtr pInterfaceDef = *iit;
+			ConstStaticContextEntryPtr pEntry(new StaticContextEntry(pInterfaceDef));
+			if (!ctx.addEntry(pEntry))
+			{
+				boost::wformat f(L"%1% already exists in context.");
+				f % pEntry->getName();
+				m_pLog->log(*pInterfaceDef, msg::ErrAnaCtxInit_IfaceNameAlreadyExists, f.str());
+				continue;
+			}
+		}
+	}
+
+	void SemanticAnalysis::initClassContext(
+		StaticContext& ctx,
+		const ClassDef& classDef)
+	{
+		const map<const wstring, FormalParamDefPtr>& formalParamsMap = classDef.getFormalParametersMap();
+
+		map<const wstring, FormalParamDefPtr>::const_iterator fpit;
+
+		for (fpit = formalParamsMap.begin(); fpit != formalParamsMap.end(); fpit++)
+		{
+			const FormalParamDefPtr& pFormalParamDef = (*fpit).second;
+			StaticContextEntryPtr pEntry(new StaticContextEntry(pFormalParamDef));
+			if (!ctx.addEntry(pEntry))
+			{
+				boost::wformat f(L"%1% already exists in context.");
+				f % pEntry->getName();
+				m_pLog->log(*pFormalParamDef, msg::ErrAnaCtxInit_FParmNameAlreadyExsits, f.str());
+				continue;
+			}
 		}
 
+		const list<VariableDeclDefPtr>& variables = classDef.getVariableDecls();
 
+		list<VariableDeclDefPtr>::const_iterator vit;
+
+		for (vit = variables.begin(); vit != variables.end(); vit++)
+		{
+			const VariableDeclDefPtr& pVariableDef = *vit;
+			StaticContextEntryPtr pEntry(new StaticContextEntry(pVariableDef));
+			if (!ctx.addEntry(pEntry))
+			{
+				boost::wformat f(L"%1% already exists in context.");
+				f % pEntry->getName();
+				m_pLog->log(*pVariableDef, msg::ErrAnaCtxInit_VarNameAlreadyExsits, f.str());
+				continue;
+			}
+		}
 	}
 
 	void SemanticAnalysis::inferTypes(
@@ -169,6 +229,8 @@ namespace COBJ
 
 				list<wstring>::const_iterator it;
 
+				wstring parentPath(L"");
+
 				for (it = path.begin(); it != path.end(); it++)
 				{
 					const wstring& pathElement = *it;
@@ -181,7 +243,7 @@ namespace COBJ
 						{
 							boost::wformat f(L"Unable to resolve name %1%");
 							f % pathElement;
-							m_pLog->addError(referencePathDef, f.str());
+							m_pLog->log(referencePathDef, msg::ErrAnaTypeInfer_NameNotInContext, f.str());
 							return;
 						}
 						else
@@ -233,12 +295,19 @@ namespace COBJ
 								pathElement,
 								pCurrentType))
 						{
-							boost::wformat f(L"Unable to resolve name %1%");
-							f % pathElement;
-							m_pLog->addError(referencePathDef, f.str());
+							boost::wformat f(L"%1% is not a member of %2%");
+							f % pathElement % parentPath;
+							m_pLog->log(referencePathDef, msg::ErrAnaTypeInfer_NotAMember, f.str());
 							return;
 						}
 					}
+
+					if (parentPath.size())
+					{
+						parentPath.append(L".");
+					}
+
+					parentPath.append(pathElement);
 				}
 
 				assert(pCurrentType.get() != NULL);
@@ -331,31 +400,5 @@ namespace COBJ
 		}
 
 		return false;
-	}
-
-	void SemanticAnalysis::initClassContext(
-		StaticContext& ctx,
-		const ClassDef& classDef)
-	{
-		const map<const wstring, FormalParamDefPtr>& formalParamsMap = classDef.getFormalParametersMap();
-
-		map<const wstring, FormalParamDefPtr>::const_iterator fpit;
-
-		for (fpit = formalParamsMap.begin(); fpit != formalParamsMap.end(); fpit++)
-		{
-			FormalParamDefPtr pFormalParamDef = (*fpit).second;
-			StaticContextEntryPtr entry(new StaticContextEntry(pFormalParamDef));
-			ctx.addEntry(entry);
-		}
-
-		const list<VariableDeclDefPtr>& variables = classDef.getVariableDecls();
-
-		list<VariableDeclDefPtr>::const_iterator vit;
-
-		for (vit = variables.begin(); vit != variables.end(); vit++)
-		{
-			StaticContextEntryPtr entry(new StaticContextEntry(*vit));
-			ctx.addEntry(entry);
-		}
 	}
 }

@@ -50,7 +50,7 @@ namespace COBJ
 			m_FormalPrametersMap = formalParametersMap;
 		}
 
-		const list<const wstring>& getImplementedInterfaces()
+		const list<const wstring>& getImplementedInterfaces() const
 		{
 			return m_ImplementedInterfaces;
 		}

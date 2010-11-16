@@ -16,7 +16,7 @@ namespace COBJ
 		{
 			m_BasicType = (basic_type) OBJECT_REF_TYPE;
 		}
-		else if (node->getType(node) == N_OBJECT_TYPE)
+		else if (node->getType(node) == N_CLASS_TYPE)
 		{
 			m_BasicType = (basic_type) CLASS_REF_TYPE;
 		}
@@ -45,6 +45,20 @@ namespace COBJ
 	const std::wstring& ReferenceType::getReferenceTypeName() const
 	{
 		return m_ReferenceTypeName;
+	}
+
+	std::wstring ReferenceType::toString() const
+	{
+		if (getReferenceType() == CLASS_REF_TYPE)
+		{
+			boost::wformat f(L"class<%1%>");
+			f % m_ReferenceTypeName;
+			return f.str();
+		}
+		else
+		{
+			return m_ReferenceTypeName;
+		}
 	}
 
 	bool ReferenceType::operator==(const Type& type) const

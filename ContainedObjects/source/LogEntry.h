@@ -1,31 +1,21 @@
 #pragma once
 
+#include "message_code.h"
+
 namespace COBJ
 {
-	enum log_level
-	{
-		ERROR_LEVEL = 2,
-		WARNING_LEVEL = 1,
-		INFO_LEVEL = 0
-	};
-
 	class LogEntry
 	{
 	public:
 
 		LogEntry(
-			log_level level,
 			const std::wstring& fileName,
 			int line,
 			int charPosition,
+			message_code messageCode,
 			const std::wstring& message);
 
 		~LogEntry(void);
-
-		log_level getLevel() const
-		{
-			return m_Level;
-		}
 
 		const std::wstring& getFile() const
 		{
@@ -42,6 +32,11 @@ namespace COBJ
 			return m_CharPosition;
 		}
 
+		message_code getMessageCode() const
+		{
+			return m_MessageCode;
+		}
+
 		const std::wstring& getMessage() const
 		{
 			return m_Message;
@@ -52,10 +47,10 @@ namespace COBJ
 		void formatMessage(std::wstring& message) const;
 
 	private:
-		log_level m_Level;
 		std::wstring m_File;
 		int m_Line;
 		int m_CharPosition;
+		message_code m_MessageCode;
 		std::wstring m_Message;
 	};
 }

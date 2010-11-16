@@ -406,10 +406,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\Error.h"
-				>
-			</File>
-			<File
 				RelativePath=".\source\exceptions.cpp"
 				>
 			</File>
@@ -431,6 +427,14 @@
 			</File>
 			<File
 				RelativePath=".\source\LogEntry.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\message_code.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\message_code.h"
 				>
 			</File>
 			<File

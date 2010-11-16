@@ -29,6 +29,8 @@ namespace COBJ
 
 		virtual bool operator!=(const Type& type) const;
 
+		virtual std::wstring toString() const = 0;
+
 	protected:
 		basic_type m_BasicType;
 	};

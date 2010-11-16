@@ -19,13 +19,14 @@ namespace COBJ
 		ReferenceType(const pANTLR3_BASE_TREE node);
 
 		~ReferenceType(void);
-
 		
 		reference_type getReferenceType() const;
 
 		const std::wstring& getReferenceTypeName() const;
 
 		bool operator==(const Type& type) const;
+
+		std::wstring toString() const;
 
 	private:
 		std::wstring m_ReferenceTypeName;

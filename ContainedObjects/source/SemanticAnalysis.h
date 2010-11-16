@@ -22,8 +22,8 @@ namespace COBJ
 		void addCheck(const ICheckPtr& pSemanticCheck);
 
 		void analyze(
-			std::list<ClassDefPtr> classes,
-			std::list<InterfaceDefPtr> interfaces);
+			const list<ClassDefPtr>& classes,
+			const list<InterfaceDefPtr>& interfaces);
 
 		static bool isTypeAssignableFrom(
 			const ConstTypePtr& pLType,
@@ -114,6 +114,11 @@ namespace COBJ
 			const StaticContext& rootCtx,
 			const std::wstring& pathElement,
 			ConstTypePtr& pNextType);
+
+		void initRootContext(
+			StaticContext& newCtx,
+			const std::list<ClassDefPtr>& classes,
+			const std::list<InterfaceDefPtr>& interfaces);
 
 		void initClassContext(
 			StaticContext& newCtx,

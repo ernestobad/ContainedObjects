@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "LogEntry.h"
 #include "ASTNode.h"
+#include "message_code.h"
 
 namespace COBJ
 {
@@ -18,12 +19,42 @@ namespace COBJ
 		return m_HasErrors;
 	}
 
+	bool Log::hasMessages(int mask) const
+	{
+		std::set<message_code>::const_iterator it;
+
+		for (it = m_MessageCodes.begin(); it != m_MessageCodes.end(); it++)
+		{
+			message_code code = *it;
+			if (code & mask)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool Log::hasMessage(message_code messageCode) const
+	{
+		if (m_MessageCodes.find(messageCode) == m_MessageCodes.end())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
 	void Log::clear()
 	{
 		m_Entries.clear();
+		m_MessageCodes.clear();
+		m_HasErrors = false;
 	}
 
-	void Log::printAll()
+	void Log::printAll() const
 	{
 		std::list<ConstLogEntryPtr>::const_iterator it;
 
@@ -34,75 +65,34 @@ namespace COBJ
 		}
 	}
 
-	const std::list<ConstLogEntryPtr>& Log::getEntries()
+	const std::list<ConstLogEntryPtr>& Log::getEntries() const
 	{
 		return m_Entries;
 	}
 
-	void Log::addError(
-			const ASTNode& node, const std::wstring& message)
+	void Log::log(
+			const ASTNode& node,
+			message_code messageCode, const std::wstring& message)
 	{
-		addEntry(
-			ERROR_LEVEL,
+		log(
 			node.getFileName(),
 			node.getLineNumer(),
 			node.getCharPosition(),
+			messageCode,
 			message);
 	}
 
-	void Log::addError(
-		const std::wstring& file, int line, int charPosition, const std::wstring& message)
-	{
-		addEntry(ERROR_LEVEL, file, line, charPosition, message);
-	}
-
-	void Log::addWarning(
-			const ASTNode& node, const std::wstring& message)
-	{
-		addEntry(
-			WARNING_LEVEL,
-			node.getFileName(),
-			node.getLineNumer(),
-			node.getCharPosition(),
-			message);
-	}
-
-	void Log::addWarning(
-		const std::wstring& file, int line, int charPosition, const std::wstring& message)
-	{
-		addEntry(WARNING_LEVEL, file, line, charPosition, message);
-	}
-
-	void Log::addInfo(
-			const ASTNode& node, const std::wstring& message)
-	{
-		addEntry(
-			INFO_LEVEL,
-			node.getFileName(),
-			node.getLineNumer(),
-			node.getCharPosition(),
-			message);
-	}
-
-	void Log::addInfo(
-		const std::wstring& file, int line, int charPosition, const std::wstring& message)
-	{
-		addEntry(INFO_LEVEL, file, line, charPosition, message);
-	}
-
-	void Log::addEntry(
-		log_level level,
-		const std::wstring& file,
-		int line,
-		int charPosition,
-		const std::wstring& message)
+	void Log::log(
+		const std::wstring& file, int line, int charPosition,
+		message_code messageCode, const std::wstring& message)
 	{
 		const ConstLogEntryPtr pEntry(
-			new LogEntry(level, file, line, charPosition, message));
+			new LogEntry(file, line, charPosition, messageCode, message));
 
 		m_Entries.push_back(pEntry);
+		m_MessageCodes.insert(messageCode);
 
-		if (level == ERROR_LEVEL)
+		if (pEntry->getMessageCode() & msg::ERR)
 		{
 			m_HasErrors = true;
 		}

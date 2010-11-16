@@ -45,7 +45,7 @@ namespace COBJ
 			return m_pDeclaredType;
 		}
 
-		void setDeclaredType(const TypePtr& pDeclaredType)
+		void setDeclaredType(const ConstTypePtr& pDeclaredType)
 		{
 			m_pDeclaredType = pDeclaredType;
 		}

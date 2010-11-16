@@ -19,6 +19,10 @@ namespace COBJ
 		PrimitiveType(const pANTLR3_BASE_TREE node);
 		~PrimitiveType(void);
 
+		std::wstring toString() const;
+
+		primitive_type getPrimitiveType() const;
+
 		bool operator==(const Type& type) const;
 	};
 

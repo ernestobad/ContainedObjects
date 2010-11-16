@@ -34,6 +34,27 @@ namespace COBJ
 	{
 	}
 
+	primitive_type PrimitiveType::getPrimitiveType() const
+	{
+		return static_cast<primitive_type>(m_BasicType);
+	}
+
+	std::wstring PrimitiveType::toString() const
+	{
+		switch (getPrimitiveType())
+		{
+		case FLOAT_P_TYPE:
+			return std::wstring(L"float");
+		case INTEGER_P_TYPE:
+			return std::wstring(L"integer");
+		case STRING_P_TYPE:
+			return std::wstring(L"string");
+		default:
+			assert(false);
+			return std::wstring(L"");
+		}
+	}
+
 	bool PrimitiveType::operator==(const Type& type) const
 	{
 		return (this->getBasicType() == type.getBasicType());

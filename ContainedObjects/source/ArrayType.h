@@ -18,6 +18,8 @@ namespace COBJ
 
 		bool operator==(const Type& type) const;
 
+		std::wstring toString() const;
+
 	private:
 		ConstTypePtr m_pChildType;
 	};

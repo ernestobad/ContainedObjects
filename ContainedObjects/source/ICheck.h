@@ -12,8 +12,8 @@ namespace COBJ
 		virtual ~ICheck(void) { }
 
 		virtual void doCheck(
-			const ConstStaticContextPtr& pCtx,
-			const ConstASTNodePtr& pNode,
+			const StaticContextPtr& pCtx,
+			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const = 0;
 	};
 }
