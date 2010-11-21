@@ -9,18 +9,25 @@ namespace COBJ
 	class ArrayType : public Type
 	{
 	public:
-		ArrayType(const ConstTypePtr& pChildType);
+		ArrayType(const TypePtr& pChildType);
 		ArrayType(const pANTLR3_BASE_TREE node);
 
 		~ArrayType(void);
 
-		const ConstTypePtr& getChildType() const;
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_ARRAY_TYPE;
+		}
+
+		void getChildNodes(std::list<ASTNodePtr>& children) const;
+
+		const TypePtr& getChildType() const;
 
 		bool operator==(const Type& type) const;
 
 		std::wstring toString() const;
 
 	private:
-		ConstTypePtr m_pChildType;
+		TypePtr m_pChildType;
 	};
 }

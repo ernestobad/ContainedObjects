@@ -28,6 +28,8 @@ namespace COBJ
 			return ASTN_ACTUAL_PARAM;
 		}
 
+		void getChildNodes(std::list<ASTNodePtr>& children) const;
+
 		const std::wstring& getParamName() const
 		{
 			return m_ParamName;

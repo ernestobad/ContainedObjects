@@ -1,10 +1,9 @@
-
 #pragma once
+
+#include "runtime_types.h"
 
 namespace COBJ
 {
-	class IObject;
-
 	class IArray
 	{
 	public:
@@ -12,20 +11,20 @@ namespace COBJ
 
 		virtual int getLength() const = 0;
 
-		virtual Result getIntegerAt(int idx, int& intValue) const = 0;
+		virtual bool getIntegerAt(int idx, int& intValue) const = 0;
 
-		virtual Result setIntegerAt(int idx, int intValue) = 0;
+		virtual bool setIntegerAt(int idx, int intValue) = 0;
 
-		virtual Result getFloatAt(int idx, float& floatValue) const = 0;
+		virtual bool getFloatAt(int idx, float& floatValue) const = 0;
 
-		virtual Result setFloatAt(int idx, float floatValue) = 0;
+		virtual bool setFloatAt(int idx, float floatValue) = 0;
 
-		virtual Result getStringAt(int idx, std::wstring& string) const = 0;
+		virtual bool getStringAt(int idx, wstring& string) const = 0;
 
-		virtual Result setStringAt(int idx, const std::wstring& string) const = 0;
+		virtual bool setStringAt(int idx, const wstring& string) const = 0;
 
-		virtual Result getObjectAt(int idx, boost::shared_ptr<IObject>& pObject) const = 0;
+		virtual bool getObjectAt(int idx, IObjectPtr& pObject) const = 0;
 
-		virtual Result setObjectAt(int idx, const boost::shared_ptr<IObject>& pObject) const = 0;
+		virtual bool setObjectAt(int idx, const IObjectPtr& pObject) const = 0;
 	};
 }

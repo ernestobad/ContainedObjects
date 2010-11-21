@@ -59,10 +59,18 @@ Validations:
 * names & references check.
 * Names cannot repeat on the same context.
 * type check: variables, actual parameters.
-* recursive references are not allowed.
+x recursive references are not allowed.
 
 * static vars cannot refer non static vars or parameters.
 
+ClassCheck:
+	- interface impl
+
+InterfaceCheck:
+	- non-initialized vars
+	
+ArrayCheck:
+	- type check
 
 context:
 	class names, interface names.
@@ -76,7 +84,7 @@ values: classes, objects, arrays, literals.
 COBFramework {
 	
 	List<File> files;
-	Map<String, IClassDef> classes;
+	Map<String, ClassDefBase> classes;
 	Map<String, InterfaceDef> interfaces;
 	List<IObjectDef> objects;
 	
@@ -135,7 +143,7 @@ IObject : IValue {
 }
 
 IClass {
-	IClassDef definition;
+	ClassDefBase definition;
 	
 	Map<String, IVar> classVariables;
 	
@@ -163,7 +171,7 @@ InterfaceDef {
 	List<IVariableDef> variableDefs;
 }
 
-IClassDef {
+ClassDefBase {
 	String name;
 	boolean isNative;
 	
@@ -211,7 +219,7 @@ IArrayInitDef : IValueDef {
 }
 
 IObjectInitDef : IValueDef {
-	IClassDef classDef;
+	ClassDefBase classDef;
 	IActualParamDef paramsDef;
 	
 	IObject eval(Context ctx);

@@ -19,6 +19,10 @@ namespace COBJ
 			return ASTN_REFERENCE_PATH_VALUE;
 		}
 
+		void getChildNodes(std::list<ASTNodePtr>& children) const
+		{
+		}
+
 		const std::list<std::wstring>& getReferencePath() const
 		{
 			return m_ReferencePath;

@@ -2,6 +2,26 @@
 
 namespace COBJ
 {
+	class Value;
+	typedef boost::shared_ptr<Value> ValuePtr;
+	//typedef boost::shared_ptr<const Value> ConstValuePtr;
+
+	class Type;
+	typedef boost::shared_ptr<Type> TypePtr;
+	//typedef boost::shared_ptr<const Type> ConstTypePtr;
+
+	class PrimitiveType;
+	typedef boost::shared_ptr<PrimitiveType> PrimitiveTypePtr;
+	//typedef boost::shared_ptr<const PrimitiveType> ConstPrimitiveTypePtr;
+
+	class ReferenceType;
+	typedef boost::shared_ptr<ReferenceType> ReferenceTypePtr;
+	//typedef boost::shared_ptr<const ReferenceType> ConstReferenceTypePtr;
+
+	class ArrayType;
+	typedef boost::shared_ptr<ArrayType> ArrayTypePtr;
+	//typedef boost::shared_ptr<const ArrayType> ConstArrayTypePtr;
+
 	class ActualParamDef;
 	typedef boost::shared_ptr<ActualParamDef> ActualParamDefPtr;
 	//typedef boost::shared_ptr<const ActualParamDef> ConstActualParamDefPtr;
@@ -14,9 +34,16 @@ namespace COBJ
 	typedef boost::shared_ptr<ASTNode> ASTNodePtr;
 	//typedef boost::shared_ptr<const ASTNode> ConstASTNodePtr;
 
+	class ClassDefBase;
+	typedef boost::shared_ptr<ClassDefBase> ClassDefBasePtr;
+
 	class ClassDef;
 	typedef boost::shared_ptr<ClassDef> ClassDefPtr;
 	//typedef boost::shared_ptr<const ClassDef> ConstClassDefPtr;
+
+	class InterfaceDef;
+	typedef boost::shared_ptr<InterfaceDef> InterfaceDefPtr;
+	//typedef boost::shared_ptr<const InterfaceDef> ConstInterfaceDefPtr;
 
 	class FloatLiteralValueDef;
 	typedef boost::shared_ptr<FloatLiteralValueDef> FloatLiteralValueDefPtr;
@@ -29,10 +56,6 @@ namespace COBJ
 	class IntegerLiteralValueDef;
 	typedef boost::shared_ptr<IntegerLiteralValueDef> IntegerLiteralValueDefPtr;
 	//typedef boost::shared_ptr<const IntegerLiteralValueDef> ConstIntegerLiteralValueDefPtr;
-
-	class InterfaceDef;
-	typedef boost::shared_ptr<InterfaceDef> InterfaceDefPtr;
-	//typedef boost::shared_ptr<const InterfaceDef> ConstInterfaceDefPtr;
 
 	class LiteralValueDef;
 	typedef boost::shared_ptr<LiteralValueDef> LiteralValueDefPtr;

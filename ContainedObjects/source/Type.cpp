@@ -7,13 +7,14 @@
 
 namespace COBJ
 {
-	Type::Type(void)
+	Type::Type(basic_type basicType)
+		: ASTNode(), m_BasicType(basicType)
 	{
 	}
 
-	Type::Type(basic_type basicType)
+	Type::Type(basic_type basicType, const pANTLR3_BASE_TREE node)
+		: ASTNode(node), m_BasicType(basicType)
 	{
-		m_BasicType = basicType;
 	}
 
 	Type::~Type()
@@ -32,7 +33,7 @@ namespace COBJ
 
 	void createType(
 				const pANTLR3_BASE_TREE node,
-				ConstTypePtr& pType)
+				TypePtr& pType)
 	{
 		assert(node->getType(node) == N_TYPE);
 		assert(node->getChildCount(node) == 1);
@@ -53,7 +54,7 @@ namespace COBJ
 
 	void createSimpleType(
 			const pANTLR3_BASE_TREE node,
-			ConstTypePtr& pType)
+			TypePtr& pType)
 	{
 		assert(node->getType(node) == N_SIMPLE_TYPE);
 		assert(node->getChildCount(node) == 1);

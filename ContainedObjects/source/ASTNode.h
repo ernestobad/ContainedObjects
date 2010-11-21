@@ -7,17 +7,20 @@ namespace COBJ
 {
 	enum ast_node_type
 	{
-		ASTN_ACTUAL_PARAM,
-		ASTN_ARRAY_INIT_VALUE,
-		ASTN_CLASS,
-		ASTN_FLOAT_LITERAL_VALUE,
-		ASTN_FORMAL_PARAM,
-		ASTN_INTEGER_LITERAL_VALUE,
-		ASTN_INTERFACE,
+		ASTN_ARRAY_TYPE,
+		ASTN_PRIMITIVE_TYPE,
+		ASTN_REFERENCE_TYPE,
 		ASTN_OBJECT_INIT_VALUE,
 		ASTN_REFERENCE_PATH_VALUE,
 		ASTN_STRING_LITERAL_VALUE,
-		ASTN_VARIABLE
+		ASTN_ARRAY_INIT_VALUE,
+		ASTN_FLOAT_LITERAL_VALUE,
+		ASTN_INTEGER_LITERAL_VALUE,
+		ASTN_ACTUAL_PARAM,
+		ASTN_CLASS,
+		ASTN_FORMAL_PARAM,
+		ASTN_INTERFACE,
+		ASTN_VARIABLE_DECL
 	};
 
 	class ASTNode
@@ -29,6 +32,8 @@ namespace COBJ
 		virtual ~ASTNode(void);
 
 		virtual ast_node_type getASTNodeType() const = 0;
+
+		virtual void getChildNodes(std::list<ASTNodePtr>& children) const = 0;
 
 		virtual int getLineNumer() const
 		{

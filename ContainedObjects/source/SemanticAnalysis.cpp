@@ -3,6 +3,7 @@
 #include "Context.h"
 #include "StaticContextEntry.h"
 #include "ICheck.h"
+#include "ClassDefBase.h"
 #include "ClassDef.h"
 #include "InterfaceDef.h"
 #include "ValueDef.h"
@@ -33,61 +34,122 @@ namespace COBJ
 	{
 	}
 
+	const LogPtr& SemanticAnalysis::getLog() const
+	{
+		return m_pLog;
+	}
+
 	void SemanticAnalysis::addCheck(const ICheckPtr& pCheck)
 	{
-
+		m_SemanticChecks.push_back(pCheck);
 	}
 
 	void SemanticAnalysis::analyze(
-			const list<ClassDefPtr>& classes,
-			const list<InterfaceDefPtr>& interfaces)
+			const list<ClassDefBasePtr>& classes)
 	{
-		StaticContextPtr pRootCtx(new StaticContext());
+		m_pLog->clear();
 
-		initRootContext(*pRootCtx, classes, interfaces);
+		ConstStaticContextPtr pRootCtx;
+		newRootContext(pRootCtx, classes);
+		inferTypes(classes, pRootCtx);
+
+		list<ClassDefBasePtr>::const_iterator it;
+		for (it = classes.begin(); it != classes.end(); it++)
+		{
+			const ClassDefBasePtr& pClassDefBase = *it;
+			check(pClassDefBase, pRootCtx);
+		}
 	}
 
-	void SemanticAnalysis::initRootContext(
-			StaticContext& ctx,
-			const std::list<ClassDefPtr>& classes,
-			const std::list<InterfaceDefPtr>& interfaces)
+	void SemanticAnalysis::check(
+		const ASTNodePtr& pNode,
+		const ConstStaticContextPtr& pCtx)
 	{
-		list<ClassDefPtr>::const_iterator cit;
+		list<ICheckPtr>::const_iterator it;
+
+		for (it = m_SemanticChecks.begin(); it != m_SemanticChecks.end(); it++)
+		{
+			const ICheckPtr& pCheck = *it;
+			pCheck->doCheck(pCtx, pNode, m_pLog);
+		}
+
+		list<ASTNodePtr> children;
+		pNode->getChildNodes(children);
+
+		ConstStaticContextPtr pNewCtx;
+
+		if ((pNode->getASTNodeType() == ASTN_CLASS) || 
+			(pNode->getASTNodeType() == ASTN_INTERFACE))
+		{
+			ClassDefBasePtr pClassDefBase = boost::static_pointer_cast<ClassDefBase>(pNode);
+
+			newClassContext(
+				pNewCtx,
+				pClassDefBase,
+				pCtx);
+		}
+		else if (pNode->getASTNodeType() == ASTN_VARIABLE_DECL)
+		{
+			VariableDeclDefPtr pVarDef = boost::static_pointer_cast<VariableDeclDef>(pNode);
+
+			newMemberContext(
+				pNewCtx,
+				pVarDef,
+				pCtx);
+		}
+		else
+		{
+			pNewCtx = pCtx;
+		}
+
+		list<ASTNodePtr>::const_iterator cit;
+
+		for (cit = children.begin(); cit != children.end(); cit++)
+		{
+			const ASTNodePtr& pChild = *cit;
+			check(pChild, pNewCtx);
+		}
+	}
+
+	void SemanticAnalysis::newRootContext(
+			ConstStaticContextPtr& pNewCtx,
+			const std::list<ClassDefBasePtr>& classes)
+	{
+		StaticContextPtr pCtx(new StaticContext());
+
+		list<ClassDefBasePtr>::const_iterator cit;
 
 		for (cit = classes.begin(); cit != classes.end(); cit++)
 		{
-			const ClassDefPtr pClassDef = *cit;
-			ConstStaticContextEntryPtr pEntry(new StaticContextEntry(pClassDef));
-			if (!ctx.addEntry(pEntry))
+			const ClassDefBasePtr pClassDef = *cit;
+
+			ConstStaticContextEntryPtr pEntry(
+				pClassDef->getASTNodeType() == ASTN_CLASS ?
+				new StaticContextEntry(boost::static_pointer_cast<ClassDef>(pClassDef)) :
+				new StaticContextEntry(boost::static_pointer_cast<InterfaceDef>(pClassDef)));
+
+			if (!pCtx->addEntry(pEntry))
 			{
 				boost::wformat f(L"%1% already exists in context.");
 				f % pEntry->getName();
-				m_pLog->log(*pClassDef, msg::ErrAnaCtxInit_ClassNameAlreadyExists, f.str());
+				m_pLog->log(
+					*boost::static_pointer_cast<ASTNode>(pClassDef),
+					msg::ErrAnaCtxInit_ClassNameAlreadyExists, f.str());
 				continue;
 			}
 		}
 
-		list<InterfaceDefPtr>::const_iterator iit;
-
-		for (iit = interfaces.begin(); iit != interfaces.end(); iit++)
-		{
-			const InterfaceDefPtr pInterfaceDef = *iit;
-			ConstStaticContextEntryPtr pEntry(new StaticContextEntry(pInterfaceDef));
-			if (!ctx.addEntry(pEntry))
-			{
-				boost::wformat f(L"%1% already exists in context.");
-				f % pEntry->getName();
-				m_pLog->log(*pInterfaceDef, msg::ErrAnaCtxInit_IfaceNameAlreadyExists, f.str());
-				continue;
-			}
-		}
+		pNewCtx = boost::static_pointer_cast<const StaticContext>(pCtx);
 	}
 
-	void SemanticAnalysis::initClassContext(
-		StaticContext& ctx,
-		const ClassDef& classDef)
+	void SemanticAnalysis::newClassContext(
+		ConstStaticContextPtr& pNewCtx,
+		const ClassDefBasePtr& pClassDefBase,
+		const ConstStaticContextPtr& pRootCtx)
 	{
-		const map<const wstring, FormalParamDefPtr>& formalParamsMap = classDef.getFormalParametersMap();
+		StaticContextPtr pCtx(new StaticContext(pRootCtx));
+
+		const map<const wstring, FormalParamDefPtr>& formalParamsMap = pClassDefBase->getFormalParametersMap();
 
 		map<const wstring, FormalParamDefPtr>::const_iterator fpit;
 
@@ -95,7 +157,7 @@ namespace COBJ
 		{
 			const FormalParamDefPtr& pFormalParamDef = (*fpit).second;
 			StaticContextEntryPtr pEntry(new StaticContextEntry(pFormalParamDef));
-			if (!ctx.addEntry(pEntry))
+			if (!pCtx->addEntry(pEntry))
 			{
 				boost::wformat f(L"%1% already exists in context.");
 				f % pEntry->getName();
@@ -104,7 +166,7 @@ namespace COBJ
 			}
 		}
 
-		const list<VariableDeclDefPtr>& variables = classDef.getVariableDecls();
+		const list<VariableDeclDefPtr>& variables = pClassDefBase->getVariableDecls();
 
 		list<VariableDeclDefPtr>::const_iterator vit;
 
@@ -112,7 +174,7 @@ namespace COBJ
 		{
 			const VariableDeclDefPtr& pVariableDef = *vit;
 			StaticContextEntryPtr pEntry(new StaticContextEntry(pVariableDef));
-			if (!ctx.addEntry(pEntry))
+			if (!pCtx->addEntry(pEntry))
 			{
 				boost::wformat f(L"%1% already exists in context.");
 				f % pEntry->getName();
@@ -120,23 +182,38 @@ namespace COBJ
 				continue;
 			}
 		}
+
+		pNewCtx = boost::static_pointer_cast<const StaticContext>(pCtx);
+	}
+
+	void SemanticAnalysis::newMemberContext(
+		ConstStaticContextPtr& pNewCtx,
+		const VariableDeclDefPtr& pVarDef,
+		const ConstStaticContextPtr& pRootCtx)
+	{
+		StaticContextPtr pCtx(new StaticContext(pRootCtx, pVarDef->isStatic()));
+		pNewCtx = boost::static_pointer_cast<const StaticContext>(pCtx);
 	}
 
 	void SemanticAnalysis::inferTypes(
-			list<ClassDefPtr>& classes,
-			ConstStaticContextPtr& rootCtx)
+			const list<ClassDefBasePtr>& classes,
+			ConstStaticContextPtr& pRootCtx)
 	{
-		list<ClassDefPtr>::iterator cit;
+		list<ClassDefBasePtr>::const_iterator cit;
 
 		for (cit = classes.begin(); cit != classes.end(); cit++)
 		{
-			ClassDefPtr& pClassDef = *cit;
+			const ClassDefBasePtr& pClassDefBase = *cit;
 
-			StaticContextPtr pClassCtx(new StaticContext(rootCtx));
+			if (pClassDefBase->getASTNodeType() == ASTN_INTERFACE)
+			{
+				continue;
+			}
 
-			initClassContext(*pClassCtx, *pClassDef);
+			ConstStaticContextPtr pClassCtx;
+			newClassContext(pClassCtx, pClassDefBase, pRootCtx);
 
-			const list<VariableDeclDefPtr>& variables = pClassDef->getVariableDecls();
+			const list<VariableDeclDefPtr>& variables = pClassDefBase->getVariableDecls();
 
 			list<VariableDeclDefPtr>::const_iterator vit;
 
@@ -145,14 +222,21 @@ namespace COBJ
 				const VariableDeclDefPtr& pVariable = *vit;
 				const ValueDefPtr& pValueDef = pVariable->getValue();
 
-				inferTypes(*pValueDef, rootCtx);
+				if (pValueDef.get() == NULL)
+				{
+					// this is reported by ClassCheck
+					continue;
+				}
+				
+				ConstStaticContextPtr pMemberCtx(new StaticContext(pClassCtx, pVariable->isStatic()));
+				inferTypes(*pValueDef, pMemberCtx);
 			}
 		}
 	}
 
 	void SemanticAnalysis::inferTypes(
 		ValueDef& valueDef,
-		ConstStaticContextPtr& pClassCtx)
+		ConstStaticContextPtr& pMemberCtx)
 	{
 		switch (valueDef.getValueType())
 		{
@@ -174,7 +258,7 @@ namespace COBJ
 					const ActualParamDefPtr& pActualParamDef = (*it).second;
 					const ValueDefPtr& pParamValueDef = pActualParamDef->getValue();
 
-					inferTypes(*pParamValueDef, pClassCtx);
+					inferTypes(*pParamValueDef, pMemberCtx);
 				}
 			}
 			break;
@@ -192,7 +276,7 @@ namespace COBJ
 				{
 					const ValueDefPtr& pArrayValue = *it;
 
-					inferTypes(*pArrayValue, pClassCtx);
+					inferTypes(*pArrayValue, pMemberCtx);
 				}
 			}
 			break;
@@ -225,7 +309,7 @@ namespace COBJ
 
 				StaticContextEntryPtr pEntry;
 
-				ConstTypePtr pCurrentType;
+				TypePtr pCurrentType;
 
 				list<wstring>::const_iterator it;
 
@@ -239,7 +323,7 @@ namespace COBJ
 					{
 						ConstStaticContextEntryPtr pEntry;
 
-						if (!pClassCtx->lookup(pathElement, pEntry))
+						if (!pMemberCtx->lookup(pathElement, pEntry))
 						{
 							boost::wformat f(L"Unable to resolve name %1%");
 							f % pathElement;
@@ -266,11 +350,30 @@ namespace COBJ
 								{
 									VariableDeclDefPtr pVariableDef;
 									pEntry->getVariable(pVariableDef);
-									pCurrentType = pVariableDef->getDeclaredType();
+
+									if (pMemberCtx->isStatic() && !pVariableDef->isStatic())
+									{
+										boost::wformat f(L"Cannot refer to a non static variable from an static context: %1%");
+										f % pathElement;
+										m_pLog->log(referencePathDef, msg::ErrAnaTypeInfer_NonStaticVarRef, f.str());
+										return;
+									}
+									else
+									{
+										pCurrentType = pVariableDef->getDeclaredType();
+									}
 								}
 								break;
 							case FORMAL_PARAM_DEF_CTX_ENTRY:
 								{
+									if (pMemberCtx->isStatic())
+									{
+										boost::wformat f(L"Cannot refer to a class parameter from an static context: %1%");
+										f % pathElement;
+										m_pLog->log(referencePathDef, msg::ErrAnaTypeInfer_NonStaticParamRef, f.str());
+										return;
+									}
+
 									FormalParamDefPtr pFormalParamDef;
 									pEntry->getFormalParam(pFormalParamDef);
 									pCurrentType = pFormalParamDef->getType();
@@ -286,8 +389,8 @@ namespace COBJ
 					{
 						assert(pCurrentType.get() != NULL);
 
-						ConstStaticContextPtr pRootCtx = pClassCtx;
-						pClassCtx->getRootContext(pRootCtx);
+						ConstStaticContextPtr pRootCtx;
+						pMemberCtx->getRootContext(pRootCtx);
 
 						if (!followPathElement(
 								*pCurrentType,
@@ -325,7 +428,7 @@ namespace COBJ
 			const Type& currentType,
 			const StaticContext& rootCtx,
 			const wstring& pathElement,
-			ConstTypePtr& pNextType)
+			TypePtr& pNextType)
 	{
 		boolean isObject = false;
 		switch (currentType.getBasicType())
@@ -400,5 +503,77 @@ namespace COBJ
 		}
 
 		return false;
+	}
+
+	bool isTypeAssignableFrom(
+			const TypePtr& pLType,
+			const TypePtr& pRType,
+			const ConstStaticContextPtr& pRootCtx)
+	{
+		if (*pLType == *pRType)
+		{
+			return true;
+		}
+		else if (pLType->getBasicType() != pRType->getBasicType())
+		{
+			return false;
+		}
+		else if (pLType->getBasicType() == OBJECT_B_TYPE)
+		{
+			ReferenceTypePtr pLRefType = 
+				boost::static_pointer_cast<ReferenceType>(pLType);
+
+			ReferenceTypePtr pRRefType = 
+				boost::static_pointer_cast<ReferenceType>(pRType);
+
+			const wstring& lTypeName = pLRefType->getReferenceTypeName();
+
+			const wstring& rTypeName = pRRefType->getReferenceTypeName();
+
+			ConstStaticContextEntryPtr pRCtxEntry;
+
+			if (!pRootCtx->lookup(rTypeName, pRCtxEntry))
+			{
+				return false;
+			}
+
+			ClassDefPtr pRClass;
+			if (!pRCtxEntry->getClass(pRClass))
+			{
+				// if rh type is an interface, then lh type must be the same interface
+				// (ther is no interface inheritance), but we know that *pLType != *pRType
+				// so the interfaces are not the same
+				return false;
+			}
+
+			const list<const wstring>& interfaces = pRClass->getImplementedInterfaces();
+
+			list<const wstring>::const_iterator it;
+
+			for (it = interfaces.begin(); it != interfaces.end(); it++)
+			{
+				const wstring& ifaceName = *it;
+				if (lTypeName == ifaceName)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+		else if (pLType->getBasicType() == ARRAY_B_TYPE)
+		{
+			ArrayTypePtr pLArrayType = boost::static_pointer_cast<ArrayType>(pLType);
+			ArrayTypePtr pRArrayType = boost::static_pointer_cast<ArrayType>(pRType);
+
+			return isTypeAssignableFrom(
+				pLArrayType->getChildType(),
+				pRArrayType->getChildType(),
+				pRootCtx);
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

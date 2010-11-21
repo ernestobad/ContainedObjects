@@ -19,7 +19,16 @@ namespace COBJ
 		ReferenceType(const pANTLR3_BASE_TREE node);
 
 		~ReferenceType(void);
+
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_REFERENCE_TYPE;
+		}
 		
+		void getChildNodes(std::list<ASTNodePtr>& children) const
+		{
+		}
+
 		reference_type getReferenceType() const;
 
 		const std::wstring& getReferenceTypeName() const;

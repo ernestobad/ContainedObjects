@@ -70,6 +70,27 @@ namespace COBJ
 		return m_Message;
 	}
 
+	// InternalErrorException //
+
+	InternalErrorException::InternalErrorException(const std::wstring& message) 
+		: COBJException(message)
+	{
+	}
+
+	InternalErrorException::InternalErrorException(const std::wstring& message, const std::wstring& cause)
+		: COBJException(message, cause)
+	{
+	}
+
+	InternalErrorException::InternalErrorException(const InternalErrorException& e)
+		: COBJException(e)
+	{
+	}
+
+	InternalErrorException::~InternalErrorException(void)
+	{
+	}
+
 	// IOException //
 
 	IOException::IOException(const std::wstring& message) 

@@ -4,6 +4,7 @@
 #include "antlr/ContainedObjectsLexer.h"
 #include "ArrayType.h"
 #include "ValueDef.h"
+#include "ASTNode.h"
 
 namespace COBJ
 {
@@ -48,5 +49,17 @@ namespace COBJ
 
 	ArrayInitValueDef::~ArrayInitValueDef(void)
 	{
+	}
+
+	void ArrayInitValueDef::getChildNodes(std::list<ASTNodePtr>& children) const
+	{
+		children.push_back(m_pDeclaredType);
+
+		std::list<ValueDefPtr>::const_iterator it;
+
+		for (it = m_Values.begin(); it != m_Values.end(); it++)
+		{
+			children.push_back(*it);
+		}		
 	}
 }

@@ -19,6 +19,10 @@ namespace COBJ
 			return ASTN_FLOAT_LITERAL_VALUE;
 		}
 
+		void getChildNodes(std::list<ASTNodePtr>& children) const
+		{
+		}
+
 		float getFloatValue() const
 		{
 			return m_FloatValue;

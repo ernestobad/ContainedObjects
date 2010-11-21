@@ -20,6 +20,8 @@ namespace COBJ
 			return ASTN_OBJECT_INIT_VALUE;
 		}
 
+		void getChildNodes(std::list<ASTNodePtr>& children) const;
+
 		const wstring& getClassName() const
 		{
 			return m_ClassName;

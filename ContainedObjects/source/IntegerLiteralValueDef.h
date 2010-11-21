@@ -18,6 +18,10 @@ namespace COBJ
 			return ASTN_INTEGER_LITERAL_VALUE;
 		}
 
+		void getChildNodes(std::list<ASTNodePtr>& children) const
+		{
+		}
+
 		int getIntValue() const
 		{
 			return m_IntValue;

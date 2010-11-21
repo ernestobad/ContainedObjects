@@ -10,12 +10,13 @@
 #include <antlr3defs.h>
 #include "ASTNode.h"
 #include "ast_types.h"
+#include "ClassDefBase.h"
 
 namespace COBJ
 {
 	using namespace std;
 
-	class ClassDef : public ASTNode
+	class ClassDef : public ClassDefBase
 	{
 
 	public:
@@ -27,6 +28,8 @@ namespace COBJ
 		{
 			return ASTN_CLASS;
 		}
+
+		void getChildNodes(std::list<ASTNodePtr>& children) const;
 
 		virtual ~ClassDef();
 
@@ -42,12 +45,12 @@ namespace COBJ
 
 		const map<const wstring, FormalParamDefPtr>& getFormalParametersMap() const
 		{
-			return m_FormalPrametersMap;
+			return m_FormalParametersMap;
 		}
 
 		void setFormalParametersMap(const map<const wstring, FormalParamDefPtr>& formalParametersMap)
 		{
-			m_FormalPrametersMap = formalParametersMap;
+			m_FormalParametersMap = formalParametersMap;
 		}
 
 		const list<const wstring>& getImplementedInterfaces() const
@@ -55,7 +58,7 @@ namespace COBJ
 			return m_ImplementedInterfaces;
 		}
 
-		void setImplementedInterfaces(const list<const wstring> implementedInterfaces)
+		void setImplementedInterfaces(const list<const wstring>& implementedInterfaces)
 		{
 			m_ImplementedInterfaces = implementedInterfaces;
 		}
@@ -72,7 +75,7 @@ namespace COBJ
 
 		private:
 			wstring m_ClassName;
-			map<const wstring, FormalParamDefPtr> m_FormalPrametersMap;
+			map<const wstring, FormalParamDefPtr> m_FormalParametersMap;
 			list<const wstring> m_ImplementedInterfaces;
 			list<VariableDeclDefPtr> m_VariableDecls;
 			bool m_IsNative;

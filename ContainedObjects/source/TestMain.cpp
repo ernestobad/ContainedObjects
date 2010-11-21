@@ -2,16 +2,18 @@
 
 #include "IEngine.h"
 #include "Engine.h"
+#include "runtime_types.h"
 
 using namespace COBJ;
+using namespace std;
 
 int main( int argc, const char* argv[] )
 {
-	std::wstring strFile = L"testprog3.cbj";
-	std::list<std::wstring> fileList;
+	wstring strFile = L"testprog3.cbj";
+	list<const wstring> fileList;
 	fileList.push_back(strFile);
 
-	IEngine* pEngine = Engine::getInstance();
+	IEnginePtr pEngine = Engine::getInstance();
 	pEngine->parseFiles(fileList);
 
 	printf( "\nHello World\n\n" );

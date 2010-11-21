@@ -18,6 +18,10 @@ namespace COBJ
 			return ASTN_STRING_LITERAL_VALUE;
 		}
 
+		void getChildNodes(std::list<ASTNodePtr>& children) const
+		{
+		}
+
 		const std::wstring& getStringValue() const
 		{
 			return m_StringValue;

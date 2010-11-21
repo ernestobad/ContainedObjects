@@ -13,7 +13,7 @@ namespace COBJ
 	}
 
 	StaticContextEntry::StaticContextEntry(const InterfaceDefPtr& pInterfaceDef)
-		: m_EntryType(INTERFACE_DEF_CTX_ENTRY), m_pEntry(pInterfaceDef), m_Name(pInterfaceDef->getIntefaceName())
+		: m_EntryType(INTERFACE_DEF_CTX_ENTRY), m_pEntry(pInterfaceDef), m_Name(pInterfaceDef->getClassName())
 	{
 	}
 

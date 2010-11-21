@@ -11,7 +11,7 @@ namespace COBJ
 	}
 
 	InterfaceDef::InterfaceDef(const pANTLR3_BASE_TREE node)
-		: ASTNode(node)
+		: ClassDefBase(node)
 	{
 		assert(node->getType(node) == N_IFACE_DECL);
 		assert(node->getChildCount(node) == 3);
@@ -26,15 +26,16 @@ namespace COBJ
 
 			n = (pANTLR3_BASE_TREE) n->getChild(n, 0);
 			assert(n->getType(n) == ID);
-			m_InterfaceName = (wchar_t*) n->getText(n)->chars;
+			m_ClassName = (wchar_t*) n->getText(n)->chars;
 		}
 
 		{
-			// class params
-			n = (pANTLR3_BASE_TREE) node->getChild(node, 0);
-			assert(n->getType(n) == N_FORMAL_CLASS_PARAMS);
+			// formal class params
 
-			m_FormalPrameters.clear();
+			m_FormalParametersMap.clear();
+
+			n = (pANTLR3_BASE_TREE) node->getChild(node, 1);
+			assert(n->getType(n) == N_FORMAL_CLASS_PARAMS);
 
 			int childCount = n->getChildCount(n);
 			for (int i = 0; i < childCount; i++)
@@ -42,8 +43,8 @@ namespace COBJ
 				c = (pANTLR3_BASE_TREE) n->getChild(n, i);
 				assert(c->getType(c) == N_FORMAL_CLASS_PARAM);
 
-				boost::shared_ptr<FormalParamDef> pFormalParamDef(new FormalParamDef(c));
-				m_FormalPrameters.push_back(pFormalParamDef);
+				FormalParamDefPtr pFormalParamDef(new FormalParamDef(c));
+				m_FormalParametersMap[pFormalParamDef->getParamName()] = pFormalParamDef;
 			}
 		}
 
@@ -68,5 +69,22 @@ namespace COBJ
 
 	InterfaceDef::~InterfaceDef(void)
 	{
+	}
+
+	void InterfaceDef::getChildNodes(std::list<ASTNodePtr>& children) const
+	{
+		list<VariableDeclDefPtr>::const_iterator vit;
+
+		for (vit = m_VariableDecls.begin(); vit != m_VariableDecls.end(); vit++)
+		{
+			children.push_back(*vit);
+		}
+
+		map<const wstring, FormalParamDefPtr>::const_iterator fit;
+
+		for (fit = m_FormalParametersMap.begin(); fit != m_FormalParametersMap.end(); fit++)
+		{
+			children.push_back((*fit).second);
+		}
 	}
 }

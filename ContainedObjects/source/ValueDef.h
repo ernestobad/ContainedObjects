@@ -29,14 +29,12 @@ namespace COBJ {
 
 		virtual ~ValueDef();
 
-		virtual ast_node_type getASTNodeType() const = 0;
-
-		const ConstTypePtr& getInferredType() const
+		const TypePtr& getInferredType() const
 		{
 			return m_pInferredType;
 		}
 
-		void setInferredType(const ConstTypePtr& pInferredType)
+		void setInferredType(const TypePtr& pInferredType)
 		{
 			m_pInferredType = pInferredType;
 		}
@@ -52,7 +50,7 @@ namespace COBJ {
 		}
 
 	private:
-		ConstTypePtr m_pInferredType;
+		TypePtr m_pInferredType;
 		value_type m_ValueType;
 
 	};

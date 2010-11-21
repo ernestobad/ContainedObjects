@@ -5,6 +5,8 @@
 
 namespace COBJ
 {
+	using namespace std;
+
 	ObjectInitValueDef::ObjectInitValueDef(void)
 		: ValueDef(OBJECT_INIT)
 	{
@@ -52,5 +54,15 @@ namespace COBJ
 
 	ObjectInitValueDef::~ObjectInitValueDef(void)
 	{
+	}
+
+	void ObjectInitValueDef::getChildNodes(std::list<ASTNodePtr>& children) const
+	{
+		map<const wstring, ActualParamDefPtr>::const_iterator it;
+
+		for (it = m_ActualParamsMap.begin(); it != m_ActualParamsMap.end(); it++)
+		{
+			children.push_back(it->second);
+		}
 	}
 }

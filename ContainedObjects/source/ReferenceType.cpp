@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "ReferenceType.h"
+#include "exceptions.h"
 #include "antlr/ContainedObjectsLexer.h"
 
 namespace COBJ
@@ -9,22 +10,27 @@ namespace COBJ
 	{
 	}
 
-	ReferenceType::ReferenceType(const pANTLR3_BASE_TREE node)
-		: Type()
+	basic_type getReferenceBasicType(const pANTLR3_BASE_TREE node)
 	{
 		if (node->getType(node) == N_OBJECT_TYPE)
 		{
-			m_BasicType = (basic_type) OBJECT_REF_TYPE;
+			return (basic_type) OBJECT_REF_TYPE;
 		}
 		else if (node->getType(node) == N_CLASS_TYPE)
 		{
-			m_BasicType = (basic_type) CLASS_REF_TYPE;
+			return (basic_type) CLASS_REF_TYPE;
 		}
 		else
 		{
-			assert(false);
+			std::wstring msg(L"Invalid node");
+			InternalErrorException e(msg);
+			throw e;
 		}
+	}
 
+	ReferenceType::ReferenceType(const pANTLR3_BASE_TREE node)
+		: Type(getReferenceBasicType(node), node)
+	{
 		assert(node->getChildCount(node) == 1);
 
 		pANTLR3_BASE_TREE n = (pANTLR3_BASE_TREE) node->getChild(node, 0);

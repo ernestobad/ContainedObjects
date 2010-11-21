@@ -27,8 +27,10 @@ namespace COBJ
 
 		ast_node_type getASTNodeType() const
 		{
-			return ASTN_VARIABLE;
+			return ASTN_VARIABLE_DECL;
 		}
+
+		void getChildNodes(std::list<ASTNodePtr>& children) const;
 
 		bool isStatic() const
 		{
@@ -40,12 +42,12 @@ namespace COBJ
 			m_IsStatic = isStatic;
 		}
 
-		const ConstTypePtr& getDeclaredType() const
+		const TypePtr& getDeclaredType() const
 		{
 			return m_pDeclaredType;
 		}
 
-		void setDeclaredType(const ConstTypePtr& pDeclaredType)
+		void setDeclaredType(const TypePtr& pDeclaredType)
 		{
 			m_pDeclaredType = pDeclaredType;
 		}
@@ -73,7 +75,7 @@ namespace COBJ
 	private:
 		bool m_IsStatic;
 		std::wstring m_Name;
-		ConstTypePtr m_pDeclaredType;
+		TypePtr m_pDeclaredType;
 		ValueDefPtr m_pValue;
 	};
 }

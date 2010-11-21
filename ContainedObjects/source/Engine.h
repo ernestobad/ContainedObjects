@@ -1,23 +1,23 @@
 #pragma once
 
 #include "IEngine.h"
+#include "runtime_types.h"
+#include "ast_types.h"
+#include "common_types.h"
 
 namespace COBJ
 {
-	class Type;
-	class IClass;
-	class IInterface;
-	class Log;
+	using namespace std;
 
 	class Engine : public IEngine
 	{
 	public:
 
-		static Engine* getInstance()
+		static const EnginePtr& getInstance()
 		{
 			if (s_pInstance == NULL)
 			{
-				s_pInstance = new Engine();
+				s_pInstance = EnginePtr(new Engine());
 			}
 
 			return s_pInstance;
@@ -25,27 +25,27 @@ namespace COBJ
 		
 		~Engine(void);
 
-		void parseFiles(const std::list<std::wstring>& filePaths);
+		void parseFiles(const list<const wstring>& filePaths);
 
-		void parseFile(const std::wstring& filePath);
+		void parseFile(const wstring& filePath);
 
 		const std::wstring& getCurrentFile();
 
 		bool getClass(
 			const std::wstring& className,
-			boost::shared_ptr<IClass>& pClass);
+			IClassPtr& pClass);
 
 		bool getInterface(
 			const std::wstring& interfaceName,
-			boost::shared_ptr<IInterface>& pInterface);
+			IInterfacePtr& pInterface);
 
 	private:
 		Engine(void);
-		static Engine* s_pInstance;
+		static EnginePtr s_pInstance;
 
-		std::list<boost::shared_ptr<IClass>> m_Classes;
-		std::list<boost::shared_ptr<IInterface>> m_Interfaces;
-		boost::shared_ptr<Log> m_pLog;
-		std::wstring m_CurrentFile;
+		list<IClassPtr> m_Classes;
+		list<IInterfacePtr> m_Interfaces;
+		LogPtr m_pLog;
+		wstring m_CurrentFile;
 	};	
 }

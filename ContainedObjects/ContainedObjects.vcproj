@@ -180,14 +180,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\ArrayInitValueDef.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ArrayInitValueDef.h"
-				>
-			</File>
-			<File
 				RelativePath=".\source\ast_types.h"
 				>
 			</File>
@@ -208,11 +200,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\FloatLiteralValueDef.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\FloatLiteralValueDef.h"
+				RelativePath=".\source\ClassDefBase.h"
 				>
 			</File>
 			<File
@@ -224,59 +212,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\IntegerLiteralValueDef.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\IntegerLiteralValueDef.h"
-				>
-			</File>
-			<File
 				RelativePath=".\source\InterfaceDef.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\source\InterfaceDef.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\LiteralValueDef.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\LiteralValueDef.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ObjectInitValueDef.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ObjectInitValueDef.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ReferencePathValueDef.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ReferencePathValueDef.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\StringLiteralValueDef.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\StringLiteralValueDef.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ValueDef.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ValueDef.h"
 				>
 			</File>
 			<File
@@ -287,6 +227,110 @@
 				RelativePath=".\source\VariableDeclDef.h"
 				>
 			</File>
+			<Filter
+				Name="type"
+				>
+				<File
+					RelativePath=".\source\ArrayType.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ArrayType.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\PrimitiveType.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\PrimitiveType.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ReferenceType.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ReferenceType.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\Type.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\Type.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="value"
+				>
+				<File
+					RelativePath=".\source\ArrayInitValueDef.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ArrayInitValueDef.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\FloatLiteralValueDef.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\FloatLiteralValueDef.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\IntegerLiteralValueDef.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\IntegerLiteralValueDef.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\LiteralValueDef.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\LiteralValueDef.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ObjectInitValueDef.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ObjectInitValueDef.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ReferencePathValueDef.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ReferencePathValueDef.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\StringLiteralValueDef.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\StringLiteralValueDef.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ValueDef.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ValueDef.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="antlr"
@@ -362,6 +406,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\source\runtime_types.h"
+				>
+			</File>
+			<File
 				RelativePath=".\source\RuntimeContextEntry.cpp"
 				>
 			</File>
@@ -373,14 +421,6 @@
 		<Filter
 			Name="common"
 			>
-			<File
-				RelativePath=".\source\ArrayType.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ArrayType.h"
-				>
-			</File>
 			<File
 				RelativePath=".\source\auto_resource.h"
 				>
@@ -438,30 +478,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\PrimitiveType.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\PrimitiveType.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ReferenceType.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ReferenceType.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\Type.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\Type.h"
-				>
-			</File>
-			<File
 				RelativePath=".\source\Value.cpp"
 				>
 			</File>
@@ -473,18 +489,6 @@
 		<Filter
 			Name="static"
 			>
-			<File
-				RelativePath=".\source\ICheck.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ObjectInitCheck.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\ObjectInitCheck.h"
-				>
-			</File>
 			<File
 				RelativePath=".\source\SemanticAnalysis.cpp"
 				>
@@ -505,6 +509,62 @@
 				RelativePath=".\source\StaticContextEntry.h"
 				>
 			</File>
+			<Filter
+				Name="check"
+				>
+				<File
+					RelativePath=".\source\ArrayInitCheck.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ArrayInitCheck.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ClassCheck.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ClassCheck.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ICheck.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\InterfaceCheck.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\InterfaceCheck.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ObjectInitCheck.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ObjectInitCheck.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\TypeCheck.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\TypeCheck.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\VariableDeclCheck.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\VariableDeclCheck.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\ClassDiagram1.cd"

@@ -46,4 +46,9 @@ namespace COBJ {
 	FormalParamDef::~FormalParamDef()
 	{
 	}
+
+	void FormalParamDef::getChildNodes(std::list<ASTNodePtr>& children) const
+	{
+		children.push_back(m_pType);
+	}
 }

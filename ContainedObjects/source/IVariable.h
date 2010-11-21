@@ -1,12 +1,12 @@
-
 #pragma once
 
-class basic_type;
-class IObject;
-class IArray;
+#include "runtime_types.h"
+#include "Type.h"
 
 namespace COBJ
 {
+	using namespace std;
+
 	class IVariable
 	{
 	public:
@@ -14,28 +14,28 @@ namespace COBJ
 
 		virtual basic_type getBasicType() = 0;
 
-		virtual Result getInteger(int& value) const = 0;
+		virtual bool getInteger(int& value) const = 0;
 
-		virtual Result setInteger(int value) = 0;
+		virtual bool setInteger(int value) = 0;
 
-		virtual Result getFloat(float& value) const = 0;
+		virtual bool getFloat(float& value) const = 0;
 
-		virtual Result setFloat(float value) = 0;
+		virtual bool setFloat(float value) = 0;
 
-		virtual Result getString(std::wstring& value) const = 0;
+		virtual bool getString(wstring& value) const = 0;
 
-		virtual Result setString(const std::wstring& value) const = 0;
+		virtual bool setString(const wstring& value) const = 0;
 
-		virtual Result getArray(boost::shared_ptr<IArray>& pValue) const = 0;
+		virtual bool getArray(IArrayPtr& pValue) const = 0;
 
-		virtual Result setArray(const boost::shared_ptr<IArray>& pValue) const = 0;
+		virtual bool setArray(const IArrayPtr& pValue) const = 0;
 
-		virtual Result getObject(boost::shared_ptr<IObject>& pValue) const = 0;
+		virtual bool getObject(IObjectPtr& pValue) const = 0;
 
-		virtual Result setObject(const boost::shared_ptr<IObject>& pValue) const = 0;
+		virtual bool setObject(const IObjectPtr& pValue) const = 0;
 
-		virtual Result getClass(boost::shared_ptr<IClass>& pValue) const = 0;
+		virtual bool getClass(IClassPtr& pValue) const = 0;
 
-		virtual Result setClass(const boost::shared_ptr<IClass>& pValue) const = 0;
+		virtual bool setClass(const IClassPtr& pValue) const = 0;
 	};
 }

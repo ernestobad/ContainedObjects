@@ -16,12 +16,12 @@
 namespace COBJ
 {
 	ClassDef::ClassDef()
-		: m_IsNative(false)
+		: ClassDefBase(), m_IsNative(false)
 	{
 	}
 
 	ClassDef::ClassDef(const pANTLR3_BASE_TREE node)
-		: ASTNode(node), m_IsNative(false)
+		: ClassDefBase(node), m_IsNative(false)
 	{
 		assert(node->getType(node) == N_CLASS_DECL);
 		assert(node->getChildCount(node) == 4);
@@ -43,7 +43,7 @@ namespace COBJ
 		{
 			// formal class params
 
-			m_FormalPrametersMap.clear();
+			m_FormalParametersMap.clear();
 
 			n = (pANTLR3_BASE_TREE) node->getChild(node, 1);
 			assert(n->getType(n) == N_FORMAL_CLASS_PARAMS);
@@ -55,7 +55,7 @@ namespace COBJ
 				assert(c->getType(c) == N_FORMAL_CLASS_PARAM);
 
 				FormalParamDefPtr pFormalParamDef(new FormalParamDef(c));
-				m_FormalPrametersMap[pFormalParamDef->getParamName()] = pFormalParamDef;
+				m_FormalParametersMap[pFormalParamDef->getParamName()] = pFormalParamDef;
 			}
 		}
 
@@ -102,5 +102,22 @@ namespace COBJ
 
 	ClassDef::~ClassDef()
 	{
+	}
+
+	void ClassDef::getChildNodes(std::list<ASTNodePtr>& children) const
+	{
+		list<VariableDeclDefPtr>::const_iterator vit;
+
+		for (vit = m_VariableDecls.begin(); vit != m_VariableDecls.end(); vit++)
+		{
+			children.push_back(*vit);
+		}
+
+		map<const wstring, FormalParamDefPtr>::const_iterator fit;
+
+		for (fit = m_FormalParametersMap.begin(); fit != m_FormalParametersMap.end(); fit++)
+		{
+			children.push_back((*fit).second);
+		}
 	}
 }

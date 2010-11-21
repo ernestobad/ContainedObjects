@@ -44,4 +44,9 @@ namespace COBJ {
 	ActualParamDef::~ActualParamDef() {
 	}
 
+	void ActualParamDef::getChildNodes(std::list<ASTNodePtr>& children) const
+	{
+		children.push_back(m_pValue);
+	}
+
 }

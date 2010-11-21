@@ -1,6 +1,7 @@
 #include "platform.h"
 #include "PrimitiveType.h"
 #include "antlr/ContainedObjectsLexer.h"
+#include "exceptions.h"
 
 namespace COBJ
 {
@@ -9,25 +10,31 @@ namespace COBJ
 	{
 	}
 
-	PrimitiveType::PrimitiveType(const pANTLR3_BASE_TREE node)
-		: Type()
+	basic_type getPrimitiveBasicType(const pANTLR3_BASE_TREE node)
 	{
 		if (node->getType(node) == N_INTEGER_TYPE)
 		{
-			m_BasicType = INTEGER_B_TYPE;
+			return INTEGER_B_TYPE;
 		}
 		else if (node->getType(node) == N_FLOAT_TYPE)
 		{
-			m_BasicType = FLOAT_B_TYPE;
+			return FLOAT_B_TYPE;
 		}
 		else if (node->getType(node) == N_STRING_TYPE)
 		{
-			m_BasicType = STRING_B_TYPE;
+			return STRING_B_TYPE;
 		}
 		else
 		{
-			assert(false);
+			std::wstring msg(L"Invalid node");
+			InternalErrorException e(msg);
+			throw e;
 		}
+	}
+
+	PrimitiveType::PrimitiveType(const pANTLR3_BASE_TREE node)
+		: Type(getPrimitiveBasicType(node), node)
+	{
 	}
 
 	PrimitiveType::~PrimitiveType(void)

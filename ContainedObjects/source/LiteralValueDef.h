@@ -21,8 +21,6 @@ namespace COBJ
 
 		virtual ~LiteralValueDef(void);
 
-		virtual ast_node_type getASTNodeType() const = 0;
-
 		literal_type getLiteralType() const
 		{
 			return m_LiteralType;

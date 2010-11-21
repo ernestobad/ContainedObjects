@@ -25,7 +25,7 @@ namespace COBJ
 	}
 
 	void ObjectInitCheck::doCheck(
-		const ConstStaticContextPtr& pCtx,
+		const ConstStaticContextPtr& pMemberCtx,
 		const ASTNodePtr& pNode,
 		const LogPtr& pLog) const
 	{
@@ -38,7 +38,7 @@ namespace COBJ
 		const wstring& className = pObjectInit->getClassName();
 
 		ConstStaticContextEntryPtr pContextEntry;
-		if (!pCtx->lookup(className, pContextEntry))
+		if (!pMemberCtx->lookup(className, pContextEntry))
 		{
 			boost::wformat f(L"Can't find name %1% in context.");
 			f % className;
@@ -77,7 +77,7 @@ namespace COBJ
 			const wstring& actualParamName = (*apIt).first;
 			const ActualParamDefPtr& pActualParamDef = (*apIt).second;
 
-			const ConstTypePtr& pActualParamInferredType = 
+			const TypePtr& pActualParamInferredType = 
 				pActualParamDef->getValue()->getInferredType();
 
 			if ((fpIt = formalParamsMap.find(actualParamName)) == formalParamsMap.end())
@@ -97,13 +97,15 @@ namespace COBJ
 
 			const FormalParamDefPtr& pFormalParamDef = (*fpIt).second;
 
-			const ConstTypePtr& pFormalParamType = pFormalParamDef->getType();
+			const TypePtr& pFormalParamType = pFormalParamDef->getType();
 
+			ConstStaticContextPtr pRootCtx;
+			pMemberCtx->getRootContext(pRootCtx);
 
-			if (!SemanticAnalysis::isTypeAssignableFrom(
+			if (!isTypeAssignableFrom(
 					 pFormalParamType,
 					pActualParamInferredType,
-					pCtx->getParentContext()))
+					pRootCtx))
 			{
 				boost::wformat f(L"Cannot convert value from %1% to %2%.");
 				f % pActualParamInferredType->toString() %  pFormalParamType->toString();

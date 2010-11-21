@@ -13,17 +13,27 @@ namespace COBJ {
 	class Context {
 	public:
 		Context()
-			: m_pParentContext()
+			: m_pParentContext(), m_IsStatic(false)
 		{
 		}
 
-		Context(const boost::shared_ptr<const Context<E>>& pParentContext) 
-			: m_pParentContext(pParentContext)
+		Context(const boost::shared_ptr<const Context<E>>& pParentContext, bool isStatic = false)
+			: m_pParentContext(pParentContext), m_IsStatic(isStatic)
 		{
 		}
 
 		virtual ~Context()
 		{
+		}
+
+		virtual bool isStatic() const
+		{
+			return m_IsStatic;
+		}
+
+		virtual void setStatic(bool isStatic)
+		{
+			m_IsStatic = isStatic;
 		}
 
 		virtual bool hasParent() const
@@ -101,6 +111,7 @@ namespace COBJ {
 	private:
 		boost::shared_ptr<const Context<E>> m_pParentContext;
 		std::map<const std::wstring, boost::shared_ptr<const E>> m_Map;
+		bool m_IsStatic;
 	};
 
 }

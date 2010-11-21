@@ -19,90 +19,20 @@ namespace COBJ
 	public:
 		SemanticAnalysis(const LogPtr& pLog);
 
-		void addCheck(const ICheckPtr& pSemanticCheck);
+		void addCheck(
+			const ICheckPtr& pCheck);
 
 		void analyze(
-			const list<ClassDefPtr>& classes,
-			const list<InterfaceDefPtr>& interfaces);
+			const list<ClassDefBasePtr>& classes);
 
-		static bool isTypeAssignableFrom(
-			const ConstTypePtr& pLType,
-			const ConstTypePtr& pRType,
-			const ConstStaticContextPtr& pRootCtx)
-		{
-			if (*pLType == *pRType)
-			{
-				return true;
-			}
-			else if (pLType->getBasicType() != pRType->getBasicType())
-			{
-				return false;
-			}
-			else if (pLType->getBasicType() == OBJECT_B_TYPE)
-			{
-				ConstReferenceTypePtr& pLRefType = 
-					boost::static_pointer_cast<const ReferenceType>(pLType);
-
-				ConstReferenceTypePtr& pRRefType = 
-					boost::static_pointer_cast<const ReferenceType>(pRType);
-
-				const wstring& lTypeName = pLRefType->getReferenceTypeName();
-
-				const wstring& rTypeName = pRRefType->getReferenceTypeName();
-
-				ConstStaticContextEntryPtr pRCtxEntry;
-
-				if (!pRootCtx->lookup(rTypeName, pRCtxEntry))
-				{
-					return false;
-				}
-
-				ClassDefPtr pRClass;
-				if (!pRCtxEntry->getClass(pRClass))
-				{
-					// if rh type is an interface, then lh type must be the same interface
-					// (ther is no interface inheritance), but we know that *pLType != *pRType
-					// so the interfaces are not the same
-					return false;
-				}
-
-				const list<const wstring>& interfaces = pRClass->getImplementedInterfaces();
-
-				list<const wstring>::const_iterator it;
-
-				for (it = interfaces.begin(); it != interfaces.end(); it++)
-				{
-					const wstring& ifaceName = *it;
-					if (lTypeName == ifaceName)
-					{
-						return true;
-					}
-				}
-
-				return false;
-			}
-			else if (pLType->getBasicType() == ARRAY_B_TYPE)
-			{
-				ConstArrayTypePtr pLArrayType = boost::static_pointer_cast<const ArrayType>(pLType);
-				ConstArrayTypePtr pRArrayType = boost::static_pointer_cast<const ArrayType>(pRType);
-
-				return isTypeAssignableFrom(
-					pLArrayType->getChildType(),
-					pRArrayType->getChildType(),
-					pRootCtx);
-			}
-			else
-			{
-				return false;
-			}
-		}
+		const LogPtr& getLog() const;
 
 		~SemanticAnalysis(void);
 
 	private:
 
 		void inferTypes(
-			std::list<ClassDefPtr>& classes,
+			const std::list<ClassDefBasePtr>& classes,
 			ConstStaticContextPtr& pRootCtx);
 
 		void inferTypes(
@@ -113,19 +43,33 @@ namespace COBJ
 			const Type& currentType,
 			const StaticContext& rootCtx,
 			const std::wstring& pathElement,
-			ConstTypePtr& pNextType);
+			TypePtr& pNextType);
 
-		void initRootContext(
-			StaticContext& newCtx,
-			const std::list<ClassDefPtr>& classes,
-			const std::list<InterfaceDefPtr>& interfaces);
+		void newRootContext(
+			ConstStaticContextPtr& pNewCtx,
+			const std::list<ClassDefBasePtr>& classes);
 
-		void initClassContext(
-			StaticContext& newCtx,
-			const ClassDef& pClassDef);
+		void newClassContext(
+			ConstStaticContextPtr& pNewCtx,
+			const ClassDefBasePtr& pClassDefBase,
+			const ConstStaticContextPtr& pRootCtx);
+
+		void newMemberContext(
+			ConstStaticContextPtr& pNewCtx,
+			const VariableDeclDefPtr& pVariableDef,
+			const ConstStaticContextPtr& pClassCtx);
+
+		void check(
+			const ASTNodePtr& pNode,
+			const ConstStaticContextPtr& pCtx);
 
 		std::list<ICheckPtr> m_SemanticChecks;
 		boost::shared_ptr<Log> m_pLog;
 	};
+
+	bool isTypeAssignableFrom(
+		const TypePtr& pLType,
+		const TypePtr& pRType,
+		const ConstStaticContextPtr& pRootCtx);
 
 }

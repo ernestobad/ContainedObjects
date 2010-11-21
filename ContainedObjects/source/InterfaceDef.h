@@ -3,10 +3,13 @@
 #include <antlr3defs.h>
 #include "ASTNode.h"
 #include "ast_types.h"
+#include "ClassDefBase.h"
 
 namespace COBJ
 {
-	class InterfaceDef : public ASTNode
+	using namespace std;
+
+	class InterfaceDef : public ClassDefBase
 	{
 	public:
 		InterfaceDef();
@@ -19,24 +22,26 @@ namespace COBJ
 			return ASTN_INTERFACE;
 		}
 
-		const std::wstring& getIntefaceName() const
+		void getChildNodes(std::list<ASTNodePtr>& children) const;
+
+		const std::wstring& getClassName() const
 		{
-			return m_InterfaceName;
+			return m_ClassName;
 		}
 
-		void setInterfaceName(const std::wstring& interfaceName)
+		void setClassName(const std::wstring& className)
 		{
-			m_InterfaceName = interfaceName;
+			m_ClassName = className;
 		}
 
-		const std::list<FormalParamDefPtr>& getFormalParameters() const
+		const map<const wstring, FormalParamDefPtr>& getFormalParametersMap() const
 		{
-			return m_FormalPrameters;
+			return m_FormalParametersMap;
 		}
 
-		void setFormalParameters(const std::list<FormalParamDefPtr>& formalParameters)
+		void setFormalParametersMap(const map<const wstring, FormalParamDefPtr>& formalParametersMap)
 		{
-			m_FormalPrameters = formalParameters;
+			m_FormalParametersMap = formalParametersMap;
 		}
 
 		const std::list<VariableDeclDefPtr>& getVariableDecls() const
@@ -50,8 +55,8 @@ namespace COBJ
 		}
 
 	private:
-		std::wstring m_InterfaceName;
-		std::list<FormalParamDefPtr> m_FormalPrameters;
-		std::list<VariableDeclDefPtr> m_VariableDecls;
+		wstring m_ClassName;
+		map<const wstring, FormalParamDefPtr> m_FormalParametersMap;
+		list<VariableDeclDefPtr> m_VariableDecls;
 	};
 }

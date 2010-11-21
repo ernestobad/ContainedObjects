@@ -12,7 +12,7 @@ namespace COBJ
 		virtual ~ICheck(void) { }
 
 		virtual void doCheck(
-			const StaticContextPtr& pCtx,
+			const ConstStaticContextPtr& pCtx,
 			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const = 0;
 	};

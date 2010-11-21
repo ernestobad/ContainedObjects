@@ -1,13 +1,12 @@
 
 #pragma once
 
-
+#include "ast_types.h"
+#include "runtime_types.h"
 
 namespace COBJ
 {
-	class IInterface;
-	class IVariable;
-	class ClassDef;
+	using namespace std;
 
 	class IClass
 	{
@@ -16,16 +15,17 @@ namespace COBJ
 
 		virtual bool isNative() const = 0;
 
-		virtual const ClassDef& getDefinition() = 0;
+		virtual const ClassDefPtr& getDefinition() = 0;
 
-		virtual bool implements(IInterface* pInterface) const = 0;
+		virtual bool implements(
+			const IInterfacePtr pInterface) const = 0;
 
 		virtual Result getImplementedInterfaces(
-			std::vector<IInterface*>& impementedInterfaces) const = 0;
+			vector<const IInterfacePtr>& interfaces) const = 0;
 
 		virtual Result newObject(
-			const std::map<std::wstring, boost::shared_ptr<IVariable>>& params,
-			IObject** ppObject) = 0;
+			const map<const wstring, const IVariablePtr>& params,
+			IObjectPtr ppObject) = 0;
 
 		virtual Result getStaticVariable(
 			const std::wstring& varName, IVariable** ppVariable) const = 0;

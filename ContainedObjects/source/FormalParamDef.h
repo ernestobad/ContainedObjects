@@ -29,7 +29,9 @@ namespace COBJ
 			return ASTN_FORMAL_PARAM;
 		}
 
-		const ConstTypePtr& getType() const
+		void getChildNodes(std::list<ASTNodePtr>& children) const;
+
+		const TypePtr& getType() const
 		{
 			return m_pType;
 		}
@@ -50,7 +52,7 @@ namespace COBJ
 		}
 
 	private:
-		ConstTypePtr m_pType;
+		TypePtr m_pType;
 		std::wstring m_ParamName;
 	};
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ASTNode.h"
 #include "Type.h"
 #include <antlr3defs.h>
 
@@ -18,6 +19,15 @@ namespace COBJ
 		PrimitiveType(primitive_type primitiveType);
 		PrimitiveType(const pANTLR3_BASE_TREE node);
 		~PrimitiveType(void);
+
+		ast_node_type getASTNodeType() const
+		{
+			return ASTN_PRIMITIVE_TYPE;
+		}
+
+		void getChildNodes(std::list<ASTNodePtr>& children) const
+		{
+		}
 
 		std::wstring toString() const;
 

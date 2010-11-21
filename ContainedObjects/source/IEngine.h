@@ -1,12 +1,12 @@
 
 #pragma once
 
+#include "runtime_types.h"
+#include "ast_types.h"
+
 namespace COBJ
 {
-	class IClass;
-	class IInterface;
-	class IVariable;
-	class Type;
+	using namespace std;
 
 	class IEngine
     {
@@ -14,22 +14,22 @@ namespace COBJ
         virtual ~IEngine(){}
 
 		virtual void parseFiles(
-			const std::list<std::wstring>& filePaths) = 0;
+			const list<const wstring>& filePaths) = 0;
 
 		virtual void parseFile(
-			const std::wstring& filePath) = 0;
+			const wstring& filePath) = 0;
 
 		virtual bool getClass(
-			const std::wstring& className,
-			boost::shared_ptr<IClass>& pClass) = 0;
+			const wstring& className,
+			IClassPtr& pClass) = 0;
 
 		virtual bool getInterface(
-			const std::wstring& interfaceName,
-			boost::shared_ptr<IInterface>& pInterface) = 0;
+			const wstring& interfaceName,
+			IInterfacePtr& pInterface) = 0;
 	};
 
 	const void CreateEngine(
-		const std::vector<boost::shared_ptr<IClass>>& nativeClasses,
-		const std::vector<boost::shared_ptr<IInterface>>& nativeInterfaces,
-		boost::shared_ptr<IEngine>& pEngine);
+		const vector<IClassPtr>& nativeClasses,
+		const vector<IInterfacePtr>& nativeInterfaces,
+		IEnginePtr& pEngine);
 }

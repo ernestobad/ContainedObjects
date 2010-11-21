@@ -20,6 +20,8 @@ namespace COBJ
 			return ASTN_ARRAY_INIT_VALUE;
 		}
 
+		void getChildNodes(std::list<ASTNodePtr>& children) const;
+
 		const std::list<ValueDefPtr>& getValues() const
 		{
 			return m_Values;

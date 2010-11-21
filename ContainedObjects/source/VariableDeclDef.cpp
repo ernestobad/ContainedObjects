@@ -82,4 +82,9 @@ namespace COBJ
 	{
 	}
 
+	void VariableDeclDef::getChildNodes(std::list<ASTNodePtr>& children) const
+	{
+		children.push_back(m_pDeclaredType);
+		children.push_back(m_pValue);
+	}
 }

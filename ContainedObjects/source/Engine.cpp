@@ -12,7 +12,9 @@
 
 namespace COBJ
 {
-	Engine* Engine::s_pInstance = NULL;
+	using namespace std;
+
+	EnginePtr Engine::s_pInstance = EnginePtr();
 
 	Engine::Engine(void)
 		: m_pLog(new Log())
@@ -23,16 +25,17 @@ namespace COBJ
 	{
 	}
 
-	const std::wstring& Engine::getCurrentFile()
+	const wstring& Engine::getCurrentFile()
 	{
 		return m_CurrentFile;
 	}
 
-	void Engine::parseFiles(const std::list<std::wstring>& filePaths)
+	void Engine::parseFiles(const list<const wstring>& filePaths)
 	{
-		std::list<std::wstring>::const_iterator it;
+		list<const wstring>::const_iterator it;
 
-		for (it = filePaths.begin(); it != filePaths.end(); it++) {
+		for (it = filePaths.begin(); it != filePaths.end(); it++)
+		{
 			parseFile(*it);
 		}
 	}
@@ -49,7 +52,7 @@ namespace COBJ
 			}
 	} 
 
-	void Engine::parseFile(const std::wstring& filePath)
+	void Engine::parseFile(const wstring& filePath)
 	{
 		m_CurrentFile = filePath;
 
@@ -61,13 +64,13 @@ namespace COBJ
 		ContainedObjectsParser_init_return langAST;
 		//fantlr3_auto_resource<ANTLR3_COMMON_TREE_NODE_STREAM>::Type nodes;
 
-		std::string filePathUtf8;
+		string filePathUtf8;
 		convertUTF16ToUTF8(filePath, filePathUtf8);
 
-		std::ifstream fileStream(filePathUtf8.c_str());
-		std::string fileContentsUtf8((std::istreambuf_iterator<char>(fileStream)), std::istreambuf_iterator<char>());
+		ifstream fileStream(filePathUtf8.c_str());
+		string fileContentsUtf8((istreambuf_iterator<char>(fileStream)), istreambuf_iterator<char>());
 		
-		std::wstring fileContentsUtf16;
+		wstring fileContentsUtf16;
 		convertUTF8ToUTF16(fileContentsUtf8, fileContentsUtf16);
 
 		input = antlr3NewUCS2StringInPlaceStream(
@@ -77,13 +80,13 @@ namespace COBJ
 
 		//input = antlr3AsciiFileStreamNew((pANTLR3_UINT8) filePathUtf8.c_str());
 
-		std::ofstream outFileStream("test.txt", std::ios::out | std::ios::binary);
+		ofstream outFileStream("test.txt", ios::out | ios::binary);
 		outFileStream.write((char*) input->data, input->sizeBuf);
 		outFileStream.close();
 
 		if (input.get() == NULL)
 		{
-			std::wstring msg(L"Unable to open file " + filePath);
+			wstring msg(L"Unable to open file " + filePath);
 			ParserException e(msg);
 			throw e;
 		}
@@ -92,7 +95,7 @@ namespace COBJ
 
 		if (lxr == NULL)
 		{
-			std::wstring msg(L"Unable to create the lexer");
+			wstring msg(L"Unable to create the lexer");
 			ParserException e(msg);
             throw e;
 		}
@@ -101,7 +104,7 @@ namespace COBJ
 
 		if (tstream == NULL)
 		{
-			std::wstring msg(L"Could not allocate token stream\n");
+			wstring msg(L"Could not allocate token stream\n");
 			ParserException e(msg);
 			throw e;
 		}
@@ -110,7 +113,7 @@ namespace COBJ
  
 		if (psr == NULL)
 		{
-			std::wstring msg(L"Could not allocate parser\n");
+			wstring msg(L"Could not allocate parser\n");
 			ParserException e(msg);
 			throw e;
 		}
@@ -122,13 +125,13 @@ namespace COBJ
 
 		if (lexerRec->getNumberOfSyntaxErrors(lexerRec) > 0)
 		{
-			std::wstring msg(L"The lexer returned errors\n");
+			wstring msg(L"The lexer returned errors\n");
 			ParserException e(msg);
 			throw e;
 		}
 		else if (parserRec->getNumberOfSyntaxErrors(parserRec) > 0)
 		{
-			std::wstring msg(L"The parser returned errors\n");
+			wstring msg(L"The parser returned errors\n");
 			ParserException e(msg);
 			throw e;
 		}
@@ -155,20 +158,20 @@ namespace COBJ
 		}
 	}
 
-	bool Engine::getClass(const std::wstring& className, boost::shared_ptr<IClass>& pClass)
+	bool Engine::getClass(const wstring& className, IClassPtr& pClass)
 	{
 		return false;
 	}
 
-	bool Engine::getInterface(const std::wstring& interfaceName, boost::shared_ptr<IInterface>& pInterface)
+	bool Engine::getInterface(const wstring& interfaceName, IInterfacePtr& pInterface)
 	{
 		return false;
 	}
 
 	const void CreateEngine(
-		const std::vector<boost::shared_ptr<IClass>> nativeClasses,
-		const std::vector<boost::shared_ptr<IInterface>> nativeInterfaces,
-		boost::shared_ptr<IEngine>& pEngine)
+		const vector<IClassPtr> nativeClasses,
+		const vector<IInterfacePtr> nativeInterfaces,
+		IEnginePtr& pEngine)
 	{
 
 	}

@@ -5,13 +5,13 @@
 namespace COBJ
 {
 
-	ArrayType::ArrayType(const ConstTypePtr& pChildType)
+	ArrayType::ArrayType(const TypePtr& pChildType)
 		: Type(ARRAY_B_TYPE), m_pChildType(pChildType)
 	{
 	}
 
 	ArrayType::ArrayType(const pANTLR3_BASE_TREE node)
-		: Type(ARRAY_B_TYPE)
+		: Type(ARRAY_B_TYPE, node)
 	{
 		assert(node->getType(node) == N_ARRAY_TYPE);
 		assert(node->getChildCount(node) == 1);
@@ -36,7 +36,12 @@ namespace COBJ
 		return f.str();
 	}
 
-	const ConstTypePtr& ArrayType::getChildType() const
+	void ArrayType::getChildNodes(std::list<ASTNodePtr>& children) const
+	{
+		children.push_back(m_pChildType);
+	}
+
+	const TypePtr& ArrayType::getChildType() const
 	{
 		return m_pChildType;
 	}
@@ -50,8 +55,8 @@ namespace COBJ
 
 		const ArrayType& arrayType = static_cast<const ArrayType &>(type);
 
-		const ConstTypePtr& childType1 = arrayType.getChildType();
-		const ConstTypePtr& childType2 = getChildType();
+		const TypePtr& childType1 = arrayType.getChildType();
+		const TypePtr& childType2 = getChildType();
 
 		return (*childType1 == *childType2);
 	}

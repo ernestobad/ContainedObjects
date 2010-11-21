@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "ASTNode.h"
 #include "common_types.h"
 #include <antlr3defs.h>
 
@@ -15,11 +16,11 @@ namespace COBJ
 		CLASS_B_TYPE
 	};
 
-	class Type
+	class Type : public ASTNode
 	{
 	public:
-		Type(void);
 		Type(basic_type basicType);
+		Type(basic_type basicType, const pANTLR3_BASE_TREE node);
 
         virtual ~Type();
 
@@ -37,9 +38,9 @@ namespace COBJ
 
 	void createType(
 			const pANTLR3_BASE_TREE node,
-			ConstTypePtr& pType);
+			TypePtr& pType);
 
 	void createSimpleType(
 				const pANTLR3_BASE_TREE node,
-				ConstTypePtr& pType);
+				TypePtr& pType);
 }

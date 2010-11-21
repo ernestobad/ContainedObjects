@@ -24,6 +24,17 @@ namespace COBJ
 		std::wstring m_Cause;
 	};
 
+	// InternalErrorException //
+
+	class InternalErrorException : public COBJException
+	{
+	public:
+		InternalErrorException(const std::wstring& message);
+		InternalErrorException(const std::wstring& message, const std::wstring& cause);
+		InternalErrorException(const InternalErrorException& e);
+		virtual ~InternalErrorException(void);
+	};
+
 	// IOException //
 
 	class IOException : public COBJException
