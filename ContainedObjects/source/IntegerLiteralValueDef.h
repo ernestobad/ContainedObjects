@@ -27,7 +27,7 @@ namespace COBJ
 			return m_IntValue;
 		}
 
-		void setIntValue(const int intValue)
+		void setIntValue(int intValue)
 		{
 			m_IntValue = intValue;
 		}

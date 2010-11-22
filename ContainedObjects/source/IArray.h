@@ -1,30 +1,45 @@
 #pragma once
 
 #include "runtime_types.h"
+#include "ast_types.h"
 
 namespace COBJ
 {
+	using namespace std;
+
 	class IArray
 	{
 	public:
         virtual ~IArray(){}
 
+		virtual basic_type getBasicType() const = 0;
+
+		virtual void assignAt(int idx, IVariable& var) = 0;
+
 		virtual int getLength() const = 0;
 
-		virtual bool getIntegerAt(int idx, int& intValue) const = 0;
+		virtual int getIntegerAt(int idx) const = 0;
 
-		virtual bool setIntegerAt(int idx, int intValue) = 0;
+		virtual void setIntegerAt(int idx, int value) = 0;
 
-		virtual bool getFloatAt(int idx, float& floatValue) const = 0;
+		virtual float getFloatAt(int idx) const = 0;
 
-		virtual bool setFloatAt(int idx, float floatValue) = 0;
+		virtual void setFloatAt(int idx, float value) = 0;
 
-		virtual bool getStringAt(int idx, wstring& string) const = 0;
+		virtual wstring& getStringAt(int idx) const = 0;
 
-		virtual bool setStringAt(int idx, const wstring& string) const = 0;
+		virtual void setStringAt(int idx, const wstring& value) = 0;
 
-		virtual bool getObjectAt(int idx, IObjectPtr& pObject) const = 0;
+		virtual IArrayPtr getArrayAt(int idx) const = 0;
 
-		virtual bool setObjectAt(int idx, const IObjectPtr& pObject) const = 0;
+		virtual void setArrayAt(int idx, const IArrayPtr& pValue) = 0;
+
+		virtual IObjectPtr getObjectAt(int idx) const = 0;
+
+		virtual void setObjectAt(int idx, const IObjectPtr& pValue) = 0;
+
+		virtual IClassPtr getClassAt(int idx) const = 0;
+
+		virtual void setClassAt(int idx, const IClassPtr& pValue) = 0;
 	};
 }

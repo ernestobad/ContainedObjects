@@ -1,11 +1,12 @@
 
 #pragma once
 
-class IIClass;
-class IIVariable;
+#include "runtime_types.h"
 
 namespace COBJ
 {
+	using namespace std;
+
 	class IObject
 	{
 	public:
@@ -13,9 +14,10 @@ namespace COBJ
 
 		virtual bool isNative() const = 0;
 
-		virtual Result getClass(IIClass** ppClass) const = 0;
+		virtual void getClass(IClassPtr& pClass) const = 0;
 
-		virtual Result getMemberVariable(
-			const std::wstring& varName, IVariable** ppVar) const = 0;
+		virtual bool getMemberVariable(
+			const wstring& varName,
+			IVariablePtr& pVar) const = 0;
 	};
 }

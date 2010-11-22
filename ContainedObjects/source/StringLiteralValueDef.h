@@ -6,6 +6,8 @@
 
 namespace COBJ
 {
+	using namespace std;
+
 	class StringLiteralValueDef : public LiteralValueDef
 	{
 	public:
@@ -18,21 +20,21 @@ namespace COBJ
 			return ASTN_STRING_LITERAL_VALUE;
 		}
 
-		void getChildNodes(std::list<ASTNodePtr>& children) const
+		void getChildNodes(list<ASTNodePtr>& children) const
 		{
 		}
 
-		const std::wstring& getStringValue() const
+		const wstring& getStringValue() const
 		{
 			return m_StringValue;
 		}
 
-		void setStringValue(const std::wstring& stringValue)
+		void setStringValue(const wstring& stringValue)
 		{
 			m_StringValue = stringValue;
 		}
 
 	private:
-		std::wstring m_StringValue;
+		wstring m_StringValue;
 	};
 }

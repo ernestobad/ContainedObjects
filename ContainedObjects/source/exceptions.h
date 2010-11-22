@@ -35,6 +35,28 @@ namespace COBJ
 		virtual ~InternalErrorException(void);
 	};
 
+	// IndexOutOfBoundsException //
+
+	class IndexOutOfBoundsException : public COBJException
+	{
+	public:
+		IndexOutOfBoundsException(const std::wstring& message);
+		IndexOutOfBoundsException(const std::wstring& message, const std::wstring& cause);
+		IndexOutOfBoundsException(const IndexOutOfBoundsException& e);
+		virtual ~IndexOutOfBoundsException(void);
+	};
+
+	// InvalidTypeException //
+
+	class InvalidTypeException : public COBJException
+	{
+	public:
+		InvalidTypeException(const std::wstring& message);
+		InvalidTypeException(const std::wstring& message, const std::wstring& cause);
+		InvalidTypeException(const InvalidTypeException& e);
+		virtual ~InvalidTypeException(void);
+	};
+
 	// IOException //
 
 	class IOException : public COBJException

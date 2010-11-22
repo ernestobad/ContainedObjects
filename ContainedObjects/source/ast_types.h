@@ -2,10 +2,6 @@
 
 namespace COBJ
 {
-	class Value;
-	typedef boost::shared_ptr<Value> ValuePtr;
-	//typedef boost::shared_ptr<const Value> ConstValuePtr;
-
 	class Type;
 	typedef boost::shared_ptr<Type> TypePtr;
 	//typedef boost::shared_ptr<const Type> ConstTypePtr;
@@ -17,6 +13,8 @@ namespace COBJ
 	class ReferenceType;
 	typedef boost::shared_ptr<ReferenceType> ReferenceTypePtr;
 	//typedef boost::shared_ptr<const ReferenceType> ConstReferenceTypePtr;
+
+	enum basic_type;
 
 	class ArrayType;
 	typedef boost::shared_ptr<ArrayType> ArrayTypePtr;

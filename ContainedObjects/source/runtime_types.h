@@ -2,6 +2,19 @@
 
 namespace COBJ
 {
+	template <class E>
+	class Context;
+
+	class RuntimeContextEntry;
+
+	typedef Context<RuntimeContextEntry> RuntimeContext;
+
+	typedef boost::shared_ptr<RuntimeContext> RuntimeContextPtr;
+	typedef boost::shared_ptr<const RuntimeContext> ConstRuntimeContextPtr;
+
+	typedef boost::shared_ptr<RuntimeContextEntry> RuntimeContextEntryPtr;
+	typedef boost::shared_ptr<const RuntimeContextEntry> ConstRuntimeContextEntryPtr;
+
 	class IClass;
 	typedef boost::shared_ptr<IClass> IClassPtr;
 	//typedef boost::shared_ptr<const IClass> ConstIClassPtr;

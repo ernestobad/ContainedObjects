@@ -91,6 +91,48 @@ namespace COBJ
 	{
 	}
 
+	// IndexOutOfBoundsException //
+
+	IndexOutOfBoundsException::IndexOutOfBoundsException(const std::wstring& message) 
+		: COBJException(message)
+	{
+	}
+
+	IndexOutOfBoundsException::IndexOutOfBoundsException(const std::wstring& message, const std::wstring& cause)
+		: COBJException(message, cause)
+	{
+	}
+
+	IndexOutOfBoundsException::IndexOutOfBoundsException(const IndexOutOfBoundsException& e)
+		: COBJException(e)
+	{
+	}
+
+	IndexOutOfBoundsException::~IndexOutOfBoundsException(void)
+	{
+	}
+
+	// InvalidTypeException //
+
+	InvalidTypeException::InvalidTypeException(const std::wstring& message) 
+		: COBJException(message)
+	{
+	}
+
+	InvalidTypeException::InvalidTypeException(const std::wstring& message, const std::wstring& cause)
+		: COBJException(message, cause)
+	{
+	}
+
+	InvalidTypeException::InvalidTypeException(const InvalidTypeException& e)
+		: COBJException(e)
+	{
+	}
+
+	InvalidTypeException::~InvalidTypeException(void)
+	{
+	}
+
 	// IOException //
 
 	IOException::IOException(const std::wstring& message) 
