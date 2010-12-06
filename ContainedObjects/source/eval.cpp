@@ -2,6 +2,7 @@
 #include "eval.h"
 #include "IVariable.h"
 #include "IClass.h"
+#include "IObject.h"
 #include "Context.h"
 #include "RuntimeContextEntry.h"
 #include "ValueDef.h"
@@ -42,14 +43,14 @@ namespace COBJ
 						pObjectInitDef->getClassName(),
 						pEntry))
 				{
-					throw InternalErrorException(L"Class not in context");
+					throw RuntimeCheckException(L"Class not in context");
 				}
 
 				IClassPtr pIClass;
 
 				if (!pEntry->getClass(pIClass))
 				{
-					throw InternalErrorException(L"Context entry is not a class");
+					throw RuntimeCheckException(L"Context entry is not a class");
 				}
 
 				map<const wstring, IVariablePtr> paramsMap;
@@ -79,11 +80,26 @@ namespace COBJ
 				ReferencePathValueDefPtr pReferencePathDef
 					= boost::static_pointer_cast<ReferencePathValueDef>(pValueDef);
 
-				// TODO:
-				// if context is static, first entry must be class or static variable
-				// else, all entries are allowed
-				// then follow path retrieving member variables with IObject and IClass accessor methods.
+				const list<const wstring>& path = pReferencePathDef->getReferencePath();
 
+				list<const wstring>::const_iterator it;
+				IVariablePtr pCurrValueVar;
+
+				for (it = path.begin(); it != path.end(); it++)
+				{
+					const wstring& name = *it;
+
+					if (it == path.begin())
+					{
+						resolveContextMember(pCtx, name, pCurrValueVar);
+					}
+					else
+					{
+						resolveValueMember(pCurrValueVar, name);
+					}
+				}
+
+				pVar = pCurrValueVar;
 				break;
 			}
 		case ASTN_ARRAY_INIT_VALUE:
@@ -145,6 +161,65 @@ namespace COBJ
 		default:
 			{
 				throw InternalErrorException(L"Invalid node type");
+			}
+		}
+	}
+
+	void resolveContextMember(
+		const ConstRuntimeContextPtr& pCtx,
+		const wstring& name,
+		IVariablePtr& pVar)
+	{
+		ConstRuntimeContextEntryPtr pEntry;
+		
+		if (!pCtx->lookup(name, pEntry))
+		{
+			throw RuntimeCheckException(L"Name not found in context");
+		}
+
+		switch (pEntry->getType())
+		{
+		case CLASS_RT_CTX_ENTRY:
+			{
+				IClassPtr pClass;
+				pEntry->getClass(pClass);
+				pVar->setClass(pClass);
+				break;
+			}
+		case VARIABLE_RT_CTX_ENTRY:
+			{
+				IVariablePtr pIVar;
+				pEntry->getVariable(pIVar);
+				pVar->assign(*pIVar);
+				break;
+			}
+		}
+	}
+
+	void resolveValueMember(
+		const IVariablePtr& pVar,
+		const wstring& name)
+	{
+		switch (pVar->getBasicType())
+		{
+		case FLOAT_B_TYPE:
+		case INTEGER_B_TYPE:
+		case STRING_B_TYPE:
+		case ARRAY_B_TYPE:
+			{
+				throw RuntimeCheckException(L"Unable to resolve member");
+			}
+		case OBJECT_B_TYPE:
+			{
+				IObjectPtr pIObj = pVar->getObject();
+				pVar->assign(*pIObj->getMemberVariable(name));
+				break;
+			}
+		case CLASS_B_TYPE:
+			{
+				IClassPtr pIClass = pVar->getClass();
+				pVar->assign(*pIClass->getStaticVariable(name));
+				break;
 			}
 		}
 	}

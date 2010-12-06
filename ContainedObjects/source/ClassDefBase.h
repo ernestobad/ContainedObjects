@@ -27,16 +27,61 @@ namespace COBJ
 
 		virtual ast_node_type getASTNodeType() const = 0;
 
-		virtual const wstring& getClassName() const = 0;
+		virtual const wstring& getClassName() const
+		{
+			return m_ClassName;
+		}
 
-		virtual void setClassName(const wstring& className) = 0;
+		virtual void setClassName(const wstring& className)
+		{
+			m_ClassName = className;
+		}
 
-		virtual const map<const wstring, FormalParamDefPtr>& getFormalParametersMap() const = 0;
+		virtual const map<const wstring, FormalParamDefPtr>& getFormalParametersMap() const
+		{
+			return m_FormalParametersMap;
+		}
 
-		virtual void setFormalParametersMap(const map<const wstring, FormalParamDefPtr>& formalParametersMap) = 0;
+		virtual void setFormalParametersMap(const map<const wstring, FormalParamDefPtr>& formalParametersMap)
+		{
+			m_FormalParametersMap = formalParametersMap;
+		}
 
-		virtual const list<VariableDeclDefPtr>& getVariableDecls() const = 0;
+		virtual const list<const wstring>& getImplementedInterfaces() const
+		{
+			return m_ImplementedInterfaces;
+		}
 
-		virtual void setVariableDecls(const list<VariableDeclDefPtr> &variableDecls) = 0;
+		virtual void setImplementedInterfaces(const list<const wstring>& implementedInterfaces)
+		{
+			m_ImplementedInterfaces = implementedInterfaces;
+		}
+
+		virtual const list<VariableDeclDefPtr>& getVariableDecls() const
+		{
+			return m_VariableDecls;
+		}
+
+		virtual void setVariableDecls(const list<VariableDeclDefPtr> &variableDecls)
+		{
+			m_VariableDecls = variableDecls;
+		}
+
+		virtual const set<const wstring>& getStaticDependencies() const
+		{
+			return dependencies;
+		}
+
+		virtual void addStaticDependency(const wstring& className)
+		{
+			dependencies.insert(className);
+		}
+
+	protected:
+		wstring m_ClassName;
+		map<const wstring, FormalParamDefPtr> m_FormalParametersMap;
+		list<const wstring> m_ImplementedInterfaces;
+		list<VariableDeclDefPtr> m_VariableDecls;
+		set<const wstring> dependencies;
 	};
 }

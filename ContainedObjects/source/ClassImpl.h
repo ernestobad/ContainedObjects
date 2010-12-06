@@ -9,28 +9,31 @@ namespace COBJ
 	class ClassImpl : public IClass
 	{
 	public:
-		ClassImpl(const ClassDefPtr pClassDef, const RuntimeContextPtr& pRootCtx);
+		ClassImpl(const ClassDefBasePtr pClassDefBase, const RuntimeContextPtr& pRootCtx);
 		~ClassImpl(void);
 
 		bool isNative() const;
 
-		const ClassDefPtr& getDefinition() const;
+		bool isInterface() const;
 
-		bool implements(
-			const wstring interfaceName) const;
-
-		void getImplementedInterfaces(
-			list<const IInterfacePtr>& interfaces) const;
+		const ClassDefBasePtr& getDefinition() const;
 
 		void newObject(
-			const map<const wstring, const IVariablePtr>& params,
-			IObjectPtr ppObject) const;
+			const map<const wstring, IVariablePtr>& params,
+			IObjectPtr& pObject) const;
 
-		bool getStaticVariable(
-			const wstring& varName, IVariablePtr& pVariable) const;
+		bool implements(const wstring& interfaceName) const;
+
+		const IVariablePtr& getStaticVariable(const wstring& varName) const;
+
+		bool hasStaticVariable(const wstring& varName) const;
+
+		const IInterfacePtr& getInterface(const wstring& interfaceName) const;
 
 	private:
-		RuntimeContextPtr m_pRootCtx;
-		ClassDefPtr m_pClassDef;
+		RuntimeContextPtr m_pClassCtx;
+		ClassDefBasePtr m_pClassDefBase;
+		map<const wstring, IVariablePtr> m_VarsMap;
+		map<const wstring, IInterfacePtr> m_InterfacesMap;
 	};
 }

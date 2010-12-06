@@ -14,9 +14,9 @@ namespace COBJ
 		VariableImpl(basic_type basicType);
 		~VariableImpl(void);
 
-		basic_type getBasicType();
+		basic_type getBasicType() const;
 
-		void assign(IVariable& var);
+		void assign(const IVariable& var);
 
 		int getInteger() const;
 

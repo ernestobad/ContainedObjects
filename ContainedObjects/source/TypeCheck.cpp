@@ -21,7 +21,7 @@ namespace COBJ
 	}
 
 	void TypeCheck::doCheck(
-			const ConstStaticContextPtr& pCtx,
+			const StaticContextPtr& pCtx,
 			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const
 	{
@@ -34,7 +34,7 @@ namespace COBJ
 
 		TypePtr pType = boost::static_pointer_cast<Type>(pNode);
 
-		ConstStaticContextPtr pRootCtx = pCtx;
+		StaticContextPtr pRootCtx = pCtx;
 		pCtx->getRootContext(pRootCtx);
 
 		switch (pType->getBasicType())
@@ -50,7 +50,7 @@ namespace COBJ
 				const ReferenceTypePtr pRefType = boost::static_pointer_cast<ReferenceType>(pType);
 				const wstring& typeName = pRefType->getReferenceTypeName();
 
-				ConstStaticContextEntryPtr pEntry;
+				CStaticContextEntryPtr pEntry;
 				if (!pRootCtx->lookup(typeName, pEntry))
 				{
 					boost::wformat f(L"Name %1% not found in context");

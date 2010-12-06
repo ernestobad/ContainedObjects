@@ -1,21 +1,21 @@
 #include "platform.h"
 #include "RuntimeContextEntry.h"
+#include "IClass.h"
+#include "ClassDef.h"
+#include "IInterface.h"
+#include "InterfaceDef.h"
 
 
 namespace COBJ
 {
 	RuntimeContextEntry::RuntimeContextEntry(const boost::shared_ptr<IClass>& pClass)
-		: m_EntryType(CLASS_RT_CTX_ENTRY), m_pEntry(pClass)
+		: m_EntryType(CLASS_RT_CTX_ENTRY), m_pEntry(pClass),
+		m_Name(pClass->getDefinition()->getClassName())
 	{
 	}
 
-	RuntimeContextEntry::RuntimeContextEntry(const boost::shared_ptr<IInterface>& pInterface)
-		: m_EntryType(INTERFACE_RT_CTX_ENTRY), m_pEntry(pInterface)
-	{
-	}
-
-	RuntimeContextEntry::RuntimeContextEntry(const boost::shared_ptr<IVariable>& pVariable)
-		: m_EntryType(VARIABLE_RT_CTX_ENTRY), m_pEntry(pVariable)
+	RuntimeContextEntry::RuntimeContextEntry(const wstring& name, const boost::shared_ptr<IVariable>& pVariable)
+		: m_EntryType(VARIABLE_RT_CTX_ENTRY), m_Name(name), m_pEntry(pVariable)
 	{
 	}
 
@@ -36,17 +36,6 @@ namespace COBJ
 		}
 
 		pClass = boost::static_pointer_cast<IClass>(m_pEntry);
-		return true;
-	}
-
-	bool RuntimeContextEntry::getInterface(boost::shared_ptr<IInterface>& pInterface) const
-	{
-		if (m_EntryType != INTERFACE_RT_CTX_ENTRY)
-		{
-			return false;
-		}
-
-		pInterface = boost::static_pointer_cast<IInterface>(m_pEntry);
 		return true;
 	}
 

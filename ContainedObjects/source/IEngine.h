@@ -22,14 +22,9 @@ namespace COBJ
 		virtual bool getClass(
 			const wstring& className,
 			IClassPtr& pClass) = 0;
-
-		virtual bool getInterface(
-			const wstring& interfaceName,
-			IInterfacePtr& pInterface) = 0;
 	};
 
 	const void CreateEngine(
 		const vector<IClassPtr>& nativeClasses,
-		const vector<IInterfacePtr>& nativeInterfaces,
 		IEnginePtr& pEngine);
 }

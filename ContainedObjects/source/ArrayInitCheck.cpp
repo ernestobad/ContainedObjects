@@ -18,7 +18,7 @@ namespace COBJ
 	}
 
 	void ArrayInitCheck::doCheck(
-			const ConstStaticContextPtr& pCtx,
+			const StaticContextPtr& pCtx,
 			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const
 	{
@@ -27,7 +27,7 @@ namespace COBJ
 			return;
 		}
 
-		ConstStaticContextPtr pRootCtx = pCtx;
+		StaticContextPtr pRootCtx = pCtx;
 		pCtx->getRootContext(pRootCtx);
 
 		ArrayInitValueDefPtr pArrayInit = boost::static_pointer_cast<ArrayInitValueDef>(pNode);
@@ -45,7 +45,7 @@ namespace COBJ
 			const ValueDefPtr pValue = *it;
 			const TypePtr& pValueType = pValue->getInferredType();
 
-			if (!isTypeAssignableFrom(
+			if (!SemanticAnalysis::isTypeAssignableFrom(
 					pArrayType,
 					pValueType,
 					pRootCtx))

@@ -16,12 +16,12 @@
 namespace COBJ
 {
 	ClassDef::ClassDef()
-		: ClassDefBase(), m_IsNative(false)
+		: ClassDefBase()
 	{
 	}
 
 	ClassDef::ClassDef(const pANTLR3_BASE_TREE node)
-		: ClassDefBase(node), m_IsNative(false)
+		: ClassDefBase(node)
 	{
 		assert(node->getType(node) == N_CLASS_DECL);
 		assert(node->getChildCount(node) == 4);
@@ -120,4 +120,6 @@ namespace COBJ
 			children.push_back((*fit).second);
 		}
 	}
+
+	
 }

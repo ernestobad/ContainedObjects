@@ -91,6 +91,27 @@ namespace COBJ
 	{
 	}
 
+	// RuntimeCheckException // 
+
+	RuntimeCheckException::RuntimeCheckException(const std::wstring& message) 
+		: COBJException(message)
+	{
+	}
+
+	RuntimeCheckException::RuntimeCheckException(const std::wstring& message, const std::wstring& cause)
+		: COBJException(message, cause)
+	{
+	}
+
+	RuntimeCheckException::RuntimeCheckException(const RuntimeCheckException& e)
+		: COBJException(e)
+	{
+	}
+
+	RuntimeCheckException::~RuntimeCheckException(void)
+	{
+	}
+
 	// IndexOutOfBoundsException //
 
 	IndexOutOfBoundsException::IndexOutOfBoundsException(const std::wstring& message) 

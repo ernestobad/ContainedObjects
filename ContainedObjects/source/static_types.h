@@ -10,10 +10,10 @@ namespace COBJ
 	typedef Context<StaticContextEntry> StaticContext;
 
 	typedef boost::shared_ptr<StaticContext> StaticContextPtr;
-	typedef boost::shared_ptr<const StaticContext> ConstStaticContextPtr;
+	// typedef boost::shared_ptr<const StaticContext> CStaticContextPtr;
 
 	typedef boost::shared_ptr<StaticContextEntry> StaticContextEntryPtr;
-	typedef boost::shared_ptr<const StaticContextEntry> ConstStaticContextEntryPtr;
+	typedef boost::shared_ptr<const StaticContextEntry> CStaticContextEntryPtr;
 
 	class ICheck;
 	typedef boost::shared_ptr<ICheck> ICheckPtr;

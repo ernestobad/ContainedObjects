@@ -18,6 +18,7 @@ namespace COBJ
 	{
 	public:
 		SemanticAnalysis(const LogPtr& pLog);
+		~SemanticAnalysis(void);
 
 		void addCheck(
 			const ICheckPtr& pCheck);
@@ -27,49 +28,34 @@ namespace COBJ
 
 		const LogPtr& getLog() const;
 
-		~SemanticAnalysis(void);
+		static bool isTypeAssignableFrom(
+			const TypePtr& pLType,
+			const TypePtr& pRType,
+			const StaticContextPtr& pRootCtx);
 
 	private:
 
-		void inferTypes(
-			const std::list<ClassDefBasePtr>& classes,
-			ConstStaticContextPtr& pRootCtx);
-
-		void inferTypes(
-			ValueDef& valueDef,
-			ConstStaticContextPtr& pClassCtx);
-
-		bool followPathElement(
-			const Type& currentType,
-			const StaticContext& rootCtx,
-			const std::wstring& pathElement,
-			TypePtr& pNextType);
-
-		void newRootContext(
-			ConstStaticContextPtr& pNewCtx,
-			const std::list<ClassDefBasePtr>& classes);
-
-		void newClassContext(
-			ConstStaticContextPtr& pNewCtx,
-			const ClassDefBasePtr& pClassDefBase,
-			const ConstStaticContextPtr& pRootCtx);
-
-		void newMemberContext(
-			ConstStaticContextPtr& pNewCtx,
-			const VariableDeclDefPtr& pVariableDef,
-			const ConstStaticContextPtr& pClassCtx);
-
 		void check(
 			const ASTNodePtr& pNode,
-			const ConstStaticContextPtr& pCtx);
+			const StaticContextPtr& pCtx);
+
+		void checkClassContext(
+			const ClassDefBasePtr& pClassDefBase,
+			const StaticContextPtr& pCtx);
+
+		void checkInstanceContext(
+			const ClassDefBasePtr& pClassDefBase,
+			const StaticContextPtr& pCtx);
+
+		void findStaticDependencies(
+			const ClassDefBasePtr& pClassDefBase,
+			const StaticContextPtr& pClassCtx,
+			const ASTNodePtr& pNode);
 
 		std::list<ICheckPtr> m_SemanticChecks;
 		boost::shared_ptr<Log> m_pLog;
 	};
 
-	bool isTypeAssignableFrom(
-		const TypePtr& pLType,
-		const TypePtr& pRType,
-		const ConstStaticContextPtr& pRootCtx);
+	
 
 }

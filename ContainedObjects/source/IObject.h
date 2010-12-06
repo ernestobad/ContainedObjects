@@ -14,10 +14,14 @@ namespace COBJ
 
 		virtual bool isNative() const = 0;
 
-		virtual void getClass(IClassPtr& pClass) const = 0;
+		virtual const IClass& getClass() const = 0;
 
-		virtual bool getMemberVariable(
-			const wstring& varName,
-			IVariablePtr& pVar) const = 0;
+		virtual bool implements(const wstring& interfaceName) const = 0;
+
+		virtual const IInterfacePtr& getInterface(const wstring& interfaceName) const = 0;
+
+		virtual bool hasMemberVariable(const wstring& varName) const = 0;
+
+		virtual const IVariablePtr& getMemberVariable(const wstring& varName) const = 0;
 	};
 }

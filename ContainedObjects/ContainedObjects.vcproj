@@ -425,6 +425,14 @@
 				RelativePath=".\source\RuntimeContextEntry.h"
 				>
 			</File>
+			<File
+				RelativePath=".\source\RuntimeContextHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\RuntimeContextHelper.h"
+				>
+			</File>
 			<Filter
 				Name="impl"
 				>
@@ -442,6 +450,22 @@
 				</File>
 				<File
 					RelativePath=".\source\ClassImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\InterfaceImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\InterfaceImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ObjectImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\source\ObjectImpl.h"
 					>
 				</File>
 				<File
@@ -543,6 +567,22 @@
 			</File>
 			<File
 				RelativePath=".\source\StaticContextEntry.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\StaticContextHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\StaticContextHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\TypeInference.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\source\TypeInference.h"
 				>
 			</File>
 			<Filter

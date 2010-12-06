@@ -23,40 +23,5 @@ namespace COBJ
 		}
 
 		void getChildNodes(std::list<ASTNodePtr>& children) const;
-
-		const std::wstring& getClassName() const
-		{
-			return m_ClassName;
-		}
-
-		void setClassName(const std::wstring& className)
-		{
-			m_ClassName = className;
-		}
-
-		const map<const wstring, FormalParamDefPtr>& getFormalParametersMap() const
-		{
-			return m_FormalParametersMap;
-		}
-
-		void setFormalParametersMap(const map<const wstring, FormalParamDefPtr>& formalParametersMap)
-		{
-			m_FormalParametersMap = formalParametersMap;
-		}
-
-		const std::list<VariableDeclDefPtr>& getVariableDecls() const
-		{
-			return m_VariableDecls;
-		}
-
-		void setVariableDecls(const std::list<VariableDeclDefPtr> &variableDecls)
-		{
-			m_VariableDecls = variableDecls;
-		}
-
-	private:
-		wstring m_ClassName;
-		map<const wstring, FormalParamDefPtr> m_FormalParametersMap;
-		list<VariableDeclDefPtr> m_VariableDecls;
 	};
 }

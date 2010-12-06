@@ -1,10 +1,9 @@
-
 #pragma once
+
+#include "runtime_types.h"
 
 namespace COBJ
 {
-	class InterfaceDef;
-
 	class IInterface
 	{
 	public:
@@ -12,6 +11,8 @@ namespace COBJ
 
 		virtual bool isNative() const = 0;
 
-		virtual const InterfaceDef& getDefinition() = 0;
+		virtual const IClassPtr& getClass() const = 0;
+
+		virtual const IVariable& getVariable(unsigned int index) const = 0;
 	};
 }

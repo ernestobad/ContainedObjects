@@ -56,12 +56,12 @@ namespace COBJ
 	{
 	}
 
-	basic_type VariableImpl::getBasicType()
+	basic_type VariableImpl::getBasicType() const
 	{
 		return m_BasicType;
 	}
 
-	void VariableImpl::assign(IVariable& var)
+	void VariableImpl::assign(const IVariable& var)
 	{
 		switch (var.getBasicType())
 		{

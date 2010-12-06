@@ -6,6 +6,15 @@
 
 namespace COBJ
 {
+	bool alphabeticalOrderCompare(VariableDeclDefPtr& first, VariableDeclDefPtr& second)
+	{
+		const wstring& name1 = first->getName();
+		const wstring& name2 = second->getName();
+
+		return boost::algorithm::lexicographical_compare(
+			name1, name2, boost::is_iless());
+	}
+
 	InterfaceDef::InterfaceDef(void)
 	{
 	}
@@ -64,6 +73,8 @@ namespace COBJ
 				boost::shared_ptr<VariableDeclDef> pVariableDeclDef(new VariableDeclDef(c));
 				m_VariableDecls.push_back(pVariableDeclDef);
 			}
+
+			m_VariableDecls.sort(alphabeticalOrderCompare);
 		}
 	}
 

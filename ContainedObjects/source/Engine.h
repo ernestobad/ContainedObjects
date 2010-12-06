@@ -27,24 +27,28 @@ namespace COBJ
 
 		void parseFiles(const list<const wstring>& filePaths);
 
-		void parseFile(const wstring& filePath);
-
 		const std::wstring& getCurrentFile();
 
 		bool getClass(
 			const std::wstring& className,
 			IClassPtr& pClass);
 
-		bool getInterface(
-			const std::wstring& interfaceName,
-			IInterfacePtr& pInterface);
+		const RuntimeContextPtr& getRootContext();
 
 	private:
 		Engine(void);
+
 		static EnginePtr s_pInstance;
 
-		list<IClassPtr> m_Classes;
-		list<IInterfacePtr> m_Interfaces;
+		void parseFile(const wstring& filePath);
+
+		void initClasses();
+
+		void initClass(const ClassDefBasePtr& pClassDefBase);
+
+		RuntimeContextPtr m_pRootCtx;
+		map<const wstring, ClassDefBasePtr> m_ClassDefMap;
+		map<const wstring, IClassPtr> m_ClassesMap;
 		LogPtr m_pLog;
 		wstring m_CurrentFile;
 	};	

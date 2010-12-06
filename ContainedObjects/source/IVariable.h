@@ -12,9 +12,9 @@ namespace COBJ
 	public:
         virtual ~IVariable(){}
 
-		virtual basic_type getBasicType() = 0;
+		virtual basic_type getBasicType() const = 0;
 
-		virtual void assign(IVariable& var) = 0;
+		virtual void assign(const IVariable& var) = 0;
 
 		virtual int getInteger() const = 0;
 

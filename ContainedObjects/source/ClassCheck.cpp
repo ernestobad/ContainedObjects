@@ -23,7 +23,7 @@ namespace COBJ
 	}
 
 	void ClassCheck::doCheck(
-			const ConstStaticContextPtr& pCtx,
+			const StaticContextPtr& pCtx,
 			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const
 	{
@@ -32,7 +32,7 @@ namespace COBJ
 			return;
 		}
 
-		ConstStaticContextPtr pRootCtx;
+		StaticContextPtr pRootCtx;
 		pCtx->getRootContext(pRootCtx);
 
 		ClassDefPtr pClassDef = boost::static_pointer_cast<ClassDef>(pNode);
@@ -45,7 +45,7 @@ namespace COBJ
 		{
 			const wstring& ifaceName = *it;
 
-			ConstStaticContextEntryPtr pEntry;
+			CStaticContextEntryPtr pEntry;
 			InterfaceDefPtr pInterfaceDef;
 
 			if (!pRootCtx->lookup(ifaceName, pEntry))
@@ -88,10 +88,10 @@ namespace COBJ
 	void ClassCheck::checkInterfaceParams(
 		const ClassDefPtr& pClassDef,
 		const InterfaceDefPtr& pInterfaceDef,
-		const ConstStaticContextPtr& pCtx,
+		const StaticContextPtr& pCtx,
 		const LogPtr& pLog) const
 	{
-		ConstStaticContextPtr pRootCtx;
+		StaticContextPtr pRootCtx;
 		pCtx->getRootContext(pRootCtx);
 
 		const map<const wstring, FormalParamDefPtr>& ifaceFormalParams =
@@ -122,7 +122,7 @@ namespace COBJ
 
 			const FormalParamDefPtr& pClassParam = (*cit).second;
 
-			if (!isTypeAssignableFrom(
+			if (!SemanticAnalysis::isTypeAssignableFrom(
 					pClassParam->getType(),
 					pIfaceParam->getType(),
 					pRootCtx))
@@ -156,10 +156,10 @@ namespace COBJ
 	void ClassCheck::checkInterfaceVars(
 		const ClassDefPtr& pClassDef,
 		const InterfaceDefPtr& pInterfaceDef,
-		const ConstStaticContextPtr& pCtx,
+		const StaticContextPtr& pCtx,
 		const LogPtr& pLog) const
 	{
-		ConstStaticContextPtr pRootCtx;
+		StaticContextPtr pRootCtx;
 		pCtx->getRootContext(pRootCtx);
 
 		const list<VariableDeclDefPtr>& classVars = pClassDef->getVariableDecls();
@@ -201,7 +201,7 @@ namespace COBJ
 				continue;
 			}
 
-			if (!isTypeAssignableFrom(
+			if (!SemanticAnalysis::isTypeAssignableFrom(
 					pClassVariableDecl->getDeclaredType(),
 					pIfaceVariableDecl->getDeclaredType(),
 					pRootCtx))

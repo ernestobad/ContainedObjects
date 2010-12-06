@@ -35,6 +35,17 @@ namespace COBJ
 		virtual ~InternalErrorException(void);
 	};
 
+	// RuntimeCheckException //
+
+	class RuntimeCheckException : public COBJException
+	{
+	public:
+		RuntimeCheckException(const std::wstring& message);
+		RuntimeCheckException(const std::wstring& message, const std::wstring& cause);
+		RuntimeCheckException(const RuntimeCheckException& e);
+		virtual ~RuntimeCheckException(void);
+	};
+
 	// IndexOutOfBoundsException //
 
 	class IndexOutOfBoundsException : public COBJException

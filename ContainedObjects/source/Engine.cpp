@@ -9,6 +9,9 @@
 #include "antlr/ContainedObjectsLexer.h"
 #include "antlr/ContainedObjectsParser.h"
 #include "Log.h"
+#include "ClassImpl.h"
+#include "Context.h"
+#include "RuntimeContextEntry.h"
 
 namespace COBJ
 {
@@ -38,6 +41,8 @@ namespace COBJ
 		{
 			parseFile(*it);
 		}
+
+		initClasses();
 	}
 
 	static void print(pANTLR3_BASE_TREE node, int level)
@@ -143,11 +148,13 @@ namespace COBJ
 
 			if (root->getType(root) == N_CLASS_DECL)
 			{
-				boost::shared_ptr<ClassDef> pClassDef(new ClassDef(root));
+				ClassDefPtr pClassDef(new ClassDef(root));
+				m_ClassDefMap[pClassDef->getClassName()] = pClassDef;
 			}
 			else if (root->getType(root) == N_IFACE_DECL)
 			{
-				boost::shared_ptr<InterfaceDef> pInterfaceDef(new InterfaceDef(root));
+				InterfaceDefPtr pInterfaceDef(new InterfaceDef(root));
+				m_ClassDefMap[pInterfaceDef->getClassName()] = pInterfaceDef;
 			}
 			else
 			{
@@ -158,19 +165,67 @@ namespace COBJ
 		}
 	}
 
-	bool Engine::getClass(const wstring& className, IClassPtr& pClass)
+	void Engine::initClasses()
 	{
-		return false;
+		map<const wstring, ClassDefBasePtr>::const_iterator it;
+
+		for (it = m_ClassDefMap.begin(); it != m_ClassDefMap.end(); it++)
+		{
+			initClass(it->second);
+		}
 	}
 
-	bool Engine::getInterface(const wstring& interfaceName, IInterfacePtr& pInterface)
+	void Engine::initClass(const ClassDefBasePtr& pClassDefBase)
 	{
-		return false;
+		const wstring& className = pClassDefBase->getClassName();
+
+		if (m_ClassesMap.find(className) != m_ClassesMap.end())
+		{
+			return;
+		}
+
+		m_ClassesMap[className] = IClassPtr();
+
+		const set<const wstring>& deps = pClassDefBase->getStaticDependencies();
+
+		map<const wstring, ClassDefBasePtr>::const_iterator mit;
+		set<const wstring>::const_iterator it;
+
+		for (it = deps.begin(); it != deps.end(); it++)
+		{
+			const wstring& name = *it;
+			if ((mit = m_ClassDefMap.find(name)) != m_ClassDefMap.end())
+			{
+				initClass(mit->second);
+			}
+		}
+
+		IClassPtr pClass = IClassPtr(new ClassImpl(pClassDefBase,  m_pRootCtx));
+
+		RuntimeContextEntryPtr pEntry = RuntimeContextEntryPtr(new RuntimeContextEntry(pClass));
+		m_pRootCtx->addEntry(pEntry);
+
+		m_ClassesMap[className] = pClass;
+	}
+
+	bool Engine::getClass(const wstring& className, IClassPtr& pClass)
+	{
+		map<const wstring, IClassPtr>::const_iterator it;
+
+		it = m_ClassesMap.find(className);
+
+		if (it == m_ClassesMap.end())
+		{
+			return false;
+		}
+
+		pClass = it->second;
+
+		return true;
 	}
 
 	const void CreateEngine(
 		const vector<IClassPtr> nativeClasses,
-		const vector<IInterfacePtr> nativeInterfaces,
 		IEnginePtr& pEngine)
 	{
 

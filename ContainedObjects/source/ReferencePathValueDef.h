@@ -6,6 +6,8 @@
 
 namespace COBJ
 {
+	using namespace std;
+
 	class ReferencePathValueDef : public ValueDef
 	{
 	public:
@@ -19,21 +21,21 @@ namespace COBJ
 			return ASTN_REFERENCE_PATH_VALUE;
 		}
 
-		void getChildNodes(std::list<ASTNodePtr>& children) const
+		void getChildNodes(list<ASTNodePtr>& children) const
 		{
 		}
 
-		const std::list<std::wstring>& getReferencePath() const
+		const list<const wstring>& getReferencePath() const
 		{
 			return m_ReferencePath;
 		}
 
-		void setReferencePath(std::list<std::wstring>& referencePath)
+		void setReferencePath(list<const wstring>& referencePath)
 		{
 			m_ReferencePath = referencePath;
 		}
 
 	private:
-		std::list<std::wstring> m_ReferencePath;
+		list<const wstring> m_ReferencePath;
 	};
 }

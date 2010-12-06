@@ -5,8 +5,19 @@
 
 namespace COBJ
 {
+	using namespace std;
+
 	void eval(
 		const ValueDefPtr& pValueDef,
 		const ConstRuntimeContextPtr& pCtx,
 		IVariablePtr& pVar);
+
+	void resolveContextMember(
+		const ConstRuntimeContextPtr& pCtx,
+		const wstring& name,
+		IVariablePtr& pVar);
+
+	void resolveValueMember(
+		const IVariablePtr& pIVar,
+		const wstring& name);
 }
