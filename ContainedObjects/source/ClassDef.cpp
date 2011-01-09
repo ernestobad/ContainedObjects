@@ -92,7 +92,7 @@ namespace COBJ
 			for (int i = 0; i < childCount; i++)
 			{
 				c = (pANTLR3_BASE_TREE) n->getChild(n, i);
-				assert(c->getType(c) == N_VARDEF_ASSIGN);
+				assert(c->getType(c) == N_VARDEF);
 
 				boost::shared_ptr<VariableDeclDef> pVarDeclAssign(new VariableDeclDef(c));
 				m_VariableDecls.push_back(pVarDeclAssign);

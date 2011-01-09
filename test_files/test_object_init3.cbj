@@ -1,0 +1,6 @@
+﻿class Hih(Heh heh)
+{ 
+	string ix = heh.ex;
+	
+	static string s = Heh.s;
+}

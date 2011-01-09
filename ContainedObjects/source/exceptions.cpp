@@ -1,24 +1,70 @@
 #include "platform.h"
 #include "exceptions.h"
 
+#ifdef _WIN32
+#include <StackWalker.h>
+#include "conversions.h"
+#endif
+
 namespace COBJ
 {
+	using namespace std;
+
+#ifdef _WIN32
+	class MyStackWalker : public StackWalker
+	{
+	public:
+	  MyStackWalker() : StackWalker()
+	  {
+		  ShowCallstack();
+	  }
+
+	  const void getStackTrace(list<wstring>& stackTrace) const
+	  {
+		  list<wstring>::const_iterator it;
+
+		  stackTrace.clear();
+
+		  for (it = m_StackTrace.begin(); it != m_StackTrace.end(); it++)
+		  {
+			  stackTrace.push_back(*it);
+		  }
+	  }
+
+	protected:
+
+	  virtual void OnOutput(LPCSTR szText)
+	  {
+		  string st = szText;
+		  wstring wst;
+		  convertUTF8ToUTF16(st, wst);
+
+		  m_StackTrace.push_back(wst);
+	  }
+
+	private:
+
+		list<wstring> m_StackTrace;
+	};
+#endif
 
 	// COBJException //
 
-	COBJException::COBJException(const std::wstring& message) 
-		: m_Message(message), m_Cause()
+	COBJException::COBJException(const wstring& message) 
+		: m_Message(message)
 	{
+		fillStackTrace();
 	}
 
-	COBJException::COBJException(const std::wstring& message, const std::wstring& cause)
+	COBJException::COBJException(const wstring& message, const wstring& cause)
 		: m_Message(message), m_Cause(cause)
 	{
+		fillStackTrace();
 	}
 
 #ifdef _WIN32
-	COBJException::COBJException(const std::wstring& message, errno_t err)
-		: m_Message(message), m_Cause()
+	COBJException::COBJException(const wstring& message, errno_t err)
+		: m_Message(message), m_Cause(), m_StackTrace()
 	{
 		wchar_t wct_error[256];
 		if (_wcserror_s(wct_error, 256, err) != 0)
@@ -28,9 +74,12 @@ namespace COBJ
 		}
 
 		m_Cause = wct_error;
+
+		fillStackTrace();
 	}
 
-	COBJException::COBJException(const std::wstring& message, DWORD lastError)
+	COBJException::COBJException(const wstring& message, DWORD lastError)
+		: m_Message(message), m_Cause(), m_StackTrace()
 	{
 		LPWSTR pBuffer = NULL;
 
@@ -47,6 +96,8 @@ namespace COBJ
 
 		m_Cause = pBuffer;
 		LocalFree(pBuffer);
+
+		fillStackTrace();
 	}
 #endif
 
@@ -54,30 +105,51 @@ namespace COBJ
 	{
 		m_Message = e.getMessage();
 		m_Cause = e.getCause();
+		m_StackTrace = e.m_StackTrace;
 	}
 
 	COBJException::~COBJException(void)
 	{
 	}
 
-	const std::wstring& COBJException::getMessage() const
+	void COBJException::printStackTrace(wostream& out) const
+	{
+		out << L"COBJException: " << getMessage() << L": " << getCause() << L"\n";
+
+		list<wstring>::const_iterator it;
+
+		for (it = m_StackTrace.begin(); it != m_StackTrace.end(); it++)
+		{
+			out << L"COBJException: " << *it << L"\n";
+		}
+	}
+
+	void COBJException::fillStackTrace()
+	{
+#ifdef _WIN32
+		MyStackWalker sw;
+		sw.getStackTrace(m_StackTrace);
+#endif
+	}
+
+	const wstring& COBJException::getMessage() const
 	{
 		return m_Message;
 	}
 
-	const std::wstring& COBJException::getCause() const
+	const wstring& COBJException::getCause() const
 	{
 		return m_Message;
 	}
 
 	// InternalErrorException //
 
-	InternalErrorException::InternalErrorException(const std::wstring& message) 
+	InternalErrorException::InternalErrorException(const wstring& message) 
 		: COBJException(message)
 	{
 	}
 
-	InternalErrorException::InternalErrorException(const std::wstring& message, const std::wstring& cause)
+	InternalErrorException::InternalErrorException(const wstring& message, const wstring& cause)
 		: COBJException(message, cause)
 	{
 	}
@@ -93,12 +165,12 @@ namespace COBJ
 
 	// RuntimeCheckException // 
 
-	RuntimeCheckException::RuntimeCheckException(const std::wstring& message) 
+	RuntimeCheckException::RuntimeCheckException(const wstring& message) 
 		: COBJException(message)
 	{
 	}
 
-	RuntimeCheckException::RuntimeCheckException(const std::wstring& message, const std::wstring& cause)
+	RuntimeCheckException::RuntimeCheckException(const wstring& message, const wstring& cause)
 		: COBJException(message, cause)
 	{
 	}
@@ -114,12 +186,12 @@ namespace COBJ
 
 	// IndexOutOfBoundsException //
 
-	IndexOutOfBoundsException::IndexOutOfBoundsException(const std::wstring& message) 
+	IndexOutOfBoundsException::IndexOutOfBoundsException(const wstring& message) 
 		: COBJException(message)
 	{
 	}
 
-	IndexOutOfBoundsException::IndexOutOfBoundsException(const std::wstring& message, const std::wstring& cause)
+	IndexOutOfBoundsException::IndexOutOfBoundsException(const wstring& message, const wstring& cause)
 		: COBJException(message, cause)
 	{
 	}
@@ -135,12 +207,12 @@ namespace COBJ
 
 	// InvalidTypeException //
 
-	InvalidTypeException::InvalidTypeException(const std::wstring& message) 
+	InvalidTypeException::InvalidTypeException(const wstring& message) 
 		: COBJException(message)
 	{
 	}
 
-	InvalidTypeException::InvalidTypeException(const std::wstring& message, const std::wstring& cause)
+	InvalidTypeException::InvalidTypeException(const wstring& message, const wstring& cause)
 		: COBJException(message, cause)
 	{
 	}
@@ -156,18 +228,18 @@ namespace COBJ
 
 	// IOException //
 
-	IOException::IOException(const std::wstring& message) 
+	IOException::IOException(const wstring& message) 
 		: COBJException(message)
 	{
 	}
 
-	IOException::IOException(const std::wstring& message, const std::wstring& cause)
+	IOException::IOException(const wstring& message, const wstring& cause)
 		: COBJException(message, cause)
 	{
 	}
 
 #ifdef _WIN32
-	IOException::IOException(const std::wstring& message, errno_t err)
+	IOException::IOException(const wstring& message, errno_t err)
 		: COBJException(message, err)
 	{
 	}
@@ -184,18 +256,18 @@ namespace COBJ
 
 	// ParseException //
 
-	ParserException::ParserException(const std::wstring& message)
+	ParserException::ParserException(const wstring& message)
 		: COBJException(message)
 	{
 	}
 
-	ParserException::ParserException(const std::wstring& message, const std::wstring& cause)
+	ParserException::ParserException(const wstring& message, const wstring& cause)
 		: COBJException(message, cause)
 	{
 	}
 
 #ifdef _WIN32
-	ParserException::ParserException(const std::wstring& message, errno_t err)
+	ParserException::ParserException(const wstring& message, errno_t err)
 		: COBJException(message, err)
 	{
 	}

@@ -29,7 +29,7 @@ namespace COBJ
 
 		wchar_t* szStr = (wchar_t*) n->getText(n)->chars;
 
-		std::wstringbuf strBuff(std::ios_base::in);
+		std::wstringbuf strBuff;
 
 		int state = START_STATE;
 		for (wchar_t* pCurr = szStr; *pCurr != L'\0'; pCurr++)
@@ -39,6 +39,7 @@ namespace COBJ
 			{
 				case START_STATE:
 					assert(curr == L'"');
+					state = NO_ESC_STATE;
 					break;
 				case NO_ESC_STATE:
 					if (curr == L'\\')
@@ -103,13 +104,10 @@ namespace COBJ
 					assert(false);
 					break;
 			}
-
-			assert(state == END_STATE);
 		}
 
-		
-
-		strBuff.str(m_StringValue);
+		assert(state == END_STATE);
+		m_StringValue = strBuff.str();
 	}
 
 	StringLiteralValueDef::~StringLiteralValueDef(void)

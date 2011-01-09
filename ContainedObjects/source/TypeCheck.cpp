@@ -21,7 +21,7 @@ namespace COBJ
 	}
 
 	void TypeCheck::doCheck(
-			const StaticContextPtr& pCtx,
+			const StaticContextPtr& pRootCtx,
 			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const
 	{
@@ -33,9 +33,6 @@ namespace COBJ
 		}
 
 		TypePtr pType = boost::static_pointer_cast<Type>(pNode);
-
-		StaticContextPtr pRootCtx = pCtx;
-		pCtx->getRootContext(pRootCtx);
 
 		switch (pType->getBasicType())
 		{
@@ -54,14 +51,14 @@ namespace COBJ
 				if (!pRootCtx->lookup(typeName, pEntry))
 				{
 					boost::wformat f(L"Name %1% not found in context");
-					f % pEntry->getName();
+					f % typeName;
 					pLog->log(*pNode, msg::ErrAnaTypeCheck_NameNotInContext, f.str());
 				}
 				else if ((pEntry->getStaticEntryType() != CLASS_DEF_CTX_ENTRY) && 
 					(pEntry->getStaticEntryType() != INTERFACE_DEF_CTX_ENTRY))
 				{
 					boost::wformat f(L"%1% is not a class or interface");
-					f % pEntry->getName();
+					f % typeName;
 					pLog->log(*pNode, msg::ErrAnaTypeCheck_NameNotClassIface, f.str());
 				}
 			}

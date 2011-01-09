@@ -23,7 +23,7 @@ namespace COBJ
 	}
 
 	void ClassCheck::doCheck(
-			const StaticContextPtr& pCtx,
+			const StaticContextPtr& pRootCtx,
 			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const
 	{
@@ -31,9 +31,6 @@ namespace COBJ
 		{
 			return;
 		}
-
-		StaticContextPtr pRootCtx;
-		pCtx->getRootContext(pRootCtx);
 
 		ClassDefPtr pClassDef = boost::static_pointer_cast<ClassDef>(pNode);
 
@@ -55,7 +52,7 @@ namespace COBJ
 				pLog->log(*pClassDef, msg::ErrAnaClassDef_IfaceNotFound, f.str());
 				continue;
 			}
-			else if (pEntry->getInterface(pInterfaceDef))
+			else if (!pEntry->getInterface(pInterfaceDef))
 			{
 				boost::wformat f(L"%1% is not an interface.");
 				f % ifaceName;
@@ -63,8 +60,8 @@ namespace COBJ
 				continue;
 			}
 
-			checkInterfaceParams(pClassDef, pInterfaceDef, pCtx, pLog);
-			checkInterfaceVars(pClassDef, pInterfaceDef, pCtx, pLog);
+			checkInterfaceParams(pClassDef, pInterfaceDef, pRootCtx, pLog);
+			checkInterfaceVars(pClassDef, pInterfaceDef, pRootCtx, pLog);
 		}
 
 		const list<VariableDeclDefPtr>& vars = pClassDef->getVariableDecls();
@@ -88,12 +85,9 @@ namespace COBJ
 	void ClassCheck::checkInterfaceParams(
 		const ClassDefPtr& pClassDef,
 		const InterfaceDefPtr& pInterfaceDef,
-		const StaticContextPtr& pCtx,
+		const StaticContextPtr& pRootCtx,
 		const LogPtr& pLog) const
 	{
-		StaticContextPtr pRootCtx;
-		pCtx->getRootContext(pRootCtx);
-
 		const map<const wstring, FormalParamDefPtr>& ifaceFormalParams =
 			pInterfaceDef->getFormalParametersMap();
 
@@ -143,7 +137,7 @@ namespace COBJ
 			const wstring& classParamName = (*cit).first;
 
 			iit = ifaceFormalParams.find(classParamName);
-			if (cit == ifaceFormalParams.end())
+			if (iit == ifaceFormalParams.end())
 			{
 				boost::wformat f(L"Class parameter %1% not defined on interface %2%.");
 				f % classParamName % pInterfaceDef->getClassName();
@@ -156,12 +150,9 @@ namespace COBJ
 	void ClassCheck::checkInterfaceVars(
 		const ClassDefPtr& pClassDef,
 		const InterfaceDefPtr& pInterfaceDef,
-		const StaticContextPtr& pCtx,
+		const StaticContextPtr& pRootCtx,
 		const LogPtr& pLog) const
 	{
-		StaticContextPtr pRootCtx;
-		pCtx->getRootContext(pRootCtx);
-
 		const list<VariableDeclDefPtr>& classVars = pClassDef->getVariableDecls();
 		const list<VariableDeclDefPtr>& ifaceVars = pInterfaceDef->getVariableDecls();
 

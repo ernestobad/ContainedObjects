@@ -1,0 +1,10 @@
+﻿class Huh()
+{ 
+	string w = "áéü";
+	
+	string x = "blah1FA1asdsd";
+	
+	string y = "";
+	
+	string z = " 1234567890{};\"*^";
+}

@@ -2,6 +2,7 @@
 
 #include "IEngine.h"
 #include "runtime_types.h"
+#include "static_types.h"
 #include "ast_types.h"
 #include "common_types.h"
 
@@ -12,22 +13,15 @@ namespace COBJ
 	class Engine : public IEngine
 	{
 	public:
-
-		static const EnginePtr& getInstance()
-		{
-			if (s_pInstance == NULL)
-			{
-				s_pInstance = EnginePtr(new Engine());
-			}
-
-			return s_pInstance;
-		}
 		
+		Engine(void);
 		~Engine(void);
 
-		void parseFiles(const list<const wstring>& filePaths);
+		void setNativeClasses(const list<IClassPtr>& nativeClasses);
 
-		const std::wstring& getCurrentFile();
+		bool parseFiles(const list<const wstring>& filePaths);
+
+		void getLog(ILogPtr& pLog);
 
 		bool getClass(
 			const std::wstring& className,
@@ -36,13 +30,10 @@ namespace COBJ
 		const RuntimeContextPtr& getRootContext();
 
 	private:
-		Engine(void);
-
-		static EnginePtr s_pInstance;
-
+		
 		void parseFile(const wstring& filePath);
 
-		void initClasses();
+		bool initClasses();
 
 		void initClass(const ClassDefBasePtr& pClassDefBase);
 
@@ -51,5 +42,6 @@ namespace COBJ
 		map<const wstring, IClassPtr> m_ClassesMap;
 		LogPtr m_pLog;
 		wstring m_CurrentFile;
-	};	
+	};
+
 }

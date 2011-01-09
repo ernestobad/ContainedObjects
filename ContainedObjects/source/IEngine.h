@@ -13,18 +13,17 @@ namespace COBJ
     public:
         virtual ~IEngine(){}
 
-		virtual void parseFiles(
+		virtual bool parseFiles(
 			const list<const wstring>& filePaths) = 0;
-
-		virtual void parseFile(
-			const wstring& filePath) = 0;
 
 		virtual bool getClass(
 			const wstring& className,
 			IClassPtr& pClass) = 0;
+
+		virtual void getLog(ILogPtr& pLog) = 0;
 	};
 
-	const void CreateEngine(
-		const vector<IClassPtr>& nativeClasses,
+	void CreateEngine(
+		const list<IClassPtr>& nativeClasses,
 		IEnginePtr& pEngine);
 }

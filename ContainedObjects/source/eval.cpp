@@ -95,7 +95,7 @@ namespace COBJ
 					}
 					else
 					{
-						resolveValueMember(pCurrValueVar, name);
+						resolveValueMember(pCurrValueVar, name, pCurrValueVar);
 					}
 				}
 
@@ -168,7 +168,7 @@ namespace COBJ
 	void resolveContextMember(
 		const ConstRuntimeContextPtr& pCtx,
 		const wstring& name,
-		IVariablePtr& pVar)
+		IVariablePtr& pMemberVar)
 	{
 		ConstRuntimeContextEntryPtr pEntry;
 		
@@ -181,16 +181,16 @@ namespace COBJ
 		{
 		case CLASS_RT_CTX_ENTRY:
 			{
+				IVariablePtr pVarTmp(new VariableImpl(CLASS_B_TYPE));
 				IClassPtr pClass;
 				pEntry->getClass(pClass);
-				pVar->setClass(pClass);
+				pVarTmp->setClass(pClass);
+				pMemberVar = pVarTmp;
 				break;
 			}
 		case VARIABLE_RT_CTX_ENTRY:
 			{
-				IVariablePtr pIVar;
-				pEntry->getVariable(pIVar);
-				pVar->assign(*pIVar);
+				pEntry->getVariable(pMemberVar);
 				break;
 			}
 		}
@@ -198,7 +198,8 @@ namespace COBJ
 
 	void resolveValueMember(
 		const IVariablePtr& pVar,
-		const wstring& name)
+		const wstring& name,
+		IVariablePtr& pMemberVar)
 	{
 		switch (pVar->getBasicType())
 		{
@@ -212,13 +213,13 @@ namespace COBJ
 		case OBJECT_B_TYPE:
 			{
 				IObjectPtr pIObj = pVar->getObject();
-				pVar->assign(*pIObj->getMemberVariable(name));
+				pMemberVar = pIObj->getMemberVariable(name);
 				break;
 			}
 		case CLASS_B_TYPE:
 			{
 				IClassPtr pIClass = pVar->getClass();
-				pVar->assign(*pIClass->getStaticVariable(name));
+				pMemberVar = pIClass->getStaticVariable(name);
 				break;
 			}
 		}

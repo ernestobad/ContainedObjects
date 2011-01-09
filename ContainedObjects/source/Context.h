@@ -108,6 +108,11 @@ namespace COBJ {
 			return true;
 		}
 
+		virtual void clear()
+		{
+			m_Map.clear();
+		}
+
 	private:
 		boost::shared_ptr<Context<E>> m_pParentContext;
 		std::map<const std::wstring, boost::shared_ptr<const E>> m_Map;

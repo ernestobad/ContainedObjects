@@ -20,7 +20,7 @@ namespace COBJ
 	}
 
 	void VariableDeclCheck::doCheck(
-			const StaticContextPtr& pClassCtx,
+			const StaticContextPtr& pRootCtx,
 			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const
 	{
@@ -49,9 +49,6 @@ namespace COBJ
 			return;
 		}
 
-		StaticContextPtr pRootCtx;
-		pClassCtx->getRootContext(pRootCtx);
-		
 		if (!SemanticAnalysis::isTypeAssignableFrom(
 					pDeclaredType,
 					pValueType,

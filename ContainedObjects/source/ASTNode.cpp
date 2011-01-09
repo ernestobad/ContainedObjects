@@ -13,7 +13,21 @@ namespace COBJ
 	{
 		m_LineNumber = node->getLine(node);
 		m_CharPosition = node->getCharPositionInLine(node);
-		m_FileName = Engine::getInstance()->getCurrentFile();
+
+		pANTLR3_BASE_TREE n = node;
+		while ((n != NULL) && (n->u == NULL))
+		{ 
+			if (n->u != NULL)
+			{
+				m_FileName = (wchar_t*) n->u;
+				node->u = n->u;
+				break;
+			}
+			else
+			{
+				n = n->getParent(n);
+			}
+		}
 	}
 
 	ASTNode::~ASTNode(void)

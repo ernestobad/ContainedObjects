@@ -25,7 +25,7 @@ namespace COBJ
 	}
 
 	void ObjectInitCheck::doCheck(
-		const StaticContextPtr& pMemberCtx,
+		const StaticContextPtr& pRootCtx,
 		const ASTNodePtr& pNode,
 		const LogPtr& pLog) const
 	{
@@ -38,7 +38,7 @@ namespace COBJ
 		const wstring& className = pObjectInit->getClassName();
 
 		CStaticContextEntryPtr pContextEntry;
-		if (!pMemberCtx->lookup(className, pContextEntry))
+		if (!pRootCtx->lookup(className, pContextEntry))
 		{
 			boost::wformat f(L"Can't find name %1% in context.");
 			f % className;
@@ -98,9 +98,6 @@ namespace COBJ
 			const FormalParamDefPtr& pFormalParamDef = (*fpIt).second;
 
 			const TypePtr& pFormalParamType = pFormalParamDef->getType();
-
-			StaticContextPtr pRootCtx;
-			pMemberCtx->getRootContext(pRootCtx);
 
 			if (!SemanticAnalysis::isTypeAssignableFrom(
 					 pFormalParamType,

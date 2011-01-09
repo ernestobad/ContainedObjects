@@ -1,0 +1,4 @@
+﻿class Huh(string x)
+{ 
+	string y = "abc";
+}

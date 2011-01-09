@@ -22,11 +22,11 @@ namespace COBJ
 	{
 	}
 
-	void LogEntry::printFormatedMessage() const
+	void LogEntry::printFormatedMessage(wostream& out) const
 	{
 		std::wstring msg;
 		formatMessage(msg);
-		std::wcout << msg;
+		out << msg << L"\n";
 	}
 
 	void LogEntry::formatMessage(std::wstring& message) const

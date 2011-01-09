@@ -22,7 +22,7 @@ namespace COBJ
 
 		for (cit = classes.begin(); cit != classes.end(); cit++)
 		{
-			const ClassDefBasePtr pClassDef = *cit;
+			const ClassDefBasePtr& pClassDef = *cit;
 
 			StaticContextEntryPtr pEntry(
 				pClassDef->getASTNodeType() == ASTN_CLASS ?

@@ -1,0 +1,8 @@
+﻿class Hah()
+{ 
+	Heh heh = Heh(x = "abc", y = 123, z = 321.1);
+	
+	Hih hih = Hih(heh = heh);
+	
+	class<Heh> hehClass = Heh;
+}

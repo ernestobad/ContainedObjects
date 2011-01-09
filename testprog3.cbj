@@ -1,4 +1,4 @@
 class Huh(Twitt t)
 { 
-	string x = "blah\"\u1FA1asdsd";
+	string x = "blah1FA1asdsd";
 }

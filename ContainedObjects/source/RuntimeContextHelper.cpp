@@ -27,7 +27,7 @@ namespace COBJ
 		RuntimeContextPtr& pClassCtx,
 		const RuntimeContextPtr& pRootCtx)
 	{
-		pClassCtx = RuntimeContextPtr(new RuntimeContext());
+		pClassCtx = RuntimeContextPtr(new RuntimeContext(pRootCtx));
 	}
 
 	void RuntimeContextHelper::newInstanceContext(
@@ -35,7 +35,7 @@ namespace COBJ
 		const map<const wstring, IVariablePtr> params,
 		const RuntimeContextPtr& pClassCtx)
 	{
-		pInstanceCtx = RuntimeContextPtr(new RuntimeContext());
+		pInstanceCtx = RuntimeContextPtr(new RuntimeContext(pClassCtx));
 
 		map<const wstring, IVariablePtr>::const_iterator it;
 

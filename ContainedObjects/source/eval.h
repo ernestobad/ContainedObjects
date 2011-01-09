@@ -15,9 +15,10 @@ namespace COBJ
 	void resolveContextMember(
 		const ConstRuntimeContextPtr& pCtx,
 		const wstring& name,
-		IVariablePtr& pVar);
+		IVariablePtr& pMemberVar);
 
 	void resolveValueMember(
 		const IVariablePtr& pIVar,
-		const wstring& name);
+		const wstring& name,
+		IVariablePtr& pMemberVar);
 }

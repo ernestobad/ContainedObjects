@@ -15,7 +15,7 @@ namespace COBJ
 		~ClassCheck(void);
 
 		void doCheck(
-			const StaticContextPtr& pCtx,
+			const StaticContextPtr& pRootCtx,
 			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const;
 
@@ -23,13 +23,13 @@ namespace COBJ
 		void checkInterfaceParams(
 			const ClassDefPtr& pClassDef,
 			const InterfaceDefPtr& pInterfaceDef,
-			const StaticContextPtr& pCtx,
+			const StaticContextPtr& pRootCtx,
 			const LogPtr& pLog) const;
 
 		void checkInterfaceVars(
 			const ClassDefPtr& pClassDef,
 			const InterfaceDefPtr& pInterfaceDef,
-			const StaticContextPtr& pCtx,
+			const StaticContextPtr& pRootCtx,
 			const LogPtr& pLog) const;
 	};
 

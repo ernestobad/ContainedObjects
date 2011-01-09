@@ -1,0 +1,10 @@
+﻿class Heh(string x, integer y, float z)
+{
+	string ex = x;
+	
+	integer ey = y;
+	
+	float ez = z;
+	
+	static string s = "x";
+}

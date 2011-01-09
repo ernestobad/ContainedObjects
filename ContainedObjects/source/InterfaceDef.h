@@ -22,6 +22,6 @@ namespace COBJ
 			return ASTN_INTERFACE;
 		}
 
-		void getChildNodes(std::list<ASTNodePtr>& children) const;
+		void getChildNodes(list<ASTNodePtr>& children) const;
 	};
 }

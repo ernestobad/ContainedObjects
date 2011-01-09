@@ -1,0 +1,10 @@
+﻿class Hehe()
+{ 
+	class<Heh> hehIface = Hah;
+	
+	Heh heh = Hah(x = "hehe");
+	
+	string x = heh.y;
+	
+	string s = hehIface.s;
+}

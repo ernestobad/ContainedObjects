@@ -33,26 +33,26 @@ namespace COBJ
 		}
 
 		const InterfaceDefPtr pInterfaceDef = boost::static_pointer_cast<InterfaceDef>(pClassDefBase);
-
-		m_Vars = vector<IVariablePtr>(pInterfaceDef->getVariableDecls().size());
-
 		const list<VariableDeclDefPtr>& vars = pInterfaceDef->getVariableDecls();
 
 		list<VariableDeclDefPtr>::const_iterator it;
 
-		int i = 0;
+		list<IVariablePtr> varsList;
+
 		for (it = vars.begin(); it != vars.end(); it++)
 		{
 			const VariableDeclDefPtr& pVarDef = *it;
 			const wstring& varName = pVarDef->getName();
 
-			if (pObject != NULL) {
-				m_Vars[i++] = pObject->getMemberVariable(varName);
+			if (pObject != NULL && !pVarDef->isStatic()) {
+				varsList.push_back(pObject->getMemberVariable(varName));
 			}
-			else {
-				m_Vars[i++] = pClass->getStaticVariable(varName);
+			else if (pClass != NULL && pVarDef->isStatic()) {
+				varsList.push_back(pClass->getStaticVariable(varName));
 			}
 		}
+
+		m_Vars = vector<IVariablePtr>(varsList.begin(), varsList.end());
 	}
 
 	InterfaceImpl::~InterfaceImpl(void)

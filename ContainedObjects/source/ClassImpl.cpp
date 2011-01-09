@@ -12,7 +12,7 @@
 
 namespace COBJ
 {
-	ClassImpl::ClassImpl(const ClassDefBasePtr pClassDefBase, const RuntimeContextPtr& pRootCtx)
+	ClassImpl::ClassImpl(const ClassDefBasePtr& pClassDefBase, const RuntimeContextPtr& pRootCtx)
 		: m_pClassDefBase(pClassDefBase), m_pClassCtx()
 	{
 		RuntimeContextHelper::newClassContext(m_pClassCtx, pRootCtx);

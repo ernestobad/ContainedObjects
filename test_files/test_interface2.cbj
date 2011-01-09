@@ -1,0 +1,8 @@
+﻿interface Heh(string x)
+{ 
+	string y;
+	
+	static string s;
+	
+	Huh huh;
+}

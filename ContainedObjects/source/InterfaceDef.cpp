@@ -59,7 +59,7 @@ namespace COBJ
 
 		{
 			// body
-			n = (pANTLR3_BASE_TREE) node->getChild(node, 1);
+			n = (pANTLR3_BASE_TREE) node->getChild(node, 2);
 			assert(n->getType(n) == N_BODY);
 
 			m_VariableDecls.clear();

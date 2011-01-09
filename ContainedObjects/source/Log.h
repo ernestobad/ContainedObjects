@@ -3,11 +3,13 @@
 #include "common_types.h"
 #include "ast_types.h"
 #include "message_code.h"
+#include "Ilog.h"
 
 namespace COBJ
 {
+	using namespace std;
 
-	class Log
+	class Log : public ILog
 	{
 	public:
 		Log(void);
@@ -22,21 +24,21 @@ namespace COBJ
 		bool hasMessage(message_code messageCode) const;
 
 		void log(
-			const std::wstring& file, int line, int charPosition,
-			message_code messageCode, const std::wstring& message);
+			const wstring& file, int line, int charPosition,
+			message_code messageCode, const wstring& message);
 
 		void log(
 			const ASTNode& node,
-			message_code messageCode, const std::wstring& message);
+			message_code messageCode, const wstring& message);
 
-		const std::list<ConstLogEntryPtr>& getEntries() const;
+		const std::list<CLogEntryPtr>& getEntries() const;
 
-		void printAll() const;
+		void printAll(wostream& out) const;
 
 	private:
 
-		std::list<ConstLogEntryPtr> m_Entries;
-		std::set<message_code> m_MessageCodes;
+		list<CLogEntryPtr> m_Entries;
+		set<message_code> m_MessageCodes;
 		bool m_HasErrors;
 	};
 }

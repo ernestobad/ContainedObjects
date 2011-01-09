@@ -2,26 +2,34 @@
 
 namespace COBJ
 {
+	using namespace std;
 
 	// COBJException //
 
-	class COBJException : public std::exception
+	class COBJException : public exception
 	{
 	public:
-		COBJException(const std::wstring& message);
-		COBJException(const std::wstring& message, const std::wstring& cause);
+		COBJException(const wstring& message);
+		COBJException(const wstring& message, const wstring& cause);
 #ifdef _WIN32
-		COBJException(const std::wstring& message, errno_t err);
-		COBJException(const std::wstring& message, DWORD lastError);
+		COBJException(const wstring& message, errno_t err);
+		COBJException(const wstring& message, DWORD lastError);
 #endif
 		COBJException(const COBJException& e);
 		virtual ~COBJException(void);
 
-		virtual const std::wstring& getMessage() const;
-		virtual const std::wstring& getCause() const;
+		void printStackTrace(wostream& out) const;
+
+		virtual const wstring& getMessage() const;
+		virtual const wstring& getCause() const;
+
 	private:
-		std::wstring m_Message;
-		std::wstring m_Cause;
+
+		void fillStackTrace();
+
+		list<wstring> m_StackTrace;
+		wstring m_Message;
+		wstring m_Cause;
 	};
 
 	// InternalErrorException //
@@ -29,8 +37,8 @@ namespace COBJ
 	class InternalErrorException : public COBJException
 	{
 	public:
-		InternalErrorException(const std::wstring& message);
-		InternalErrorException(const std::wstring& message, const std::wstring& cause);
+		InternalErrorException(const wstring& message);
+		InternalErrorException(const wstring& message, const wstring& cause);
 		InternalErrorException(const InternalErrorException& e);
 		virtual ~InternalErrorException(void);
 	};
@@ -40,8 +48,8 @@ namespace COBJ
 	class RuntimeCheckException : public COBJException
 	{
 	public:
-		RuntimeCheckException(const std::wstring& message);
-		RuntimeCheckException(const std::wstring& message, const std::wstring& cause);
+		RuntimeCheckException(const wstring& message);
+		RuntimeCheckException(const wstring& message, const wstring& cause);
 		RuntimeCheckException(const RuntimeCheckException& e);
 		virtual ~RuntimeCheckException(void);
 	};
@@ -51,8 +59,8 @@ namespace COBJ
 	class IndexOutOfBoundsException : public COBJException
 	{
 	public:
-		IndexOutOfBoundsException(const std::wstring& message);
-		IndexOutOfBoundsException(const std::wstring& message, const std::wstring& cause);
+		IndexOutOfBoundsException(const wstring& message);
+		IndexOutOfBoundsException(const wstring& message, const wstring& cause);
 		IndexOutOfBoundsException(const IndexOutOfBoundsException& e);
 		virtual ~IndexOutOfBoundsException(void);
 	};
@@ -62,8 +70,8 @@ namespace COBJ
 	class InvalidTypeException : public COBJException
 	{
 	public:
-		InvalidTypeException(const std::wstring& message);
-		InvalidTypeException(const std::wstring& message, const std::wstring& cause);
+		InvalidTypeException(const wstring& message);
+		InvalidTypeException(const wstring& message, const wstring& cause);
 		InvalidTypeException(const InvalidTypeException& e);
 		virtual ~InvalidTypeException(void);
 	};
@@ -73,10 +81,10 @@ namespace COBJ
 	class IOException : public COBJException
 	{
 	public:
-		IOException(const std::wstring& message);
-		IOException(const std::wstring& message, const std::wstring& cause);
+		IOException(const wstring& message);
+		IOException(const wstring& message, const wstring& cause);
 #ifdef _WIN32
-		IOException(const std::wstring& message, errno_t err);
+		IOException(const wstring& message, errno_t err);
 #endif
 		IOException(const IOException& e);
 		virtual ~IOException(void);
@@ -87,10 +95,10 @@ namespace COBJ
 	class ParserException : public COBJException
 	{
 	public:
-		ParserException(const std::wstring& message);
-		ParserException(const std::wstring& message, const std::wstring& cause);
+		ParserException(const wstring& message);
+		ParserException(const wstring& message, const wstring& cause);
 #ifdef _WIN32
-		ParserException(const std::wstring& message, errno_t err);
+		ParserException(const wstring& message, errno_t err);
 #endif
 		ParserException(const ParserException& e);
 		virtual ~ParserException(void);

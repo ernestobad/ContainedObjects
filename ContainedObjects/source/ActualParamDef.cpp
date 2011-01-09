@@ -28,6 +28,9 @@ namespace COBJ {
 			// param name
 			n = (pANTLR3_BASE_TREE) node->getChild(node, 0);
 			assert(n->getType(n) == N_PARAM_NAME);
+			assert(n->getChildCount(n) == 1);
+
+			n = (pANTLR3_BASE_TREE) n->getChild(n, 0);
 
 			m_ParamName = (wchar_t*) n->getText(n)->chars;
 		}

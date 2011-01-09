@@ -19,7 +19,7 @@ namespace COBJ
 		assert(node->getType(node) == N_ARRAY_INIT_VAL);
 		assert(node->getChildCount(node) == 2);
 
-		pANTLR3_BASE_TREE n;
+		pANTLR3_BASE_TREE n, c;
 
 		{
 			// type
@@ -39,8 +39,10 @@ namespace COBJ
 			int childCount = n->getChildCount(n);
 			for (int i = 0; i < childCount; i++)
 			{
+				c = (pANTLR3_BASE_TREE) n->getChild(n, i);
+
 				boost::shared_ptr<ValueDef> pValueDef;
-				createValueDef(n, pValueDef);
+				createValueDef(c, pValueDef);
 
 				m_Values.push_back(pValueDef);
 			}

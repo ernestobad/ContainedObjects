@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Users\Public\libs\libantlr3c-3.2\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Users\Ernesto\Documents\Visual Studio 2008\Projects\FeedViz\StackWalker&quot;;&quot;C:\Users\Public\libs\libantlr3c-3.2\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,9 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="antlr3cd.lib"
-				AdditionalLibraryDirectories="&quot;C:\Users\Public\libs\libantlr3c-3.2\Debug&quot;"
+				AdditionalDependencies="antlr3cd.lib StackWalker_VC8.lib"
+				AdditionalLibraryDirectories="&quot;C:\Users\Ernesto\Documents\Visual Studio 2008\Projects\FeedViz\Debug&quot;;C:\Users\Public\libs\boost_1_44_0\stage\lib;&quot;C:\Users\Public\libs\libantlr3c-3.2\Debug&quot;"
 				GenerateDebugInformation="true"
+				SubSystem="1"
 				OptimizeReferences="0"
 			/>
 			<Tool
@@ -87,6 +88,9 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Autorun Test"
+				CommandLine="cd $(SolutionDir)&#x0D;&#x0A;&quot;$(TargetDir)$(TargetName).exe&quot; --result_code=no --report_level=no --detect_memory_leak=1&#x0D;&#x0A;&#x0D;&#x0A;&#x0D;&#x0A;"
+				ExcludedFromBuild="false"
 			/>
 		</Configuration>
 		<Configuration
@@ -116,7 +120,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;C:\Users\Public\libs\libantlr3c-3.2\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Users\Ernesto\Documents\Visual Studio 2008\Projects\FeedViz\StackWalker&quot;;&quot;C:\Users\Public\libs\libantlr3c-3.2\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -135,8 +139,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="antlr3c.lib"
-				AdditionalLibraryDirectories="&quot;C:\Users\Public\libs\libantlr3c-3.2\Release&quot;"
+				AdditionalDependencies="antlr3c.lib StackWalker_VC8.lib"
+				AdditionalLibraryDirectories="&quot;C:\Users\Ernesto\Documents\Visual Studio 2008\Projects\FeedViz\Release&quot;;C:\Users\Public\libs\boost_1_44_0\stage\lib;&quot;C:\Users\Public\libs\libantlr3c-3.2\Release&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -406,6 +410,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\source\ILog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\source\IObject.h"
 				>
 			</File>
@@ -641,6 +649,34 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="test"
+			>
+			<File
+				RelativePath=".\test\arrays_decl_tests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test\interface_tests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test\literal_tests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test\object_init_tests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test\reference_path_tests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\test\test_main.cpp"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ClassDiagram1.cd"

@@ -1,0 +1,28 @@
+﻿class Huh()
+{ 
+	integer a = 1;
+	
+	integer b = -1;
+	
+	integer c = 1000;
+	
+	integer d = -1000;
+	
+	float e = -1.0;
+	
+	float f = -.12;
+	
+	float g = -.0;
+	
+	float h = .0;
+	
+	float i = .12345;
+	
+	float j = .12E3;
+	
+	float k = .12E-3;
+	
+	float l = .12E+0;
+	
+	float m = .12E0;
+}

@@ -27,6 +27,9 @@ namespace COBJ
 	class ArrayImpl;
 	typedef boost::shared_ptr<ArrayImpl> ArrayImplPtr;
 
+	class ILog;
+	typedef boost::shared_ptr<ILog> ILogPtr;
+
 	class IClass;
 	typedef boost::shared_ptr<IClass> IClassPtr;
 

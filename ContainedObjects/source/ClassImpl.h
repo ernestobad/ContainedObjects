@@ -9,7 +9,7 @@ namespace COBJ
 	class ClassImpl : public IClass
 	{
 	public:
-		ClassImpl(const ClassDefBasePtr pClassDefBase, const RuntimeContextPtr& pRootCtx);
+		ClassImpl(const ClassDefBasePtr& pClassDefBase, const RuntimeContextPtr& pRootCtx);
 		~ClassImpl(void);
 
 		bool isNative() const;

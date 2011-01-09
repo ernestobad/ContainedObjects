@@ -62,6 +62,7 @@ namespace COBJ
 
 			checkClassContext(pClassDefBase, pRootCtx);
 			checkInstanceContext(pClassDefBase, pRootCtx);
+			check(pClassDefBase, pRootCtx);
 		}
 	}
 
@@ -85,13 +86,22 @@ namespace COBJ
 			const VariableDeclDefPtr& pVarDecl = *vit;
 			if (pVarDecl->isStatic())
 			{
-				check(pVarDecl, pClassCtx);
 				StaticContextEntryPtr pEntry(new StaticContextEntry(pVarDecl));
-				pClassCtx->addEntry(pEntry);
+				if (!pClassCtx->addEntry(pEntry))
+				{
+					boost::wformat f(
+						L"Static variable name %1% already exists in current context.");
+					
+					f % pVarDecl->getName();
 
-				findStaticDependencies(pClassDefBase, pClassCtx, pVarDecl->getValue());
+					m_pLog->log(
+						*pVarDecl, 
+						msg::ErrAnaCtxCheck_StaticVarNameAlreadyExists, f.str());
+				}
 			}
 		}
+
+		findStaticDependencies(pClassDefBase, pClassCtx, pClassDefBase);
 	}
 
 	void SemanticAnalysis::findStaticDependencies(
@@ -123,6 +133,29 @@ namespace COBJ
 				}
 			}
 		}
+		else if (pNode->getASTNodeType() == ASTN_REFERENCE_TYPE)
+		{
+			ReferenceTypePtr pRefType = boost::static_pointer_cast<ReferenceType>(pNode);
+			pClassDefBase->addStaticDependency(pRefType->getReferenceTypeName());
+		}
+		else if (pNode->getASTNodeType() == ASTN_OBJECT_INIT_VALUE)
+		{
+			ObjectInitValueDefPtr pObjectInitDef = boost::static_pointer_cast<ObjectInitValueDef>(pNode);
+			pClassDefBase->addStaticDependency(pObjectInitDef->getClassName());
+		}
+		else if (pNode->getASTNodeType() == ASTN_CLASS)
+		{
+			ClassDefPtr pClassDef = boost::static_pointer_cast<ClassDef>(pNode);
+
+			const list<const wstring>& ifaces = pClassDef->getImplementedInterfaces();
+
+			list<const wstring>::const_iterator it;
+
+			for (it = ifaces.begin(); it != ifaces.end(); it++)
+			{
+				pClassDefBase->addStaticDependency(*it);
+			}
+		}
 
 		list<ASTNodePtr> children;
 		pNode->getChildNodes(children);
@@ -147,19 +180,6 @@ namespace COBJ
 			pCtx,
 			m_pLog);
 
-		const map<const wstring, FormalParamDefPtr> formalParamsMap
-			= pClassDefBase->getFormalParametersMap();
-		map<const wstring, FormalParamDefPtr>::const_iterator fit;
-
-		for (fit = formalParamsMap.begin(); fit != formalParamsMap.end(); fit++)
-		{
-			const FormalParamDefPtr& pFormalParam = fit->second;
-			check(pFormalParam, pNewCtx);
-
-			StaticContextEntryPtr pEntry(new StaticContextEntry(pFormalParam));
-			pNewCtx->addEntry(pEntry);
-		}
-
 		const list<VariableDeclDefPtr>& varDecls = pClassDefBase->getVariableDecls();
 		list<VariableDeclDefPtr>::const_iterator vit;
 
@@ -167,13 +187,19 @@ namespace COBJ
 		{
 			const VariableDeclDefPtr& pVarDecl = *vit;
 
-			if (!pVarDecl->isStatic())
-			{
-				check(pVarDecl, pNewCtx);
-			}
-
 			StaticContextEntryPtr pEntry(new StaticContextEntry(pVarDecl));
-			pNewCtx->addEntry(pEntry);
+
+			if (!pNewCtx->addEntry(pEntry))
+			{
+				boost::wformat f(
+					L"Variable name %1% already exists in current context.");
+				
+				f % pVarDecl->getName();
+
+				m_pLog->log(
+					*pVarDecl, 
+					msg::ErrAnaCtxCheck_InstanceVarNameAlreadyExists, f.str());
+			}
 		}
 	}
 
@@ -214,7 +240,8 @@ namespace COBJ
 		{
 			return false;
 		}
-		else if (pLType->getBasicType() == OBJECT_B_TYPE)
+		else if ((pLType->getBasicType() == OBJECT_B_TYPE) || 
+			(pLType->getBasicType() == CLASS_B_TYPE))
 		{
 			ReferenceTypePtr pLRefType = 
 				boost::static_pointer_cast<ReferenceType>(pLType);

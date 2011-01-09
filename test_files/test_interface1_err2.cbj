@@ -1,0 +1,8 @@
+﻿class Hah() implements Heh
+{ 
+	string y = "x";
+	
+	Huh huh = Huh(x = "xyz");
+	
+	static string s = "x";
+}

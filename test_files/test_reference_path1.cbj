@@ -1,0 +1,6 @@
+﻿class Hah()
+{ 
+	Heh heh = Heh();
+	
+	string x = heh.hih.s;
+}

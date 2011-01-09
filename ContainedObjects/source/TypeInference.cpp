@@ -38,10 +38,11 @@ namespace COBJ
 				continue;
 			}
 
-			// TODO: create instance and static contexts
-
 			StaticContextPtr pClassCtx;
 			StaticContextHelper::newClassContext(pClassCtx, pClassDefBase, pRootCtx, pLog);
+
+			StaticContextPtr pInstanceCtx;
+			StaticContextHelper::newInstanceContext(pInstanceCtx, pClassDefBase, pRootCtx, pLog);
 
 			const list<VariableDeclDefPtr>& variables = pClassDefBase->getVariableDecls();
 
@@ -57,12 +58,15 @@ namespace COBJ
 					// this is reported by ClassCheck
 					continue;
 				}
+
+				StaticContextPtr& pParentCtx = (pVariable->isStatic() ? pClassCtx : pInstanceCtx);
+
+				StaticContextPtr pMemberCtx(new StaticContext(pParentCtx, pVariable->isStatic()));
 				
-				StaticContextPtr pMemberCtx(new StaticContext(pClassCtx, pVariable->isStatic()));
 				inferTypes(*pValueDef, pMemberCtx, pLog);
 
 				StaticContextEntryPtr pEntry(new StaticContextEntry(pVariable));
-				pClassCtx->addEntry(pEntry);
+				pParentCtx->addEntry(pEntry);
 			}
 		}
 	}

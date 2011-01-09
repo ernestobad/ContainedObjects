@@ -69,7 +69,7 @@ namespace COBJ
 			// Value
 			n = (pANTLR3_BASE_TREE) node->getChild(node, 3);
 			assert(n->getType(n) == N_VALUE);
-			
+
 			createValueDef(n, m_pValue);
 		}
 		else
@@ -85,6 +85,10 @@ namespace COBJ
 	void VariableDeclDef::getChildNodes(std::list<ASTNodePtr>& children) const
 	{
 		children.push_back(m_pDeclaredType);
-		children.push_back(m_pValue);
+
+		if (m_pValue.get() != NULL)
+		{
+			children.push_back(m_pValue);
+		}
 	}
 }

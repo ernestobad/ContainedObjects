@@ -30,7 +30,8 @@ namespace COBJ
 			CLASS_DEF	= 0x00050000,
 			TYPE_CHECK	= 0x00060000,
 			IFACE_DEF	= 0x00070000,
-			ARRAY_INIT	= 0x00080000
+			ARRAY_INIT	= 0x00080000,
+			CTX_CHECK	= 0x00090000
 		};
 
 		enum code
@@ -48,7 +49,8 @@ namespace COBJ
 			ErrAnaObjInit_IncompTypes		= ERR|ANALYSIS|OBJ_INIT|5,
 			ErrAnaCtxInit_ClassNameAlreadyExists	= ERR|ANALYSIS|CTX_INIT|1,
 			ErrAnaCtxInit_FParmNameAlreadyExsits	= ERR|ANALYSIS|CTX_INIT|2,
-			ErrAnaCtxInit_VarNameAlreadyExsits		= ERR|ANALYSIS|CTX_INIT|3,
+			ErrAnaCtxCheck_StaticVarNameAlreadyExists	= ERR|ANALYSIS|CTX_CHECK|1,
+			ErrAnaCtxCheck_InstanceVarNameAlreadyExists	= ERR|ANALYSIS|CTX_CHECK|2,
 			ErrAnaVarDecl_IncompTypes			= ERR|ANALYSIS|VAR_DECL|1,
 			ErrAnaClassDef_IfaceNotFound			= ERR|ANALYSIS|CLASS_DEF|1,
 			ErrAnaClassDef_NotAnIface				= ERR|ANALYSIS|CLASS_DEF|2,

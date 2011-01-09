@@ -14,8 +14,7 @@
 
 namespace COBJ
 {
-	class Type;
-	class ValueDef;
+	using namespace std;
 
 	class VariableDeclDef : public ASTNode
 	{
@@ -30,7 +29,7 @@ namespace COBJ
 			return ASTN_VARIABLE_DECL;
 		}
 
-		void getChildNodes(std::list<ASTNodePtr>& children) const;
+		void getChildNodes(list<ASTNodePtr>& children) const;
 
 		bool isStatic() const
 		{
@@ -52,12 +51,12 @@ namespace COBJ
 			m_pDeclaredType = pDeclaredType;
 		}
 
-		const std::wstring& getName() const
+		const wstring& getName() const
 		{
 			return m_Name;
 		}
 
-		void setName(const std::wstring& name)
+		void setName(const wstring& name)
 		{
 			m_Name = name;
 		}
@@ -74,7 +73,7 @@ namespace COBJ
 
 	private:
 		bool m_IsStatic;
-		std::wstring m_Name;
+		wstring m_Name;
 		TypePtr m_pDeclaredType;
 		ValueDefPtr m_pValue;
 	};

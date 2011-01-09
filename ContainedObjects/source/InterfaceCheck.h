@@ -14,7 +14,7 @@ namespace COBJ
 		~InterfaceCheck(void);
 
 		void doCheck(
-			const StaticContextPtr& pCtx,
+			const StaticContextPtr& pRootCtx,
 			const ASTNodePtr& pNode,
 			const LogPtr& pLog) const;
 	};

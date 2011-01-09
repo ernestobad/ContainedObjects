@@ -27,6 +27,32 @@ namespace COBJ
 
 		const ClassDefBasePtr& pClassDef = m_IClass.getDefinition();
 
+		map<const wstring, FormalParamDefPtr> formalParams = pClassDef->getFormalParametersMap();
+
+		map<const wstring, IVariablePtr>::const_iterator apit;
+
+		for (apit = params.begin(); apit != params.end(); apit++)
+		{
+			const wstring& actualParamName = apit->first;
+			if (formalParams.find(actualParamName) == formalParams.end())
+			{
+				throw RuntimeCheckException(L"Unknown parameter");
+			}
+		}
+
+		map<const wstring, FormalParamDefPtr>::const_iterator fpit;
+
+		for (fpit = formalParams.begin(); fpit != formalParams.end(); fpit++)
+		{
+			const wstring& formalParamName = fpit->first;
+			if (params.find(formalParamName) == params.end())
+			{
+				throw RuntimeCheckException(L"Missing parameter");
+			}
+
+			// Type Checking? nah
+		}
+
 		const list<VariableDeclDefPtr>& varDefs = pClassDef->getVariableDecls();
 
 		list<VariableDeclDefPtr>::const_iterator vit;

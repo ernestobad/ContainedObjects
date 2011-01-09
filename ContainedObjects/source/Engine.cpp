@@ -12,12 +12,21 @@
 #include "ClassImpl.h"
 #include "Context.h"
 #include "RuntimeContextEntry.h"
+#include "IClass.h"
+#include "IEngine.h"
+#include "SemanticAnalysis.h"
+#include "ArrayInitCheck.h"
+#include "ClassCheck.h"
+#include "InterfaceCheck.h"
+#include "ObjectInitCheck.h"
+#include "TypeCheck.h"
+#include "VariableDeclCheck.h"
+#include "ClassDef.h"
+#include "ClassDefBase.h"
 
 namespace COBJ
 {
 	using namespace std;
-
-	EnginePtr Engine::s_pInstance = EnginePtr();
 
 	Engine::Engine(void)
 		: m_pLog(new Log())
@@ -26,14 +35,36 @@ namespace COBJ
 
 	Engine::~Engine(void)
 	{
+		if (m_pRootCtx.get() != NULL)
+		{
+			m_pRootCtx->clear();
+		}
 	}
 
-	const wstring& Engine::getCurrentFile()
+	void Engine::getLog(ILogPtr& pLog)
 	{
-		return m_CurrentFile;
+		pLog = boost::static_pointer_cast<ILog>(m_pLog);
 	}
 
-	void Engine::parseFiles(const list<const wstring>& filePaths)
+	void Engine::setNativeClasses(const list<IClassPtr>& nativeClasses)
+	{
+		list<IClassPtr>::const_iterator it;
+
+		for (it = nativeClasses.begin(); it != nativeClasses.end(); it++)
+		{
+			const IClassPtr pClass = *it;
+			const wstring& className = pClass->getDefinition()->getClassName();
+
+			if (m_ClassesMap.find(className) != m_ClassesMap.end())
+			{
+				throw RuntimeCheckException(L"Duplicated native class: " + className);
+			}
+
+			m_ClassesMap[className] = pClass;
+		}
+	}
+
+	bool Engine::parseFiles(const list<const wstring>& filePaths)
 	{
 		list<const wstring>::const_iterator it;
 
@@ -42,7 +73,7 @@ namespace COBJ
 			parseFile(*it);
 		}
 
-		initClasses();
+		return initClasses();
 	}
 
 	static void print(pANTLR3_BASE_TREE node, int level)
@@ -78,16 +109,23 @@ namespace COBJ
 		wstring fileContentsUtf16;
 		convertUTF8ToUTF16(fileContentsUtf8, fileContentsUtf16);
 
-		input = antlr3NewUCS2StringInPlaceStream(
-			(pANTLR3_UINT16) fileContentsUtf16.data(),
-			(ANTLR3_UINT32) fileContentsUtf16.length(),
-			NULL);
+		pANTLR3_UINT16 pData = (pANTLR3_UINT16) fileContentsUtf16.data();
+		ANTLR3_UINT32 dataLength = fileContentsUtf16.length();
+
+		if (*pData == 0xFEFF) // Has BOM?
+		{
+			// Ignore BOM
+			pData++;
+			dataLength = dataLength-1;
+		}
+
+		input = antlr3NewUCS2StringInPlaceStream(pData, dataLength, NULL);
 
 		//input = antlr3AsciiFileStreamNew((pANTLR3_UINT8) filePathUtf8.c_str());
 
-		ofstream outFileStream("test.txt", ios::out | ios::binary);
-		outFileStream.write((char*) input->data, input->sizeBuf);
-		outFileStream.close();
+		//ofstream outFileStream("test.txt", ios::out | ios::binary);
+		//outFileStream.write((char*) input->data, input->sizeBuf);
+		//outFileStream.close();
 
 		if (input.get() == NULL)
 		{
@@ -100,7 +138,7 @@ namespace COBJ
 
 		if (lxr == NULL)
 		{
-			wstring msg(L"Unable to create the lexer");
+			wstring msg(L"Unable to create lexer");
 			ParserException e(msg);
             throw e;
 		}
@@ -115,7 +153,7 @@ namespace COBJ
 		}
 
 		psr = ContainedObjectsParserNew(tstream.get());
- 
+
 		if (psr == NULL)
 		{
 			wstring msg(L"Could not allocate parser\n");
@@ -146,33 +184,82 @@ namespace COBJ
 	 
 			pANTLR3_BASE_TREE root = langAST.tree;
 
+			root->u = (void*) filePath.c_str();
+			
 			if (root->getType(root) == N_CLASS_DECL)
 			{
 				ClassDefPtr pClassDef(new ClassDef(root));
+				const wstring& className = pClassDef->getClassName();
+
+				if (m_ClassDefMap.find(className) != m_ClassDefMap.end())
+				{
+					throw RuntimeCheckException(L"Duplicated class " + className);
+				}
+
 				m_ClassDefMap[pClassDef->getClassName()] = pClassDef;
 			}
 			else if (root->getType(root) == N_IFACE_DECL)
 			{
 				InterfaceDefPtr pInterfaceDef(new InterfaceDef(root));
-				m_ClassDefMap[pInterfaceDef->getClassName()] = pInterfaceDef;
+				const wstring& ifaceName = pInterfaceDef->getClassName();
+
+				if (m_ClassDefMap.find(ifaceName) != m_ClassDefMap.end())
+				{
+					throw RuntimeCheckException(L"Duplicated class " + ifaceName);
+				}
+
+				m_ClassDefMap[ifaceName] = pInterfaceDef;
 			}
 			else
 			{
 				assert(false);
 			}
 
-			print(root, 0);
+			// print(root, 0);
 		}
 	}
 
-	void Engine::initClasses()
+	bool Engine::initClasses()
 	{
+		ICheckPtr pArrayInitCheck = ICheckPtr(new ArrayInitCheck());
+		ICheckPtr pClassCheck = ICheckPtr(new ClassCheck());
+		ICheckPtr pInterfaceCheck = ICheckPtr(new InterfaceCheck());
+		ICheckPtr pObjectInitCheck = ICheckPtr(new ObjectInitCheck());
+		ICheckPtr pTypeCheck = ICheckPtr(new TypeCheck());
+		ICheckPtr pVariableDeclCheck = ICheckPtr(new VariableDeclCheck());
+
+		SemanticAnalysisPtr pSemanticAnalysis = SemanticAnalysisPtr(new SemanticAnalysis(m_pLog));
+		pSemanticAnalysis->addCheck(pArrayInitCheck);
+		pSemanticAnalysis->addCheck(pClassCheck);
+		pSemanticAnalysis->addCheck(pInterfaceCheck);
+		pSemanticAnalysis->addCheck(pObjectInitCheck);
+		pSemanticAnalysis->addCheck(pTypeCheck);
+		pSemanticAnalysis->addCheck(pVariableDeclCheck);
+
+		list<ClassDefBasePtr> classes;
+
 		map<const wstring, ClassDefBasePtr>::const_iterator it;
+
+		for (it = m_ClassDefMap.begin(); it != m_ClassDefMap.end(); it++)
+		{
+			classes.push_back(it->second);
+		}
+
+		pSemanticAnalysis->analyze(classes);
+
+		if (m_pLog->hasErrors())
+		{
+			return false;
+		}
+
+		m_pRootCtx = RuntimeContextPtr(new RuntimeContext());
 
 		for (it = m_ClassDefMap.begin(); it != m_ClassDefMap.end(); it++)
 		{
 			initClass(it->second);
 		}
+
+		return true;
 	}
 
 	void Engine::initClass(const ClassDefBasePtr& pClassDefBase)
@@ -224,10 +311,12 @@ namespace COBJ
 		return true;
 	}
 
-	const void CreateEngine(
-		const vector<IClassPtr> nativeClasses,
+	void CreateEngine(
+		const list<IClassPtr>& nativeClasses,
 		IEnginePtr& pEngine)
 	{
-
+		EnginePtr p = EnginePtr(new Engine());
+		p->setNativeClasses(nativeClasses);
+		pEngine = boost::shared_ptr<IEngine>(p);
 	}
 }

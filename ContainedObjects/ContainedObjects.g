@@ -30,7 +30,6 @@ tokens
 	N_IMPLEMENTED_IFACE;
 	N_FORMAL_CLASS_PARAM;
 	N_VARDEF;
-	N_VARDEF_ASSIGN;
 	
 	N_TYPE;
 	N_OBJECT_TYPE;
@@ -142,7 +141,7 @@ literal	:	INTL	-> ^(N_INT_LITERAL INTL)
 
 arrayInit
 	:	simpleType '[' ']' '{' (value (',' value)*)? '}'
-		-> ^(N_ARRAY_TYPE simpleType) ^(N_ARRAY_VALUES (N_VALUE value)*)
+		-> ^(N_ARRAY_TYPE ^(N_SIMPLE_TYPE simpleType)) ^(N_ARRAY_VALUES ^(N_VALUE value)*)
 	;
 
 objectInit
@@ -156,7 +155,7 @@ type	:	arrayType	-> ^(N_ARRAY_TYPE arrayType)
 
 arrayType
 	:	simpleType '[' ']'
-		-> ^(N_TYPE simpleType)
+		-> ^(N_SIMPLE_TYPE simpleType)
 	;
 
 simpleType
@@ -170,6 +169,9 @@ simpleType
  /*------------------------------------------------------------------
  * LEXER RULES
  *------------------------------------------------------------------*/
+ 
+fragment
+UNICODE_CHAR  :  '\u0003'..'\uFFFE';
 
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
@@ -178,9 +180,9 @@ INTL :	('+'|'-')? '0'..'9'+
     ;
 
 FLOATL
-    :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
-    |   '.' ('0'..'9')+ EXPONENT?
-    |   ('0'..'9')+ EXPONENT
+    :   ('+'|'-')?('0'..'9')+ '.' ('0'..'9')* EXPONENT?
+    |   ('+'|'-')?'.' ('0'..'9')+ EXPONENT?
+    |   ('+'|'-')?('0'..'9')+ EXPONENT
     ;
 
 COMMENT

@@ -54,18 +54,18 @@ namespace COBJ
 		m_HasErrors = false;
 	}
 
-	void Log::printAll() const
+	void Log::printAll(wostream& out) const
 	{
-		std::list<ConstLogEntryPtr>::const_iterator it;
+		std::list<CLogEntryPtr>::const_iterator it;
 
 		for (it = m_Entries.begin(); it != m_Entries.end(); it++)
 		{
-			ConstLogEntryPtr pEntry = *it;
-			pEntry->printFormatedMessage();
+			CLogEntryPtr pEntry = *it;
+			pEntry->printFormatedMessage(out);
 		}
 	}
 
-	const std::list<ConstLogEntryPtr>& Log::getEntries() const
+	const std::list<CLogEntryPtr>& Log::getEntries() const
 	{
 		return m_Entries;
 	}
@@ -86,7 +86,7 @@ namespace COBJ
 		const std::wstring& file, int line, int charPosition,
 		message_code messageCode, const std::wstring& message)
 	{
-		const ConstLogEntryPtr pEntry(
+		const CLogEntryPtr pEntry(
 			new LogEntry(file, line, charPosition, messageCode, message));
 
 		m_Entries.push_back(pEntry);
@@ -97,6 +97,6 @@ namespace COBJ
 			m_HasErrors = true;
 		}
 
-		pEntry->printFormatedMessage();
+		//pEntry->printFormatedMessage();
 	}
 }

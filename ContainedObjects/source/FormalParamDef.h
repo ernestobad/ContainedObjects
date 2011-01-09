@@ -14,7 +14,7 @@
 
 namespace COBJ
 {
-	class Type;
+	using namespace std;
 
 	class FormalParamDef : public ASTNode
 	{
@@ -29,7 +29,7 @@ namespace COBJ
 			return ASTN_FORMAL_PARAM;
 		}
 
-		void getChildNodes(std::list<ASTNodePtr>& children) const;
+		void getChildNodes(list<ASTNodePtr>& children) const;
 
 		const TypePtr& getType() const
 		{
@@ -53,6 +53,6 @@ namespace COBJ
 
 	private:
 		TypePtr m_pType;
-		std::wstring m_ParamName;
+		wstring m_ParamName;
 	};
 }

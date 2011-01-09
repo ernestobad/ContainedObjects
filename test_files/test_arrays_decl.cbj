@@ -1,0 +1,22 @@
+﻿class Huh()
+{ 
+	static string s = "x";
+
+	string[] a = string[] { 
+		"huh",
+		"heh"
+	};
+	
+	string[] b = string[] {
+	};
+	
+	string[] c = string[] { 
+		""
+	};
+	
+	integer[] d = integer[] { 
+		1, 2, 3
+	};
+	
+	string[] e = string[] { Huh.s };
+}

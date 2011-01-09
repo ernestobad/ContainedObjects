@@ -36,6 +36,7 @@ namespace COBJ {
 			boost::shared_ptr<ValueDef>& pType)
 	{
 		assert(node->getType(node) == N_VALUE);
+		int temp = node->getChildCount(node);
 		assert(node->getChildCount(node) == 1);
 
 		pANTLR3_BASE_TREE n;
@@ -51,7 +52,7 @@ namespace COBJ {
 			pType = boost::shared_ptr<ValueDef>(static_cast<ValueDef*>(new ArrayInitValueDef(n)));
 			break;
 		case N_LITERAL_VAL:
-			assert(n->getChildCount(n) == 0);
+			assert(n->getChildCount(n) == 1);
 			n = (pANTLR3_BASE_TREE) n->getChild(n, 0);
 			switch (n->getType(n))
 			{

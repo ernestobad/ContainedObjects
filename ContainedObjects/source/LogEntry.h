@@ -4,20 +4,22 @@
 
 namespace COBJ
 {
+	using namespace std;
+
 	class LogEntry
 	{
 	public:
 
 		LogEntry(
-			const std::wstring& fileName,
+			const wstring& fileName,
 			int line,
 			int charPosition,
 			message_code messageCode,
-			const std::wstring& message);
+			const wstring& message);
 
 		~LogEntry(void);
 
-		const std::wstring& getFile() const
+		const wstring& getFile() const
 		{
 			return m_File;
 		}
@@ -42,15 +44,15 @@ namespace COBJ
 			return m_Message;
 		}
 
-		void printFormatedMessage() const;
+		void printFormatedMessage(wostream& out) const;
 
-		void formatMessage(std::wstring& message) const;
+		void formatMessage(wstring& message) const;
 
 	private:
-		std::wstring m_File;
+		wstring m_File;
 		int m_Line;
 		int m_CharPosition;
 		message_code m_MessageCode;
-		std::wstring m_Message;
+		wstring m_Message;
 	};
 }
