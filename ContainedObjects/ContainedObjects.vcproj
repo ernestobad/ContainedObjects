@@ -67,6 +67,7 @@
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="0"
+				EntryPointSymbol="wWinMainCRTStartup"
 			/>
 			<Tool
 				Name="VCALinkTool"

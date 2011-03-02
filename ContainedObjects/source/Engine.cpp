@@ -35,6 +35,9 @@ namespace COBJ
 
 	Engine::~Engine(void)
 	{
+		// There's a circular dependency between m_pRootCtx and every
+		// ClassImpl instantiated. This will prevent a memory leak caused
+		// by this.
 		if (m_pRootCtx.get() != NULL)
 		{
 			m_pRootCtx->clear();
